@@ -9,14 +9,10 @@ jobs: # job 설정
   react: # job id
     name: 리액트 build & deploy
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: Frontend # 기본 워킹 디렉토리 설정
     steps: 
       - name: checkout Github Action
         uses: actions/checkout@v3 # github actions 가상 환경에 해당 레포 소스 가져오기
-      - name: Debug directory structure
-        run: ls -al  # 디버깅: 디렉토리 구조 확인
+
       - name: install yarn dependencies
         run: yarn install
 
