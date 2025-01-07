@@ -12,7 +12,13 @@ jobs: # job 설정
     steps: 
       - name: checkout Github Action
         uses: actions/checkout@v3 # github actions 가상 환경에 해당 레포 소스 가져오기
-
+        
+      # Node.js 버전 설정 (20.0.0 이상으로 설정)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'  
+          
       - name: install yarn dependencies
         run: yarn install
 
