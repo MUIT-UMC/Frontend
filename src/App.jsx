@@ -12,6 +12,8 @@ import SeatCheck from "./pages/SeatCheck";
 import GroupBuy from "./pages/GroupBuy";
 import Board from "./pages/Board";
 import VisionDetail from "./pages/VisionDetail";
+import './styles/font.css';
+
 
 function App() {
   return (
