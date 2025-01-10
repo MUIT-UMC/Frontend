@@ -11,7 +11,9 @@ import Vision from "./pages/Vision";
 import SeatCheck from "./pages/SeatCheck";
 import GroupBuy from "./pages/GroupBuy";
 import Board from "./pages/Board";
+import VisionDetail from "./pages/VisionDetail";
 import './styles/font.css';
+
 
 function App() {
   return (
@@ -26,6 +28,7 @@ function App() {
         <Route path="/upcoming" element={<Upcoming />} />
         {/* 3) 시야 확인 */}
         <Route path="/vision" element={<Vision />} />
+        <Route path="/vision/1" element={<VisionDetail />} />
         {/* 4) 남는 좌석 확인 */}
         <Route path="/seat-check" element={<SeatCheck />} />
         {/* 5) 공동 구매 */}
