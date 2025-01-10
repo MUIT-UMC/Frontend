@@ -74,19 +74,19 @@ function Detail() {
               <div style={{display: 'flex', flexDirection:'column', gap:'10px'}}>
                 <Value color='#A00000' fontSize='14px'>공동 구매시 20% 할인</Value>
                 <div style={{display:'flex', flexDirection:'row'}}>
-                  <Value width='28px' color='#919191'>R석</Value>
-                  <Value width='68px' strikethrough='true' color='#919191'>70,000원</Value>
+                  <Value width='28px' color='#919191' marginRight='16px'>R석</Value>
+                  <Value width='68px' strikethrough='true' color='#919191' marginRight='6px'>70,000원</Value>
                   <img src={ArrowRight} />
-                  <Value width='68px'>56,000원</Value>
+                  <Value width='68px' marginLeft='8px'>56,000원</Value>
                 </div>
                 <div style={{display:'flex', flexDirection:'row'}}>
-                  <Value width='28px' color='#919191'>S석</Value>
-                  <Value width='68px' strikethrough='true' color='#919191'>60,000원</Value>
+                  <Value width='28px' color='#919191' marginRight='16px'>S석</Value>
+                  <Value width='68px' strikethrough='true' color='#919191' marginRight='6px'>60,000원</Value>
                   <img src={ArrowRight} />
-                  <Value width='68px'>48,000원</Value>
+                  <Value width='68px' marginLeft='8px'>48,000원</Value>
                 </div>
                 <div style={{display:'flex', flexDirection:'row'}}>
-                  <Value width='28px' color='#919191'>A석</Value>
+                  <Value width='28px' color='#919191' marginRight='16px'>A석</Value>
                   <Value width='68px'>40,000원</Value>
                 </div>
               </div>
@@ -205,10 +205,11 @@ const Value = styled.div`
   font-family: Pretendard;
   font-size: ${(props) => props.fontSize? props.fontSize:'16px'};
   font-style: normal;
-  font-weight: 300;
+  font-weight: 500;
   line-height: 25px; /* 156.25% */
  text-decoration-line: ${(props) => props.strikethrough ? 'line-through' : 'none'};
-
+  margin-right: ${(props) => props.marginRight ? props.marginRight : '0px'};
+  margin-left: ${(props) => props.marginLeft ? props.marginLeft : '0px'};
 `;
 
 const Rating = styled.div`
