@@ -51,11 +51,12 @@ const BannerContainer = styled.div`
 
 const EngHeader = styled.div`
 color: #FFF;
-font-family: 'Candlescript_Demo_Version', sans-serif;
-font-size: 60px;
+font-family: 'Candlescript', sans-serif;
+font-size: 64px;
 font-style: normal;
-font-weight: 400;
+font-weight: 300;
 line-height: normal;
+margin-bottom: -50px;
 `
 const Header = styled.div`
   color: #FFF;

@@ -6,6 +6,10 @@ import starOutline from '../assets/icons/star-outline.svg';
 import PerformanceDetails from "../components/detail/PerformanceDetails";
 import EventCalendar from "../components/detail/EventCalendar";
 import MainBanner from "../components/detail/MainBanner";
+import ChevronRight from '../assets/icons/ChevronRight.svg';
+import ArrowRight from '../assets/icons/ArrowRight.svg';
+import HeartLine from '../assets/icons/heart-line.svg';
+import HeartFull from '../assets/icons/heart-full.svg';
 
 function Detail() {
   return (
@@ -20,10 +24,8 @@ function Detail() {
         <LeftSection>
         <TitleWrapper>
           <h1>미아 파밀리아</h1>
-          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
-            <path d="M11.625 5.25C7.6905 5.25 4.5 8.64 4.5 12.8205C4.5 21.1875 18 30.75 18 30.75C18 30.75 31.5 21.1875 31.5 12.8205C31.5 7.641 28.3095 5.25 24.375 5.25C21.585 5.25 19.17 6.954 18 9.435C16.83 6.954 14.415 5.25 11.625 5.25Z" stroke="#A00000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <button>공동 구매 기능</button>
+          <img src={HeartLine} />
+          <button>공동 구매 가능</button>
         </TitleWrapper>
         <RatingWrapper>
           <img src={starFull} alt="Star Full Icon" />
@@ -42,7 +44,13 @@ function Detail() {
               <Label>장소</Label>
               <div>
                 <Value>링크아트센터 드림1관</Value>
-                <SightLink>시야 확인하기</SightLink>
+                <div style={{ display: 'flex', 
+                              flexDirection: 'row', 
+                              gap: '4px', 
+                              marginTop:'11px'}}>
+                  <SightLink>시야 확인하기</SightLink>
+                  <img src={ChevronRight}  />
+                </div>
               </div>
             </Item>
             <Item>
@@ -64,10 +72,23 @@ function Detail() {
             <Item>
               <Label>가격</Label>
               <div style={{display: 'flex', flexDirection:'column', gap:'10px'}}>
-                <Value>공동 구매시 20% 할인</Value>
-                <Value>R석 70,000원 - 56,000원</Value>
-                <Value>S석 60,000원 - 48,000원</Value>
-                <Value>A석 40,000원</Value>
+                <Value color='#A00000' fontSize='14px'>공동 구매시 20% 할인</Value>
+                <div style={{display:'flex', flexDirection:'row'}}>
+                  <Value width='28px' color='#919191'>R석</Value>
+                  <Value width='68px' strikethrough='true' color='#919191'>70,000원</Value>
+                  <img src={ArrowRight} />
+                  <Value width='68px'>56,000원</Value>
+                </div>
+                <div style={{display:'flex', flexDirection:'row'}}>
+                  <Value width='28px' color='#919191'>S석</Value>
+                  <Value width='68px' strikethrough='true' color='#919191'>60,000원</Value>
+                  <img src={ArrowRight} />
+                  <Value width='68px'>48,000원</Value>
+                </div>
+                <div style={{display:'flex', flexDirection:'row'}}>
+                  <Value width='28px' color='#919191'>A석</Value>
+                  <Value width='68px'>40,000원</Value>
+                </div>
               </div>
             </Item>
           </InfoDetail>
@@ -78,6 +99,7 @@ function Detail() {
         <RightSection>
           <EventCalendar />
           <GroupPurchaseButton>공동 구매하기</GroupPurchaseButton>
+          
         </RightSection>
         </div>
       </MainContent>
@@ -177,14 +199,16 @@ const Label = styled.div`
 `;
 
 const Value = styled.div`
-  color: #000;
+  color: ${(props) => props.color? props.color:'#000'};
   /* Body-me */
-  width: 340px;
+  width: ${(props) => props.width? props.width: '340px'};
   font-family: Pretendard;
-  font-size: 16px;
+  font-size: ${(props) => props.fontSize? props.fontSize:'16px'};
   font-style: normal;
   font-weight: 300;
   line-height: 25px; /* 156.25% */
+ text-decoration-line: ${(props) => props.strikethrough ? 'line-through' : 'none'};
+
 `;
 
 const Rating = styled.div`
@@ -223,22 +247,25 @@ const GroupPurchaseButton = styled.button`
   background: var(--Muit-Red-main, #A00000);
   color: #FFF;
 
-/* Body-bold */
-font-family: Pretendard;
-font-size: 16px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
+  /* Body-bold */
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 `
 
 const SightLink = styled.div`
-color: var(--Gray-sub, #919191);
+  color: var(--Gray-sub, #919191);
 
-/* Body-tiny-md */
-font-family: Pretendard;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-margin-top: 11px;
+  /* Body-tiny-md */
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+
+  display: flex;
+  align-items: center; /* 수직 가운데 정렬 */
 `
