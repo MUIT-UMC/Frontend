@@ -1,4 +1,7 @@
 
+
+// 기존 상단바 변경사항 수정 중 (미완완)
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -123,6 +126,7 @@ const CenterArea = styled.div`
 
 const RightArea = styled.div`
   justify-content:  flex-end;
+  gap: 16px;
 `;
 
 const HamburgerMenu = styled.div`
@@ -138,6 +142,25 @@ const HamburgerMenu = styled.div`
   }
 `;
 
+const LogoLink = styled(Link)`
+  font-family:  "BelgianoSerif";
+  font-size: 48px;
+  font-weight: 400;
+  text-decoration: none;
+  color: ${COLOR_MUIT_RED};
+  cursor:  pointer;
+
+  &:hover {
+    color: #800000;
+  }
+`;
+
+const Icon = styled.span`
+  font-weight:  400;
+  font-size: 24px;
+  cursor: pointer;
+`;
+
 
 const NavBottom = styled.div`
   max-width: ${MAX_WIDTH}px;
@@ -149,5 +172,8 @@ const NavBottom = styled.div`
   column-gap: ${COLUMN_GAP}px;
   padding: 0 ${SIDE_MARGIN}px;
 
+  flex-direction: row;
   align-items: center;
+  justify-concent:  space-between;
 `;
+

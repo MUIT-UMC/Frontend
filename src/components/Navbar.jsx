@@ -1,3 +1,6 @@
+
+// 임시 상단바 -> Navbar2에서 수정중 수정 완료하면 Navbar2로 대체할 예정정
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -5,6 +8,10 @@ import styled from "styled-components";
 //  색상
 const COLOR_MUIT_RED = "#A00000";    // color-muit red-main
 const COLOR_BLACK = "#000000";       // color-gray-maintext
+
+const MAX_WIDTH = 1440;
+const SIDE_MARGIN = 100; // 좌우 마진
+const COLUMN_GAP = 20;   // column 간격
 
 function Navbar() {
   const location = useLocation();
