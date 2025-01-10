@@ -1,0 +1,11 @@
+/* App.css */
+@font-face {
+  font-family: 'Candlescript';
+  src: url('./assets/fonts/Candlescript_Demo_Version.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.candlescript-text {
+  font-family: 'Candlescript', sans-serif;
+}
