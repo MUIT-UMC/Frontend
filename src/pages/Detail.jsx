@@ -70,6 +70,7 @@ function Detail() {
               <Value>김도빈, 황민수, 김찬종, 조풍해, 최호승, 장민수, 박영수, 문경초, 박좌현</Value>
             </Item>
             <Item>
+              {/* 추후 컴포넌트화 해야할듯 */}
               <Label>가격</Label>
               <div style={{display: 'flex', flexDirection:'column', gap:'10px'}}>
                 <Value color='#A00000' fontSize='14px'>공동 구매시 20% 할인</Value>
@@ -144,11 +145,13 @@ const TitleWrapper = styled.div`
   }
 
   button {
-    padding: 8px 16px;
+    width: 120px;
+    height: 28px;
+    padding: auto;
     cursor: pointer;
     background-color: #A00000; /* 사용자 선호 색상 반영 */
     border: none;
-    border-radius: 4px;
+    border-radius: 2px;
     color: white;
     color: #FFF;
 
@@ -156,8 +159,7 @@ const TitleWrapper = styled.div`
     font-family: Pretendard;
     font-size: 14px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 21px; /* 150% */
+    font-weight: 300;
   }
 `;
 
@@ -252,7 +254,7 @@ const GroupPurchaseButton = styled.button`
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 300;
   line-height: normal;
 `
 
