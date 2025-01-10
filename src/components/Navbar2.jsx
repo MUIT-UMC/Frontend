@@ -1,19 +1,36 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 //  색상
 const COLOR_MUIT_RED = "#A00000";    // color-muit red-main
-const COLOR_BLACK = "#000000";       // color-gray-maintext
+const COLOR_GRAY_MAINTEXT = "#000000";
 
-function Navbar() {
+const MAX_WIDTH = 1440;
+const SIDE_MARGIN = 100; // 좌우 마진
+const COLUMN_GAP = 20;   // column 간격
+
+function Navbar2() {
+    
+    // 현재 페이지 경로 확인
   const location = useLocation();
+  // 상세 페이지인지 여부
+  const isDetailPage = location.pathname === '/detail';
 
   return (
     <NavContainer>
-      {/* 윗줄: 로고 중앙, 오른쪽 아이콘 */}
-      <GridRow>
-        <LeftArea />
+      {/* 상단부 */}
+      <NavTop>
+        <LeftArea>
+          {isDetailPage && (
+            <HamburgerMenu>
+              <div className="bar" />
+              <div className="bar" />
+              <div className="bar" />
+            </HamburgerMenu>
+          )}  
+        </LeftArea>
         <CenterArea>
           <LogoLink to="/">MUIT</LogoLink>
         </CenterArea>
@@ -21,11 +38,12 @@ function Navbar() {
           <Icon>🔍</Icon>
           <Icon>👤</Icon>
         </RightArea>
-      </GridRow>
+      </NavTop>
 
-      {/* 아랫줄: 메뉴 6개 */}
-      <GridRow style={{ paddingTop: "16px", paddingBottom: "16px" }}>
-        <MenuArea>
+      {/* 하단부 */}
+
+      {!isDetailPage && (
+        <NavBottom>
           <MenuLink
             to="/"
             $active={location.pathname === "/"}
@@ -62,84 +80,74 @@ function Navbar() {
           >
             게시판
           </MenuLink>
-        </MenuArea>
-      </GridRow>
+        </NavBottom>
+      )}
     </NavContainer>
-  );
+  )
+
 }
 
-export default Navbar;
+export default Navbar2;
 
-/* ---------------- Styled Components ----------------*/
+/* ---------------- Styled Components ---------------- */
 
 const NavContainer = styled.header`
-  max-width: 1440px;
-  height: 160px;
-  margin: 0 auto;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
 `;
 
-/** 12-column grid, 20px gutter, 100px side margins */
-const GridRow = styled.div`
+const NavTop = styled.div`
+  max-width: ${MAX_WIDTH}px;
+  height: 108px;
+  margin: 0 auto; /* 화면 가운데 정렬 */
+
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  column-gap: 20px;
-  padding-left: 100px;
-  padding-right: 100px;
+  column-gap: ${COLUMN_GAP}px;
+
+  /* 좌우 마진  */
+  padding: 0 ${SIDE_MARGIN}px;
+
+  flex-direction: row;
   align-items: center;
+  justify-concent:  space-between;
 `;
 
 const LeftArea = styled.div`
-  grid-column: 1 / 5;
+  justify-concent:  flex-start;
 `;
+
 const CenterArea = styled.div`
-  grid-column: 5 / 9;
-  display: flex;
-  justify-content: center;
+  justify-concent:  center;
 `;
+
 const RightArea = styled.div`
-  grid-column: 9 / 13;
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
+  justify-content:  flex-end;
 `;
 
-const LogoLink = styled(Link)`
-  font-family:  "BelgianoSerif";
-  font-size: 48px;
-  font-weight: 400;
-  text-decoration: none;
-  color: ${COLOR_MUIT_RED};
-
-  &:hover {
-    color: #800000;
-  }
-`;
-
-const Icon = styled.span`
-  font-weight:  400;
-  font-size: 24px;
+const HamburgerMenu = styled.div`
   cursor: pointer;
-`;
-
-/** 두 번째 줄 전체 (columns 1~12) */
-const MenuArea = styled.div`
-  grid-column: 1 / 13;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  
+  .bar {
+    width: 26px;
+    height: 2px;
+    background-color: ${COLOR_GRAY_MAINTEXT};
+    margin: 3px 0;
+  }
 `;
 
-const MenuLink = styled(Link)`
-  margin-top: 3px;
-  text-decoration: none;
-  font-family:  "Pretendard"
-  font-size: 16px;
-  font-weight: ${({ $active }) => ($active ? 700 : 500)};
-  color: ${({ $active }) => ($active ? COLOR_MUIT_RED : COLOR_BLACK)};
 
-  &:hover {
-    color: ${COLOR_MUIT_RED};
-    transition: color 0.2s;
-  }
+const NavBottom = styled.div`
+  max-width: ${MAX_WIDTH}px;
+  height: 52px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: ${COLUMN_GAP}px;
+  padding: 0 ${SIDE_MARGIN}px;
+
+  align-items: center;
 `;
