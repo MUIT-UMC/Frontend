@@ -168,7 +168,7 @@ export default Home;
 /* ------------------- Styled Components ------------------- */
 
 const HomeContainer = styled.div`
-  max-width: ${MAX_WIDTH}px;
+  width: ${MAX_WIDTH}px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(12, 1fr); /* 12열 그리드 */

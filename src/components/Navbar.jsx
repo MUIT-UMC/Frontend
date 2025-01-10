@@ -84,7 +84,7 @@ const NavContainer = styled.header`
   height: 160px;
   margin: 0 auto;
   background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  /*box-shadow: 0 2px 4px rgba(0,0,0,0.1);*/
 `;
 
 /** 12-column grid, 20px gutter, 100px side margins */
@@ -104,6 +104,7 @@ const CenterArea = styled.div`
   grid-column: 5 / 9;
   display: flex;
   justify-content: center;
+  margin:20px;
 `;
 const RightArea = styled.div`
   grid-column: 9 / 13;

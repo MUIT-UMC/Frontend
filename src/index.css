@@ -1,46 +1,6 @@
-
- /* 1) BelgianoSerif Regular*/
- @font-face {
-    font-family: "BelgianoSerif";
-    src: url("./assets/fonts/Belgiano-Serif.woff2") format("woff2");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-
-/* 2) Pretendard Regular */
-@font-face {
-    font-family: "Pretendard";
-    src: url("./assets/fonts/Pretendard-Regular.woff2") format("woff2");
-    font-weight: 400;  /* Regular */
-    font-style: normal;
-    font-display: swap;
-  }
-
-/* 3) Pretendard Medium */
-@font-face {
-    font-family: "Pretendard";
-    src: url("./assets/fonts/Pretendard-Medium.woff2") format("woff2");
-    font-weight: 500;  /* Medium */
-    font-style: normal;
-    font-display: swap;
-  }
-  
-  /* 4) Pretendard Semi Bold */
-  @font-face {
-    font-family: "Pretendard";
-    src: url("./assets/fonts/Pretendard-SemiBold.woff2") format("woff2");
-    font-weight: 600;  /* SemiBold */
-    font-style: normal;
-    font-display: swap;
-  }
-
-   /* 5) Pretendard Bold */
-   @font-face {
-    font-family: "Pretendard";
-    src: url("./assets/fonts/Pretendard-Bold.woff2") format("woff2");
-    font-weight: 700;  /* Bold */
-    font-style: normal;
-    font-display: swap;
-  }
-  
+/* 글로벌 스타일에서 기본 마진 제거 */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
