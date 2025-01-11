@@ -32,10 +32,9 @@ function App() {
         <Route path="/upcoming" element={<Upcoming />} />
         {/* 3) 시야 확인 */}
         <Route path="/vision" element={<Vision />} />
-        {/* 4) 공동 구매 */}
+        {/* 3-1) 시야확인 상세 */}
         <Route path="/vision/1" element={<VisionDetail />} />
-        {/* 4) 남는 좌석 확인 */}
-        {/* 5) 공동 구매 */}
+        {/* 4) 공동 구매 */}
         <Route path="/group-buy" element={<GroupBuy />} />
         {/* 5) 이벤트트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />
