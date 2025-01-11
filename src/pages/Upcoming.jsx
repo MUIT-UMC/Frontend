@@ -136,11 +136,11 @@ const Upcoming = () => {
   }
 
   return (
-    <Container>
+    <>
       {/* 중앙 섹션 */}
       <MainSection>
         <Today>
-          <h1>Today</h1>
+          <h1>TODAY</h1>
           <p>오늘 티켓 오픈</p>
         </Today>
         <FeaturedMusical>
@@ -172,7 +172,7 @@ const Upcoming = () => {
         ))}
         </TicketList>
       </TicketListWrapper>
-    </Container>
+    </>
   );
 };
 
@@ -180,9 +180,6 @@ const Upcoming = () => {
 export default Upcoming;
 
 // Styled Components
-const Container = styled.div`
-
-`;
 
 const MainSection = styled.div`
   display: flex;
@@ -202,6 +199,8 @@ const Today = styled.div`
     font-size: 4rem;
     margin: 0;
     color: #A00000;
+    font-family: "BelgianoSerif";
+    font-weight: 400;
   }
 
   p {

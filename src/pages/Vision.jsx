@@ -29,7 +29,6 @@ const Container = styled.div`
     align-items: center;
     flex-direction: column;
     padding-top:100px;
-
     h2{
       font-size: 24px;
     }

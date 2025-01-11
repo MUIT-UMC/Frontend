@@ -13,8 +13,7 @@ import HeartFull from '../assets/icons/heart-full.svg';
 
 function Detail() {
   return (
-    <div style={{display: 'flex', justifyContent: 'center'}}>
-      <Container>
+    <>
       {/*빨간배너 */}
       <MainBanner />
       {/* 본문 */}
@@ -104,8 +103,7 @@ function Detail() {
         </RightSection>
         </div>
       </MainContent>
-    </Container>
-    </div>
+   </>
     
   );
 }
