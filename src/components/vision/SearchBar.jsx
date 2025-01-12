@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import SearchIcon from '../../assets/icons/Search.svg'
+import SearchIcon from '../../assets/icons/Search2.svg'
 import React, { useState } from "react";
 
 

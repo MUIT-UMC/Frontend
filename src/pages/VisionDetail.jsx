@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { IoIosSearch } from "react-icons/io";
-import { FaLocationDot } from "react-icons/fa6";
 import { GoChevronRight } from "react-icons/go";
 import SearchBar from "../components/vision/SearchBar";
 import Seat1 from '../assets/images/Seat1.png'

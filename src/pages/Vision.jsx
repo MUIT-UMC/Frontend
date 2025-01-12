@@ -1,10 +1,8 @@
 
 import React, { useState } from "react";
 import styled from "styled-components";
-import { IoIosSearch } from "react-icons/io";
 import SearchBar from "../components/vision/SearchBar";
 import background from '../assets/images/searchpage.png'
-import Search from '../assets/icons/Search.svg'
 
 function Vision() {
   return (
