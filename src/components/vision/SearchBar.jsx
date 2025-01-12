@@ -24,7 +24,6 @@ const Search = styled.form`
   align-items: center;
   justify-content: space-between;
 
-  //margin-top: 140px;
   width: 508px;
   height: 40px;
 
@@ -43,7 +42,6 @@ const Search = styled.form`
     border: none;
     width: 420px;
   }
-
   .search-btn{
     cursor: pointer;
     width: 28px;
