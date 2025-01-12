@@ -12,6 +12,9 @@ import EventCheck from "./pages/EventCheck";
 import GroupBuy from "./pages/GroupBuy";
 import Board from "./pages/Board";
 import VisionDetail from "./pages/VisionDetail";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+
 import './styles/font.css';
 import styled from "styled-components";
 
@@ -43,6 +46,8 @@ function App() {
         {/* 7) 상세 페이지 */}
         <Route path="/detail" element={<Detail />} />
         {/* 추후 더 많은 라우트 필요 시 추가 */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
       </Router>
       </Container>
