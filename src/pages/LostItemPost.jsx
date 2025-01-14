@@ -2,6 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import itemImg from "../assets/images/lost-item-1.png";
 import CommentInputArea from "../components/post/CommentInputArea";
+import Comment from "../components/post/Comment";
+import Reply from "../components/post/Reply";
+
 function LostItemPost() {
   return (
     <>
@@ -48,6 +51,14 @@ function LostItemPost() {
                 <Hr marginTop='60px' marginBottom='20px'/>
                 <PostTitle marginBottom='20px'>댓글 3개</PostTitle>
                 <CommentInputArea />
+                <CommentWrapper>
+                  <Comment />
+                  <div>
+                    <Comment />
+                    <Reply />
+                  </div>
+                </CommentWrapper>
+                
 
       </LostItemPostContainer>
     </>
@@ -183,3 +194,9 @@ const Value = styled.div`
   margin-left: ${(props) => props.marginLeft ? props.marginLeft : '0px'};
 `;
 
+const CommentWrapper = styled.div`
+  padding-top: 20px;
+  & > *:not(:last-child) {
+    border-bottom: 1px solid #E6E6E6;
+  }
+`;
