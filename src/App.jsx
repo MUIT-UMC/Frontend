@@ -12,8 +12,10 @@ import EventCheck from "./pages/EventCheck";
 import GroupBuy from "./pages/GroupBuy";
 import Board from "./pages/Board";
 import VisionDetail from "./pages/VisionDetail";
+import LostItemPost from "./pages/LostItemPost";
 import './styles/font.css';
 import styled from "styled-components";
+
 
 
 function App() {
@@ -43,6 +45,9 @@ function App() {
         <Route path="/board" element={<Board />} />
         {/* 7) 상세 페이지 */}
         <Route path="/detail" element={<Detail />} />
+        {/* 추후 더 많은 라우트 필요 시 추가 */}
+
+        <Route path="/post/1" element={<LostItemPost />} />
         {/* 추후 더 많은 라우트 필요 시 추가 */}
       </Routes>
       </Router>
