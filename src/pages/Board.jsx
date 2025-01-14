@@ -3,6 +3,8 @@ import styled from "styled-components";
 import BoardMenu from "../components/board/BoardMenu";
 import LostItemSearchBar from "../components/board/LostItemSearchBar";
 import PostList from "../components/board/PostList";
+import ChevronRight from "../assets/icons/ChevronRight.svg";
+import ChevronLeft from "../assets/icons/ChevronLeft.svg";
 function Board() {
   return (
     <>
@@ -23,8 +25,15 @@ function Board() {
           </ButtonWrapper>
           <LostItemSearchBar />
           <PostList />  
+          <PageNavigatorWrapper>
+          <Img src={ChevronLeft} />
+            <PageNumber>1</PageNumber>
+            <PageNumber>2</PageNumber>
+            <PageNumber>3</PageNumber>
+            <PageNumber color='#A00000'>4</PageNumber>
+          <Img src={ChevronRight} visibility="hidden"/>
+        </PageNavigatorWrapper>
         </BoardContent>
-      
       {/* 게시판 목록, 글쓰기, 글 상세 보기 등 구현 예정 */}
     </BoardContainer>
     </>
@@ -112,4 +121,22 @@ div {
   font-weight: 500;
   line-height: normal;
 }
+`
+
+const PageNavigatorWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: center;
+  margin-top: 40px;
+  
+`
+
+const Img = styled.img`
+visibility: ${(props) => props.visibility ? props.visibility : 'visible'};
+`
+
+const PageNumber = styled.div`
+  color: ${(props) => props.color ? props.color : '#919191'};
 `
