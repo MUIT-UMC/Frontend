@@ -6,10 +6,10 @@ import starOutline from '../assets/icons/star-outline.svg';
 import PerformanceDetails from "../components/detail/PerformanceDetails";
 import EventCalendar from "../components/detail/EventCalendar";
 import MainBanner from "../components/detail/MainBanner";
-import ChevronRight from '../assets/icons/ChevronRight.svg';
-import ArrowRight from '../assets/icons/ArrowRight.svg';
-import HeartLine from '../assets/icons/heart-line.svg';
-import HeartFull from '../assets/icons/heart-full.svg';
+import ChevronRight from "../assets/icons/ChevronRight.svg";
+import ArrowRight from "../assets/icons/ArrowRight.svg";
+import HeartLine from "../assets/icons/heart-line.svg";
+import HeartFull from "../assets/icons/heart-full.svg";
 
 function Detail() {
   return (
