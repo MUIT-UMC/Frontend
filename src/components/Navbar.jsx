@@ -1,124 +1,230 @@
 
-// 임시 상단바 -> Navbar2에서 수정중 수정 완료하면 Navbar2로 대체할 예정정
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
+import hamburgerIcon from '../assets/icons/Hamburger.svg';
+import SearchIcon from '../assets/icons/Search.svg';
+import ProfileIcon from '../assets/icons/Profile.svg';
+
 //  색상
+const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";    // color-muit red-main
-const COLOR_BLACK = "#000000";       // color-gray-maintext
+const COLOR_GRAY_MAINTEXT = "#000000";
 
 const MAX_WIDTH = 1440;
 const SIDE_MARGIN = 100; // 좌우 마진
 const COLUMN_GAP = 20;   // column 간격
 
+//메뉴 색 경우의 수수
+function getMenuColor($detail, $scrolled) {
+  switch (true) {
+    // detail 페이지 & 스크롤 내려간 상태
+    case $detail && $scrolled:
+      return COLOR_GRAY_MAINTEXT; // 검정
+
+    // detail 페이지 & 맨 위
+    case $detail && !$scrolled:
+      return COLOR_WHITE; // 하양
+
+    // detail 아닌 경우(기본)
+    default:
+      return COLOR_GRAY_MAINTEXT; // 검정
+  }
+}
+
+// 로고 색 경우의 수수
+function getLogoColor($detail, $scrolled) {
+  switch (true) {
+    // detail 페이지 & 스크롤 내려간 상태
+    case $detail && $scrolled:
+      return COLOR_MUIT_RED; // 레드
+
+    // detail 페이지 & 맨 위
+    case $detail && !$scrolled:
+      return COLOR_WHITE; // 하양
+
+    // detail 아닌 경우(기본)
+    default:
+      return COLOR_MUIT_RED; // 레드
+  }
+}
+
+//바탕 색 경우의 수수
+function getNavColor($detail, $scrolled) {
+  switch (true) {
+    // detail 페이지 & 스크롤 내려간 상태
+    case $detail && $scrolled:
+      return COLOR_WHITE; // 하양
+
+    // detail 페이지 & 맨 위
+    case $detail && !$scrolled:
+      return COLOR_MUIT_RED; // 레드
+
+    // detail 아닌 경우(기본)
+    default:
+      return COLOR_WHITE; // 하양
+  }
+}
+
 function Navbar() {
+    
+    // 현재 페이지 경로 확인
   const location = useLocation();
+  // 상세 페이지인지 여부
+  const isDetailPage = location.pathname === '/detail';
+
+  // 스크롤 여부 상태
+  const [scrolled, setScrolled] = useState(false);
+
+  // 상세 페이지일 때만, 스크롤 이벤트 리스너 등록
+  useEffect(() => {
+    if (!isDetailPage) return;
+
+    const handleScroll = () => {
+      // 스크롤이 0보다 크면 true, 0이면 false
+      setScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isDetailPage]);
+
 
   return (
     <NavContainer>
-      {/* 윗줄: 로고 중앙, 오른쪽 아이콘 */}
-      <GridRow>
-        <LeftArea />
+      {/* 상단부 */}
+      <NavTop $detail={isDetailPage} $scrolled={scrolled}>
+        <LeftArea>
+          {isDetailPage && (
+            <HamburgerMenu>
+              <img src={hamburgerIcon} alt="Hamburger Icon" />
+            </HamburgerMenu>
+          )}  
+        </LeftArea>
         <CenterArea>
-          <LogoLink to="/">MUIT</LogoLink>
+          <LogoLink to="/" $detail={isDetailPage} $scrolled={scrolled}>MUIT</LogoLink>
         </CenterArea>
         <RightArea>
-          <Icon>🔍</Icon>
-          <Icon>👤</Icon>
+          <Icon $detail={isDetailPage} $scrolled={scrolled}><img src={SearchIcon} alt="Search Icon" /></Icon>
+          <Icon $detail={isDetailPage} $scrolled={scrolled}><img src={ProfileIcon} alt="Profile Icon" /></Icon>
         </RightArea>
-      </GridRow>
+      </NavTop>
 
-      {/* 아랫줄: 메뉴 6개 */}
-      <GridRow style={{ paddingTop: "16px", paddingBottom: "16px" }}>
-        <MenuArea>
-          <MenuLink
-            to="/"
-            $active={location.pathname === "/"}
-          >
-            뮤지컬 전체 보기
-          </MenuLink>
-          <MenuLink
-            to="/upcoming"
-            $active={location.pathname === "/upcoming"}
-          >
-            오픈예정
-          </MenuLink>
-          <MenuLink
-            to="/vision"
-            $active={location.pathname === "/vision"}
-          >
-            시야확인
-          </MenuLink>
-          <MenuLink
-            to="/group-buy"
-            $active={location.pathname === "/group-buy"}
-          >
-            공동구매
-          </MenuLink>
-          <MenuLink
-            to="/event-check"
-            $active={location.pathname === "/event-check"}
-          >
-            이벤트 확인
-          </MenuLink>
-          <MenuLink
-            to="/board"
-            $active={location.pathname === "/board"}
-          >
-            게시판
-          </MenuLink>
-        </MenuArea>
-      </GridRow>
+      {/* 하단부 */}
+
+      {!isDetailPage && (
+        <NavBottom>
+          <MenuArea>
+            <MenuLink
+              to="/"
+              $active={location.pathname === "/"}
+            >
+              뮤지컬 전체 보기
+            </MenuLink>
+            <MenuLink
+              to="/upcoming"
+              $active={location.pathname === "/upcoming"}
+            >
+              오픈예정
+            </MenuLink>
+            <MenuLink
+              to="/vision"
+              $active={location.pathname === "/vision"}
+            >
+              시야확인
+            </MenuLink>
+            <MenuLink
+              to="/group-buy"
+              $active={location.pathname === "/group-buy"}
+            >
+              공동구매
+            </MenuLink>
+            <MenuLink
+              to="/event-check"
+              $active={location.pathname === "/event-check"}
+            >
+              이벤트 확인
+            </MenuLink>
+            <MenuLink
+              to="/board"
+              $active={location.pathname === "/board"}
+            >
+              게시판
+            </MenuLink>
+          </MenuArea>
+        </NavBottom>
+      )}
     </NavContainer>
-  );
+  )
+
 }
 
 export default Navbar;
 
-/* ---------------- Styled Components ----------------*/
+/* ---------------- Styled Components ---------------- */
 
 const NavContainer = styled.header`
-  max-width: 1440px;
-  height: 160px;
+  display: flex;
+  flex-direction: column;
+  max-width: ${MAX_WIDTH}px;
+  background-color: ${COLOR_WHITE};
   margin: 0 auto;
-  background-color: #ffffff;
-  /*box-shadow: 0 2px 4px rgba(0,0,0,0.1);*/
+  position: relative;
 `;
 
-/** 12-column grid, 20px gutter, 100px side margins */
-const GridRow = styled.div`
+const NavTop = styled.div`
+  max-width: ${MAX_WIDTH}px;
+  height: 108px;
+
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  column-gap: 20px;
-  padding-left: 100px;
-  padding-right: 100px;
+  column-gap: ${COLUMN_GAP}px;
+  padding: 0 ${SIDE_MARGIN}px;
   align-items: center;
+  justify-item: center;
+
+  background-color: ${({ $detail, $scrolled }) => getNavColor($detail, $scrolled)};
 `;
 
 const LeftArea = styled.div`
   grid-column: 1 / 5;
+  display:  flex;
+  justify-content:  flex-start;
+  align-items:  center;
 `;
+
 const CenterArea = styled.div`
   grid-column: 5 / 9;
-  display: flex;
-  justify-content: center;
-  margin:20px;
+  display:  flex;
+  justify-content:  center;
+  align-items:  center;
 `;
+
 const RightArea = styled.div`
   grid-column: 9 / 13;
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
+  display:  flex;
+  justify-content:  flex-end;
+  align-items:  center;
+  gap: 20px;
+`;
+
+const HamburgerMenu = styled.div`
+  width:  36px;
+  height: 36px;
+  cursor: pointer;
+  align-self: center;
+  color: ${({ $detail, $scrolled }) => getMenuColor($detail, $scrolled)};
 `;
 
 const LogoLink = styled(Link)`
+  text-decoration: none;
   font-family:  "BelgianoSerif";
   font-size: 48px;
   font-weight: 400;
-  text-decoration: none;
-  color: ${COLOR_MUIT_RED};
+  cursor:  pointer;
+
+  color: ${({ $detail, $scrolled }) => getLogoColor($detail, $scrolled)};
 
   &:hover {
     color: #800000;
@@ -126,25 +232,40 @@ const LogoLink = styled(Link)`
 `;
 
 const Icon = styled.span`
-  font-weight:  400;
-  font-size: 24px;
+  width:  36px;
+  height: 36px;
   cursor: pointer;
+  align-self: center;
+  color: ${({ $detail, $scrolled }) => getMenuColor($detail, $scrolled)};
 `;
 
-/** 두 번째 줄 전체 (columns 1~12) */
+
+const NavBottom = styled.div`
+  max-width: ${MAX_WIDTH}px;
+  height: 52px;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: ${COLUMN_GAP}px;
+  padding: 0 ${SIDE_MARGIN}px;
+
+  align-content:  center;
+  justify-content:  space-evenly;
+`;
+
 const MenuArea = styled.div`
   grid-column: 1 / 13;
-  display: flex;
-  justify-content: space-between;
+  display:  flex;
+  justify-content:  space-evenly;
+  align-items:  center;
 `;
 
 const MenuLink = styled(Link)`
-  margin-top: 3px;
   text-decoration: none;
   font-family:  "Pretendard"
   font-size: 16px;
   font-weight: ${({ $active }) => ($active ? 700 : 500)};
-  color: ${({ $active }) => ($active ? COLOR_MUIT_RED : COLOR_BLACK)};
+  color: ${({ $active }) => ($active ? COLOR_MUIT_RED : COLOR_GRAY_MAINTEXT)};
 
   &:hover {
     color: ${COLOR_MUIT_RED};

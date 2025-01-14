@@ -13,6 +13,10 @@ import GroupBuy from "./pages/GroupBuy";
 import Board from "./pages/Board";
 import VisionDetail from "./pages/VisionDetail";
 import LostItemPost from "./pages/LostItemPost";
+
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+
 import './styles/font.css';
 import styled from "styled-components";
 
@@ -34,21 +38,21 @@ function App() {
         <Route path="/upcoming" element={<Upcoming />} />
         {/* 3) 시야 확인 */}
         <Route path="/vision" element={<Vision />} />
-        {/* 4) 공동 구매 */}
+        {/* 3-1) 시야확인 상세 */}
         <Route path="/vision/1" element={<VisionDetail />} />
-        {/* 4) 남는 좌석 확인 */}
-        {/* 5) 공동 구매 */}
+        {/* 4) 공동 구매 */}
         <Route path="/group-buy" element={<GroupBuy />} />
-        {/* 5) 이벤트트 확인 */}
+        {/* 5) 이벤트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />
-        {/* 6) 게시판 */}
+        {/* 6) 게시판/게시글 */}
         <Route path="/board" element={<Board />} />
+        <Route path="/post/1" element={<LostItemPost />} />
         {/* 7) 상세 페이지 */}
         <Route path="/detail" element={<Detail />} />
-        {/* 추후 더 많은 라우트 필요 시 추가 */}
+        {/* 9) 로그인/회원가입 */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
 
-        <Route path="/post/1" element={<LostItemPost />} />
-        {/* 추후 더 많은 라우트 필요 시 추가 */}
       </Routes>
       </Router>
       </Container>
