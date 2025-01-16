@@ -1,11 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import BoardMenu from "../components/board/BoardMenu";
-import LostItemSearchBar from "../components/board/LostItemSearchBar";
-import PostList from "../components/board/PostList";
-import ChevronRight from "../assets/icons/ChevronRight.svg";
-import ChevronLeft from "../assets/icons/ChevronLeft.svg";
+import BoardMenu from "../../components/board/BoardMenu";
+import LostItemSearchBar from "../../components/board/LostItemSearchBar";
+import PostList from "../../components/board/PostList";
+import ChevronRight from "../../assets/icons/ChevronRight.svg";
+import ChevronLeft from "../../assets/icons/ChevronLeft.svg";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 function Board() {
+  const { category, type } = useParams();
+  const navigate = useNavigate();
+
+  let categoryName;
+  let navItems;
+  switch(category) {
+    case "item":
+      categoryName = "분실물";
+      navItems = [
+        { id: 'lost', name: '분실' },
+        { id: 'found', name: '습득' },
+      ];
+      break;
+    case "anonymous":
+      categoryName = "익명";
+      navItems = [
+        { id: 'all', name: '전체' },
+        { id: 'hot', name: 'HOT' },
+      ];
+      break;
+    case "review":
+      categoryName = "리뷰";
+      navItems = [
+        { id: 'musical', name: '뮤지컬 리뷰' },
+        { id: 'seats', name: '시야 리뷰' },
+      ];
+      break;
+  }
+  
   return (
     <>
       <BoardContainer>
@@ -13,13 +45,27 @@ function Board() {
         <BoardMenu />
         </BoardMenuWrapper>
         <BoardContent>
+          {/* 헤더*/}
           <BoardHeader>
-          <h1>분실물 게시판</h1><Button>글쓰기</Button>
+          <h1>{categoryName} 게시판</h1><Button>글쓰기</Button>
           </BoardHeader>
           <SubMenu>
-            <div style={{color: '#A00000', fontWeight: '700'}}>분실</div>
-            <div>습득</div>
+          {navItems.map((item) => (
+          <NavItem
+            key={item.id}
+            isActive={type === item.id}
+            onClick={() => {
+              navigate(`/board/${category}/${item.id}`);
+            }}
+            
+          >
+            {item.name}
+          </NavItem>
+        ))}
           </SubMenu>
+
+          <Content>
+        {type === 'lost' && <>
           <ButtonWrapper>
             <Button background='none' color='#A00000' marginBottom='8px'>검색</Button>
           </ButtonWrapper>
@@ -33,6 +79,12 @@ function Board() {
             <PageNumber color='#A00000'>4</PageNumber>
           <Img src={ChevronRight} visibility="hidden"/>
         </PageNavigatorWrapper>
+        </>}
+        {type === 'found' && <div>캐스팅 정보 내용</div>}
+        {type === 'view-guide' && <div>시야 확인 내용</div>}
+        {type === 'reviews' && <div>관람 후기 내용</div>}
+      </Content>
+         
         </BoardContent>
       {/* 게시판 목록, 글쓰기, 글 상세 보기 등 구현 예정 */}
     </BoardContainer>
@@ -139,4 +191,12 @@ visibility: ${(props) => props.visibility ? props.visibility : 'visible'};
 
 const PageNumber = styled.div`
   color: ${(props) => props.color ? props.color : '#919191'};
+`
+
+const NavItem = styled.div`
+  color: ${(isActive) => isActive ? '#A00000' : '#919191'};
+  font-weight: ${(isActive) => isActive ? '700' : '300'};
+`
+
+const Content = styled.div`
 `

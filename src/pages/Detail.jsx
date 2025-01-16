@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import poster from "../assets/images/miafamiglia-poster.png";
+import posterImg from "../assets/images/miafamiglia-poster.png";
 import starFull from '../assets/icons/star-full.svg';
 import starOutline from '../assets/icons/star-outline.svg';
 import PerformanceDetails from "../components/detail/PerformanceDetails";
@@ -10,8 +10,19 @@ import ChevronRight from "../assets/icons/ChevronRight.svg";
 import ArrowRight from "../assets/icons/ArrowRight.svg";
 import HeartLine from "../assets/icons/heart-line.svg";
 import HeartFull from "../assets/icons/heart-full.svg";
+import Info from "../components/detail/Info";
+import Price from "../components/detail/Price";
 
 function Detail() {
+  const poster = posterImg;
+  const details = [
+    { label: "장소", value: "링크아트센터 드림1관", extra: { text: "시야 확인하기" } },
+    { label: "공연 기간", value: "2024.12.10 ~ 2025.03.23" },
+    { label: "공연 시간", value: "110분 (인터미션 없음)" },
+    { label: "관람 연령", value: "중학생 이상 관람가" },
+    { label: "출연", value: "김도빈, 황민수, 김찬종, 조풍해, 최호승, 장민수, 박영수, 문경초, 박좌현" },
+    { label: "가격", value: <Price />, extra: null }, // 가격 상세 구현 필요
+  ];
   return (
     <>
       {/*빨간배너 */}
@@ -21,11 +32,13 @@ function Detail() {
         <div style={{margin:'60px 100px', display: 'flex', flexDirection: 'row', justifyContent:'space-between'}}>
            {/* 공연 상세 정보, 예매 버튼, 캐스팅 정보 등 구현 예정 */}
         <LeftSection>
+
         <TitleWrapper>
           <h1>미아 파밀리아</h1>
           <img src={HeartLine} />
           <button>공동 구매 가능</button>
         </TitleWrapper>
+
         <RatingWrapper>
           <img src={starFull} alt="Star Full Icon" />
           <img src={starFull} alt="Star Full Icon" />
@@ -34,65 +47,9 @@ function Detail() {
           <img src={starOutline} alt="Star Outline Icon" />
           <Rating>4.0</Rating>
         </RatingWrapper>
-        <InfoWrapper>
-          <InfoImage>
-            <img alt="뮤지컬 포스터" src={poster} />
-          </InfoImage>
-          <InfoDetail>
-            <Item>
-              <Label>장소</Label>
-              <div>
-                <Value>링크아트센터 드림1관</Value>
-                <div style={{ display: 'flex', 
-                              flexDirection: 'row', 
-                              gap: '4px', 
-                              marginTop:'11px'}}>
-                  <SightLink>시야 확인하기</SightLink>
-                  <img src={ChevronRight}  />
-                </div>
-              </div>
-            </Item>
-            <Item>
-              <Label>공연 기간</Label>
-              <Value>2024.12.10 ~ 2025.03.23</Value>
-            </Item>
-            <Item>
-              <Label>공연 시간</Label>
-              <Value>110분 (인터미션 없음)</Value>
-            </Item>
-            <Item>
-              <Label>관람 연령</Label>
-              <Value>중학생 이상 관람가</Value>
-            </Item>
-            <Item>
-              <Label>출연</Label>
-              <Value>김도빈, 황민수, 김찬종, 조풍해, 최호승, 장민수, 박영수, 문경초, 박좌현</Value>
-            </Item>
-            <Item>
-              {/* 추후 컴포넌트화 해야할듯 */}
-              <Label>가격</Label>
-              <div style={{display: 'flex', flexDirection:'column', gap:'10px'}}>
-                <Value color='#A00000' fontSize='14px'>공동 구매시 20% 할인</Value>
-                <div style={{display:'flex', flexDirection:'row'}}>
-                  <Value width='28px' color='#919191' marginRight='16px'>R석</Value>
-                  <Value width='68px' strikethrough='true' color='#919191' marginRight='6px'>70,000원</Value>
-                  <img src={ArrowRight} />
-                  <Value width='68px' marginLeft='8px'>56,000원</Value>
-                </div>
-                <div style={{display:'flex', flexDirection:'row'}}>
-                  <Value width='28px' color='#919191' marginRight='16px'>S석</Value>
-                  <Value width='68px' strikethrough='true' color='#919191' marginRight='6px'>60,000원</Value>
-                  <img src={ArrowRight} />
-                  <Value width='68px' marginLeft='8px'>48,000원</Value>
-                </div>
-                <div style={{display:'flex', flexDirection:'row'}}>
-                  <Value width='28px' color='#919191' marginRight='16px'>A석</Value>
-                  <Value width='68px'>40,000원</Value>
-                </div>
-              </div>
-            </Item>
-          </InfoDetail>
-        </InfoWrapper>
+
+        <Info image={poster} alt='포스터 이미지' height='430px' details={details} />
+
         {/*하단 nav bar */}
         <PerformanceDetails/>
         </LeftSection>

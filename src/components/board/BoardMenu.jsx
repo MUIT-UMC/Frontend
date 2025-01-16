@@ -1,25 +1,36 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 function BoardMenu() {
+
+  const navigate = useNavigate();
   return (
   <>
     <MenuContainer>
       <MenuGroup>
           <MainMenu color='#A00000'>분실물 게시판</MainMenu>
           <SubMenu>
-            <Li color='#A00000'>분실</Li>
-            <Li>습득</Li>
+            <Li color='#A00000' to="/board/item/lost">분실</Li>
+            <Li to="/board/item/found">습득</Li>
           </SubMenu>
         </MenuGroup>
         <hr />
         <MenuGroup>
           <MainMenu>익명 게시판</MainMenu>
+          <SubMenu>
+            <Li to="/board/anonymous/all">전체</Li>
+            <Li to="/board/anonymous/hot">HOT</Li>
+          </SubMenu>
         </MenuGroup>
         <hr />
         <MenuGroup>
-          <MainMenu>시야/리뷰 게시판</MainMenu>
+          <MainMenu>리뷰 게시판</MainMenu>
+          <SubMenu>
+            <Li to="/board/review/musical">뮤지컬 리뷰</Li>
+            <Li to="/board/review/seats">시야 리뷰</Li>
+          </SubMenu>
         </MenuGroup>
       </MenuContainer>
   </>
@@ -41,8 +52,8 @@ const MenuContainer = styled.div`
 
   hr {
   border: none;
-  border-top: 1px solid #E6E6E6; /* 가로선 생성 */
-  width: 100%; /* 부모 요소 너비에 맞춤 */
+  border-top: 1px solid #E6E6E6; 
+  width: 100%; 
   margin: 0px;
 }
 `;
@@ -56,13 +67,11 @@ const MenuGroup = styled.div`
 const MainMenu = styled.div`
   color: ${(props) => props.color ? props.color : '#919191'};
 
-  /* Body-me */
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
    &:hover {
-      font-weight: 900;
     }
   `
   ;
@@ -77,23 +86,19 @@ const SubMenu = styled.ul`
   }
 `;
 
-const Li = styled.li`
+const Li = styled(Link)`
   font-family: Pretendard;
-    font-size: 16px;
-    font-weight: normal;
-    color: ${(props) => props.color ? props.color : '#919191'};
-    cursor: pointer;
-     list-style: none; /* 기본 목록 스타일 제거 */
+  font-size: 16px;
+  font-weight: normal;
+  color: ${(props) => (props.color ? props.color : "#919191")};
+  cursor: pointer;
+  text-decoration: none; 
+  display: block; 
 
-    /* 대시 추가 */
-    &::before {
-      content: '-'; /* 대시(-) 추가 */
-      margin-right: 8px; /* 텍스트와 대시 간격 조절 */
-      color: ${(props) => props.color ? props.color : '#919191'}; /* 대시 색상 */
+  &::before {
+    content: "-"; 
+    margin-right: 8px; 
+    color: ${(props) => (props.color ? props.color : "#919191")}; 
+    text-decoration: none;
     }
-
-    &:hover {
-      font-weight: 900;
-    }
-   
-`
+`;
