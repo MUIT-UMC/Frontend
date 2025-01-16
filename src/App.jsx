@@ -9,6 +9,7 @@ import Upcoming from "./pages/Upcoming";
 import Detail from "./pages/Detail";
 import Vision from "./pages/Vision";
 import EventCheck from "./pages/EventCheck";
+import EventDetail from "./pages/EventDetail";
 import GroupBuy from "./pages/GroupBuy";
 import Board from "./pages/Board";
 import VisionDetail from "./pages/VisionDetail";
@@ -41,6 +42,7 @@ function App() {
         <Route path="/group-buy" element={<GroupBuy />} />
         {/* 5) 이벤트트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />
+        <Route path="/event-check/:musicalId" element={<EventDetail/>}/>
         {/* 6) 게시판 */}
         <Route path="/board" element={<Board />} />
         {/* 7) 상세 페이지 */}
