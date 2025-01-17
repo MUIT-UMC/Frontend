@@ -36,7 +36,8 @@ export default function Navbar() {
         location.pathname.startsWith("/group-buy/") ||
         location.pathname.startsWith("/event-check/") ||
         location.pathname.startsWith("/board/") ||
-        location.pathname.startsWith("/search")
+        location.pathname.startsWith("/search") ||
+        location.pathname.startsWith("/mypage")
       ) && <NavbarSidebar/>}
       {/* 상세페이지 상단바 */}
       {location.pathname.startsWith("/detail") && <NavbarDetail/>}
