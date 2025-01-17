@@ -1,21 +1,34 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { IoIosSearch } from "react-icons/io";
+import { FaLocationDot } from "react-icons/fa6";
 import { GoChevronRight } from "react-icons/go";
-import SearchBar from "../components/vision/SearchBar";
 import Seat1 from '../assets/images/Seat1.png'
 import bluesquare1723 from '../assets/images/bluesquare1-7-23.png'
-import Location from '../assets/icons/location.svg'
 
-function VisionDetail() {
+const VisionDetail = () => {
+    const [searchValue, setSearchValue] = useState("");
+    const onChange = (e) => {
+        setSearchValue(e.target.value);
+      }
+
     return(
         <Container>
-            <SearchBar/>
+            <SearchBar>
+                <input className="search-txt"
+                    value={searchValue} onChange={onChange}
+                    placeholder="뮤지컬이나 공연장을 입력해주세요." />
+                <IoIosSearch
+                    className="search-btn"
+                    size={28} color="#C1C1C1" />
+            </SearchBar>
             <DetailArea>
                 {/*API받게 될 부분*/}
                 <img src={Seat1} className="seat-img"/>
 
                 <SeatInfo> 
-                    <img src={Location} alt="location-icon"/>
+                    <FaLocationDot
+                    size={28} color="#A00000"/>
 
                     <h3 className="title-B">블루스퀘어 신한카드홀</h3>    
                     <p className="body-M-500">서울 용산구 이태원로 294</p>
@@ -47,12 +60,40 @@ function VisionDetail() {
 }
 
 const Container = styled.div`
-    padding: 80px 100px 0px 100px;
-    display: flex;
-    flex-direction: column;
-    gap: 40px; 
+    padding: 0px 100px 0px 100px;
+    width:140px;
 
-    font-family: Pretendard;
+`
+const SearchBar = styled.form`
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 80px;
+  margin-bottom: 40px;
+
+  width: 508px;
+  height: 40px;
+
+  border: 1px solid #C1C1C1;
+  border-radius: 3px;
+
+  padding: 8px 20px 8px 20px;
+
+  input::placeholder{
+    font-size: 16px;
+    color: #919191;
+  }
+
+  .search-txt{
+    border: none;
+    width: 420px;
+  }
+
+  .search-btn{
+    cursor: pointer;
+  }
 `
 const DetailArea = styled.div`
     display: flex;
@@ -77,8 +118,7 @@ const SeatInfo = styled.div`
     .ShowTitle{
         font-size: 16px;
         font-weight: 700;
-        color: #000000;     
-        cursor: pointer; 
+        color: #000000;      
     }
     .hr-line{
         border-color: #E6E6E6;

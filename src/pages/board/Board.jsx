@@ -14,6 +14,32 @@ function Board() {
 
   let categoryName;
   let navItems;
+
+  const menus = [
+    {
+      title: "분실물 게시판",
+      color: "#A00000",
+      subMenus: [
+        { name: "분실", link: "/board/item/lost", color: "#A00000" },
+        { name: "습득", link: "/board/item/found" },
+      ],
+    },
+    {
+      title: "익명 게시판",
+      subMenus: [
+        { name: "전체", link: "/board/anonymous/all" },
+        { name: "HOT", link: "/board/anonymous/hot" },
+      ],
+    },
+    {
+      title: "리뷰 게시판",
+      subMenus: [
+        { name: "뮤지컬 리뷰", link: "/board/review/musical" },
+        { name: "시야 리뷰", link: "/board/review/seats" },
+      ],
+    },
+  ];
+  
   switch(category) {
     case "item":
       categoryName = "분실물";
@@ -42,7 +68,7 @@ function Board() {
     <>
       <BoardContainer>
         <BoardMenuWrapper>
-        <BoardMenu />
+        <BoardMenu menus={menus} />
         </BoardMenuWrapper>
         <BoardContent>
           {/* 헤더*/}

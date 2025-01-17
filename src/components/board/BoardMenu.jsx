@@ -3,45 +3,35 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-function BoardMenu() {
-
-  const navigate = useNavigate();
+function BoardMenu({ menus }) {
   return (
-  <>
     <MenuContainer>
-      <MenuGroup>
-          <MainMenu color='#A00000'>분실물 게시판</MainMenu>
+      {menus.map((menu, index) => (
+        <MenuGroup key={index}>
+          <MainMenu color={menu.color}>{menu.title}</MainMenu>
           <SubMenu>
-            <Li color='#A00000' to="/board/item/lost">분실</Li>
-            <Li to="/board/item/found">습득</Li>
+            {menu.subMenus.map((subMenu, subIndex) => (
+              <Li
+                key={subIndex}
+                to={subMenu.link}
+                color={subMenu.color}
+              >
+                {subMenu.name}
+              </Li>
+            ))}
           </SubMenu>
+          {index < menus.length - 1 && <hr />}
         </MenuGroup>
-        <hr />
-        <MenuGroup>
-          <MainMenu>익명 게시판</MainMenu>
-          <SubMenu>
-            <Li to="/board/anonymous/all">전체</Li>
-            <Li to="/board/anonymous/hot">HOT</Li>
-          </SubMenu>
-        </MenuGroup>
-        <hr />
-        <MenuGroup>
-          <MainMenu>리뷰 게시판</MainMenu>
-          <SubMenu>
-            <Li to="/board/review/musical">뮤지컬 리뷰</Li>
-            <Li to="/board/review/seats">시야 리뷰</Li>
-          </SubMenu>
-        </MenuGroup>
-      </MenuContainer>
-  </>
-  )
+      ))}
+    </MenuContainer>
+  );
 }
 
 export default BoardMenu;
 
 const MenuContainer = styled.div`
   display: flex;
-  width: 174px;
+  width: ${(props) => props.width? props.width : '174px'};
   padding: 12px;
   flex-direction: column;
   align-items: flex-start;
@@ -62,6 +52,7 @@ const MenuContainer = styled.div`
 const MenuGroup = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const MainMenu = styled.div`
