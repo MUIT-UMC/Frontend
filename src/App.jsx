@@ -11,9 +11,9 @@ import Vision from "./pages/Vision";
 import EventCheck from "./pages/EventCheck";
 import EventDetail from "./pages/EventDetail";
 import GroupBuy from "./pages/GroupBuy";
-import Board from "./pages/Board";
+import Board from "./pages/board/Board";
 import VisionDetail from "./pages/VisionDetail";
-import LostItemPost from "./pages/LostItemPost";
+import LostItemPost from "./pages/board/LostItemPost";
 
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -45,11 +45,15 @@ function App() {
         <Route path="/group-buy" element={<GroupBuy />} />
         {/* 5) 이벤트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />
+
+        {/* 6) 게시판/게시글 */}
+        <Route path="/board/:category/:type" element={<Board />} />
+        <Route path="/board/lost/1" element={<LostItemPost />} />
+
         <Route path="/event-check/:musicalId" element={<EventDetail/>}/>
         {/* 6) 게시판 */}
 
-        <Route path="/board" element={<Board />} />
-        <Route path="/post/1" element={<LostItemPost />} />
+      
         {/* 7) 상세 페이지 */}
         <Route path="/detail" element={<Detail />} />
         {/* 9) 로그인/회원가입 */}

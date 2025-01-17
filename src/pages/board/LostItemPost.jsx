@@ -1,63 +1,53 @@
 import React from "react";
 import styled from "styled-components";
-import itemImg from "../assets/images/lost-item-1.png";
-import CommentInputArea from "../components/post/CommentInputArea";
-import Comment from "../components/post/Comment";
-import Reply from "../components/post/Reply";
+import itemImg from "../../assets/images/lost-item-1.png";
+import CommentInputArea from "../../components/post/CommentInputArea";
+import Comment from "../../components/post/Comment";
+import Reply from "../../components/post/Reply";
+import Info from "../../components/detail/Info";
 
 function LostItemPost() {
+
+  
+  const title = "아이폰 16프로 화이트 티타늄";
+  const board = "분실";
+  const user = "최윤경";
+  const date = "2025-01-05";
+const image = itemImg;
+    const details = [
+      { label: "뮤지컬명", value: "알라딘"},
+      { label: "장소", value: "링크아트센터드림 드림1관" },
+      { label: "일시", value: "2025.01.05 | 14:00-16:00" },
+      { label: "물품명", value: "아이폰 16 pro 화이트 티타늄" },
+      { label: "특징", value: "짱구케이스 끼고 있고...맹구 콧물 돌아가는 모양의 케이스에요..배경화면은 사진으로 참고할게요 이렇게 생겼습니다. 여자화장실 세면대쪽 손 씻을때 빠졌을까요 아니면 공연장에서 주머니에서 빠졌을까요ㅜㅜ 찾거나 보신 분들은 댓글로 남겨주세요...감사합니다ㅠㅠ" },
+    ];
+
   return (
     <>
       <LostItemPostContainer>
         <TitleWrapper>
-        <PostTitle>아이폰 16프로 화이트 티타늄</PostTitle><BoardName>분실</BoardName>
+        <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
         </TitleWrapper>
         <SubTitleWrapper>
-          <User>최윤경</User><PostDate>2025-01-05</PostDate>
+          <User>{user}</User><PostDate>{date}</PostDate>
         </SubTitleWrapper>
+
         <Hr marginTop='20px' marginBottom='36px'/>
-        <ItemInfoWrapper>
-                  <ItemImage>
-                    <img alt="뮤지컬 포스터" src={itemImg} />
-                  </ItemImage>
-                  <ItemDetail>
-                    <Item>
-                      <Label>뮤지컬명</Label>
-                      <div>
-                        <Value>알라딘</Value>
-                      </div>
-                    </Item>
-                    <Item>
-                      <Label>분실장소</Label>
-                      <Value>링크아트센터드림 드림1관</Value>
-                    </Item>
-                    <Item>
-                      <Label>분실일</Label>
-                      <Value>2025.01.05 | 14:00-16:00</Value>
-                    </Item>
-                    <Item>
-                      <Label>분실물명</Label>
-                      <Value>아이폰 16 pro 화이트 티타늄</Value>
-                    </Item>
-                    <Item>
-                      <Label>특징</Label>
-                      <Value>짱구케이스 끼고 있고...맹구 콧물 돌아가는 모양의 케이스에요..배경화면은 사진으로 참고할게요 
-이렇게 생겼습니다. 
-여자화장실 세면대쪽 손 씻을때 빠졌을까요 아니면 공연장에서 주머니에서 빠졌을까요ㅜㅜ
-찾거나 보신 분들은 댓글로 남겨주세요...감사합니다ㅠㅠ</Value>
-                    </Item>
-                  </ItemDetail>
-                </ItemInfoWrapper>
-                <Hr marginTop='60px' marginBottom='20px'/>
-                <PostTitle marginBottom='20px'>댓글 3개</PostTitle>
-                <CommentInputArea />
-                <CommentWrapper>
-                  <Comment />
-                  <div>
-                    <Comment />
-                    <Reply />
-                  </div>
-                </CommentWrapper>
+
+        <Info image={image} alt="물품 이미지" details={details} valueWidth='600px'/>
+        
+        <Hr marginTop='60px' marginBottom='20px'/>
+
+        {/*댓글 작성부분 - 한 컴포넌트로 묶기 */}
+        <PostTitle marginBottom='20px'>댓글 3개</PostTitle>
+        <CommentInputArea />
+        <CommentWrapper>
+          <Comment />
+          <div>
+            <Comment />
+            <Reply />
+          </div>
+        </CommentWrapper>
                 
 
       </LostItemPostContainer>

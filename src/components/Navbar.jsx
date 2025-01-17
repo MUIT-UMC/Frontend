@@ -147,7 +147,7 @@ function Navbar() {
               이벤트 확인
             </MenuLink>
             <MenuLink
-              to="/board"
+              to="/board/item/lost"
               $active={location.pathname === "/board"}
             >
               게시판
