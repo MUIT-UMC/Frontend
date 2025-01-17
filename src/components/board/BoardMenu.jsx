@@ -1,20 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 
-function BoardMenu({ menus }) {
+function BoardMenu({ menus, defaultColor = "#919191" }) {
   return (
     <MenuContainer>
       {menus.map((menu, index) => (
         <MenuGroup key={index}>
-          <MainMenu color={menu.color}>{menu.title}</MainMenu>
+          <MainMenu color={menu.color || defaultColor}>{menu.title}</MainMenu>
           <SubMenu>
             {menu.subMenus.map((subMenu, subIndex) => (
               <Li
                 key={subIndex}
                 to={subMenu.link}
-                color={subMenu.color}
+                color={subMenu.color || defaultColor}
               >
                 {subMenu.name}
               </Li>
@@ -31,7 +30,7 @@ export default BoardMenu;
 
 const MenuContainer = styled.div`
   display: flex;
-  width: ${(props) => props.width? props.width : '174px'};
+  width: ${(props) => (props.width ? props.width : "174px")};
   padding: 12px;
   flex-direction: column;
   align-items: flex-start;
@@ -41,13 +40,12 @@ const MenuContainer = styled.div`
   background: none;
 
   hr {
-  border: none;
-  border-top: 1px solid #E6E6E6; 
-  width: 100%; 
-  margin: 0px;
-}
+    border: none;
+    border-top: 1px solid #e6e6e6;
+    width: 100%;
+    margin: 0px;
+  }
 `;
-
 
 const MenuGroup = styled.div`
   display: flex;
@@ -56,40 +54,34 @@ const MenuGroup = styled.div`
 `;
 
 const MainMenu = styled.div`
-  color: ${(props) => props.color ? props.color : '#919191'};
-
+  color: ${(props) => props.color || "#919191"};
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-   &:hover {
-    }
-  `
-  ;
+`;
 
 const SubMenu = styled.ul`
   list-style-type: none;
   padding: 0px;
-  margin: 8px;
-
-  li {
-    
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* li 간의 간격 설정 */
 `;
 
 const Li = styled(Link)`
   font-family: Pretendard;
   font-size: 16px;
   font-weight: normal;
-  color: ${(props) => (props.color ? props.color : "#919191")};
+  color: ${(props) => props.color || "#919191"};
   cursor: pointer;
-  text-decoration: none; 
-  display: block; 
+  text-decoration: none;
+  display: block;
 
   &::before {
-    content: "-"; 
-    margin-right: 8px; 
-    color: ${(props) => (props.color ? props.color : "#919191")}; 
+    content: "-";
+    margin-right: 8px;
+    color: ${(props) => props.color || "#919191"};
     text-decoration: none;
-    }
+  }
 `;

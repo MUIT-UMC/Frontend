@@ -62,6 +62,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         {/* 마이페이지 */}
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/:category/:type" element={<MyPage />} />
       </Routes>
       </Router>
       </Container>

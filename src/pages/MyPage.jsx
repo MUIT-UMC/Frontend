@@ -32,8 +32,15 @@ function MyPage() {
   ];
   return (
     <MyPageWrapper>
-      <h1>마이페이지</h1>
-      <BoardMenu menus={menus} />
+      <Aside>
+        <User>최윤경님</User>
+        <Id>rose06166</Id>
+        <BoardMenu menus={menus} defaultColor="#000" />
+      </Aside>
+      <Main>
+        <PageTitle>회원정보 수정</PageTitle>
+      </Main>
+     
       {/* 공동 구매 기능 구현 */}
     </MyPageWrapper>
   );
@@ -43,4 +50,48 @@ export default MyPage;
 
 const MyPageWrapper = styled.div`
   margin: 80px 100px;
+  display: flex;
+  flex-direction: row;
+  gap: 115px;
+`
+
+const Aside = styled.div`
+`
+
+const Main = styled.div`
+`
+
+const User = styled.div`  
+color: #000;
+
+/* Title-semibo */
+font-family: Pretendard;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+margin-bottom: 8px;
+`
+
+const Id = styled.div`
+color: var(--Gray-sub, #919191);
+
+/* Body-me */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 25px; /* 156.25% */
+
+margin-bottom: 28px;
+`
+const PageTitle = styled.div`
+color: #000;
+
+/* Title-semibo */
+font-family: Pretendard;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
 `
