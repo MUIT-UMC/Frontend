@@ -69,6 +69,8 @@ const SignUpBtn = styled.button`
     justify-content:center;
     align-items: center;
 
+    cursor: pointer;
+
     border: 1px solid ${(props) => props.border || props.bgcolor};
     background: ${(props) => props.bgcolor};
 
@@ -80,7 +82,7 @@ const SignUpBtn = styled.button`
     font-weight: 700;
 
     img{
-        width: 40px;
+        width: 38px;
     }
 `
 

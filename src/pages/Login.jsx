@@ -141,6 +141,7 @@ const LoginBtn = styled.button`
     font-family: Pretendard;
     font-size: 16px;
     font-weight: 700;
+    cursor:pointer;
 `
 const SignUpBtn = styled.button`
     box-sizing: border-box;
@@ -155,6 +156,7 @@ const SignUpBtn = styled.button`
     font-family: Pretendard;
     font-size: 16px;
     font-weight: 700;
+    cursor:pointer;
 `
 const SocialLogin = styled.div`
     margin-top: 50px;
@@ -171,6 +173,7 @@ const SocialIcon = styled.button`
     cursor: pointer;
     background: url('${(props) => props.url}');
     background-size: cover;
+    cursor:pointer;
 `
 
 export default Login;
