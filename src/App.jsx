@@ -50,12 +50,13 @@ function App() {
         <Route path="/board/:category/:type" element={<Board />} />
         <Route path="/board/lost/1" element={<LostItemPost />} />
 
+        
         <Route path="/event-check/:musicalId" element={<EventDetail/>}/>
-        {/* 6) 게시판 */}
 
       
         {/* 7) 상세 페이지 */}
         <Route path="/detail" element={<Detail />} />
+        
         {/* 9) 로그인/회원가입 */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
