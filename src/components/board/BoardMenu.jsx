@@ -3,17 +3,42 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
+<<<<<<< Updated upstream
 function BoardMenu() {
 
   const navigate = useNavigate();
+=======
+function BoardMenu({ menus, currentType, currentCategory, defaultColor = "#919191"}) {
+  const navigate = useNavigate(); // 추가
+>>>>>>> Stashed changes
   return (
   <>
     <MenuContainer>
+<<<<<<< Updated upstream
       <MenuGroup>
           <MainMenu color='#A00000'>분실물 게시판</MainMenu>
           <SubMenu>
             <Li color='#A00000' to="/board/item/lost">분실</Li>
             <Li to="/board/item/found">습득</Li>
+=======
+      {menus.map((menu, index) => (
+        <MenuGroup key={index}>
+          <MainMenu 
+            isActive={currentCategory === menu.id}
+            defaultColor={defaultColor}
+          >{menu.title}</MainMenu>
+          <SubMenu>
+            {menu.subMenus.map((subMenu, subIndex) => (
+           <Li
+           key={subMenu.id}
+           to={subMenu.link} // Link 컴포넌트의 to 속성 사용
+           isActive={currentType === subMenu.id}
+           defaultColor={defaultColor}
+         >
+                {subMenu.name}
+              </Li>
+            ))}
+>>>>>>> Stashed changes
           </SubMenu>
         </MenuGroup>
         <hr />
@@ -65,8 +90,12 @@ const MenuGroup = styled.div`
 `;
 
 const MainMenu = styled.div`
+<<<<<<< Updated upstream
   color: ${(props) => props.color ? props.color : '#919191'};
 
+=======
+  color: ${(props) => props.isActive? "#A00000" : props.defaultColor};
+>>>>>>> Stashed changes
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
@@ -86,19 +115,33 @@ const SubMenu = styled.ul`
   }
 `;
 
+<<<<<<< Updated upstream
 const Li = styled(Link)`
   font-family: Pretendard;
   font-size: 16px;
   font-weight: normal;
   color: ${(props) => (props.color ? props.color : "#919191")};
+=======
+const Li = styled(Link).attrs((props) => ({
+  style: {
+    color: props.isActive ? "#A00000" : props.defaultColor,
+  },
+}))`
+>>>>>>> Stashed changes
   cursor: pointer;
   text-decoration: none; 
   display: block; 
 
   &::before {
+<<<<<<< Updated upstream
     content: "-"; 
     margin-right: 8px; 
     color: ${(props) => (props.color ? props.color : "#919191")}; 
     text-decoration: none;
     }
+=======
+    content: "-";
+    margin-right: 8px;
+  }
+>>>>>>> Stashed changes
 `;

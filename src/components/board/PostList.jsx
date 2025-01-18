@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import PageNavigator from "./PageNavigator";
 
 function PostList() {
   const navigate = useNavigate();
@@ -38,6 +39,13 @@ function PostList() {
         </tr>
       ))}
     </tbody>
+    <NavWrapper>
+    <PageNavigator
+      currentPage={4} // 현재 페이지
+      totalPages={4} // 전체 페이지 수
+      onPageChange={(page) => console.log(`Move to page: ${page}`)} // 페이지 변경 핸들러
+    />
+    </NavWrapper>
   </PostListWrapper>
   )
 }
@@ -100,3 +108,9 @@ const PostListWrapper = styled.table`
     cursor: pointer;
   }
 `;
+
+const NavWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+`
