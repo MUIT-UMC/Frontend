@@ -87,7 +87,6 @@ function Board() {
         <SubMenu
           navItems={currentCategory?.navItems || []}
           currentType={type}
-          basePath={`/board/${category}`}
         />
         <Content>
           {type === "lost" && <LostBoard />}

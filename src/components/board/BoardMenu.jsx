@@ -16,7 +16,8 @@ function BoardMenu({ menus, currentType, currentCategory, defaultColor = "#91919
               <Li
                 key={subIndex}
                 to={subMenu.link}
-                color={subMenu.color || defaultColor}
+                isActive={currentType === subMenu.id}
+                defaultColor={defaultColor}
               >
                 {subMenu.name}
               </Li>
@@ -76,7 +77,7 @@ const Li = styled(Link)`
   font-family: Pretendard;
   font-size: 16px;
   font-weight: normal;
-  color: ${(props) => props.color || "#919191"};
+  color: ${(props) => props.isActive ? "#A00000" : props.defaultColor};
   cursor: pointer;
   text-decoration: none;
   display: block;
