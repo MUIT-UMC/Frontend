@@ -17,6 +17,7 @@ import LostItemPost from "./pages/board/LostItemPost";
 
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import MyPage from "./pages/mypage/MyPage";
 
 import './styles/font.css';
 import styled from "styled-components";
@@ -60,7 +61,9 @@ function App() {
         {/* 9) 로그인/회원가입 */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-
+        {/* 마이페이지 */}
+        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/:category/:type" element={<MyPage />} />
       </Routes>
       </Router>
       </Container>

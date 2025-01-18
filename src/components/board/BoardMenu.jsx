@@ -1,47 +1,40 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 
-function BoardMenu() {
-
-  const navigate = useNavigate();
+function BoardMenu({ menus, currentType, currentCategory, defaultColor = "#919191"}) {
   return (
-  <>
     <MenuContainer>
-      <MenuGroup>
-          <MainMenu color='#A00000'>분실물 게시판</MainMenu>
+      {menus.map((menu, index) => (
+        <MenuGroup key={index}>
+          <MainMenu 
+            isActive={currentCategory === menu.id}
+            defaultColor={defaultColor}
+          >{menu.title}</MainMenu>
           <SubMenu>
-            <Li color='#A00000' to="/board/item/lost">분실</Li>
-            <Li to="/board/item/found">습득</Li>
+            {menu.subMenus.map((subMenu, subIndex) => (
+              <Li
+                key={subIndex}
+                to={subMenu.link}
+                isActive={currentType === subMenu.id}
+                defaultColor={defaultColor}
+              >
+                {subMenu.name}
+              </Li>
+            ))}
           </SubMenu>
+          {index < menus.length - 1 && <hr />}
         </MenuGroup>
-        <hr />
-        <MenuGroup>
-          <MainMenu>익명 게시판</MainMenu>
-          <SubMenu>
-            <Li to="/board/anonymous/all">전체</Li>
-            <Li to="/board/anonymous/hot">HOT</Li>
-          </SubMenu>
-        </MenuGroup>
-        <hr />
-        <MenuGroup>
-          <MainMenu>리뷰 게시판</MainMenu>
-          <SubMenu>
-            <Li to="/board/review/musical">뮤지컬 리뷰</Li>
-            <Li to="/board/review/seats">시야 리뷰</Li>
-          </SubMenu>
-        </MenuGroup>
-      </MenuContainer>
-  </>
-  )
+      ))}
+    </MenuContainer>
+  );
 }
 
 export default BoardMenu;
 
 const MenuContainer = styled.div`
   display: flex;
-  width: 174px;
+  width: ${(props) => (props.width ? props.width : "174px")};
   padding: 12px;
   flex-direction: column;
   align-items: flex-start;
@@ -51,54 +44,49 @@ const MenuContainer = styled.div`
   background: none;
 
   hr {
-  border: none;
-  border-top: 1px solid #E6E6E6; 
-  width: 100%; 
-  margin: 0px;
-}
+    border: none;
+    border-top: 1px solid #e6e6e6;
+    width: 100%;
+    margin: 0px;
+  }
 `;
-
 
 const MenuGroup = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const MainMenu = styled.div`
-  color: ${(props) => props.color ? props.color : '#919191'};
-
+  color: ${(props) => props.isActive ? "#A00000" : props.defaultColor};
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-   &:hover {
-    }
-  `
-  ;
+`;
 
 const SubMenu = styled.ul`
   list-style-type: none;
   padding: 0px;
-  margin: 8px;
-
-  li {
-    
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
 `;
 
 const Li = styled(Link)`
   font-family: Pretendard;
   font-size: 16px;
   font-weight: normal;
-  color: ${(props) => (props.color ? props.color : "#919191")};
+  color: ${(props) => props.isActive ? "#A00000" : props.defaultColor};
   cursor: pointer;
-  text-decoration: none; 
-  display: block; 
+  text-decoration: none;
+  display: block;
 
   &::before {
-    content: "-"; 
-    margin-right: 8px; 
-    color: ${(props) => (props.color ? props.color : "#919191")}; 
-    text-decoration: none;
-    }
+    content: "-";
+    margin-right: 8px;
+    color: ${(props) => props.color || "#919191"};
+  }
 `;
