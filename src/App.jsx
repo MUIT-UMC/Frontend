@@ -17,7 +17,7 @@ import LostItemPost from "./pages/board/LostItemPost";
 
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import MyPage from "./pages/MyPage";
+import MyPage from "./pages/mypage/MyPage";
 
 import './styles/font.css';
 import styled from "styled-components";
