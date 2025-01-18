@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import EventContent from "../components/eventcheck/EventContent";
 
+import Calendar from "../components/Calendar";
+
 import { GoChevronRight } from "react-icons/go";
 
 const mockMusicalEvent = [
@@ -207,29 +209,32 @@ function EventDetail() {
     console.log(musicalEvent[0]?.event);
 
     return(
-        <Container>
-            <MusicalInfo>
-                <div className="Title">
-                    <h3 className="title-B-600">{musicalEvent[0].title}</h3>
-                    <GoChevronRight size={24} color="#919191"/> 
-                </div>
-                <p className="body-M-600">{musicalEvent[0].theater}</p>
-                <p className="body-M-500">{musicalEvent[0].begin}~{musicalEvent[0].end}</p>
-                <img src={musicalEvent[0].img} />
-            </MusicalInfo>
-            <EventInfo>
-                {musicalEvent[0]?.event.map((musical) => (
-                    <EventContent
-                        key={musical.order}
-                        content={musical.content}
-                        startAt={musical.startAt}
-                        finishAt={musical.finishAt}
-                    />
-                ))}
-            </EventInfo>
+      <Container>
+        <MusicalInfo>
+          <div className="Title">
+            <h3 className="title-B-600">{musicalEvent[0].title}</h3>
+            <GoChevronRight size={24} color="#919191" />
+          </div>
+          <p className="body-M-600">{musicalEvent[0].theater}</p>
+          <p className="body-M-500">{musicalEvent[0].begin}~{musicalEvent[0].end}</p>
+          <img src={musicalEvent[0].img} />
+        </MusicalInfo>
+        <EventInfo>
+          {musicalEvent[0]?.event.map((musical) => (
+            <EventContent
+              key={musical.order}
+              content={musical.content}
+              startAt={musical.startAt}
+              finishAt={musical.finishAt}
+            />
+          ))}
+        </EventInfo>
+        <CalendarArea>
+          <Calendar />
+        </CalendarArea>
 
-            <Calendar />
-        </Container>
+
+      </Container>
     )
 }
 
@@ -278,10 +283,9 @@ const EventInfo = styled.div`
     gap: 20px;
 
 `
-const Calendar = styled.div`
+const CalendarArea = styled.div`
     width: 100%;
-    height: 580px;
-    background: #CCC;
+    height: 600px;
 `
 
 export default EventDetail;
