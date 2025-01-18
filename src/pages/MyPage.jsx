@@ -1,41 +1,52 @@
 import React from "react";
 import BoardMenu from "../components/board/BoardMenu";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 
 function MyPage() {
+  const { category, type } = useParams();
 
   const menus = [
     {
+      id: "my",
       title: "My",
       subMenus: [
-        { name: "내 티켓", link: "/mypage/my/tickets" },
-        { name: "내가 쓴 글", link: "/mypage/my/posts" },
-        { name: "좋아요한 뮤지컬", link: "/mypage/my/liked-musicals" },
+        { id: 'tickets', name: "내 티켓", link: "/mypage/my/tickets" },
+        { id: 'posts', name: "내가 쓴 글", link: "/mypage/my/posts" },
+        { id: 'liked-musicals', name: "좋아요한 뮤지컬", link: "/mypage/my/liked-musicals" },
       ],
     },
     {
+      id: "account",
       title: "계정 관리",
       subMenus: [
-        { name: "회원정보 수정", link: "/mypage/account/edit" },
-        { name: "비밀번호 변경", link: "/mypage/account/change-password" },
-        { name: "계정 연결 설정", link: "/mypage/account/link-settings" },
-        { name: "배송지 관리", link: "/mypage/account/address" },
-        { name: "로그인 관리", link: "/mypage/account/login-management" },
+        { id: 'edit', name: "회원정보 수정", link: "/mypage/account/edit" },
+        { id: 'change-password', name: "비밀번호 변경", link: "/mypage/account/change-password" },
+        { id: 'link-settings', name: "계정 연결 설정", link: "/mypage/account/link-settings" },
+        { id: 'address', name: "배송지 관리", link: "/mypage/account/address" },
+        { id: 'login-management', name: "로그인 관리", link: "/mypage/account/login-management" },
       ],
     },
     {
+      id: "support",
       title: "기타",
       subMenus: [
-        { name: "1:1 문의", link: "/mypage/support/contact" },
+        { id: 'contact', name: "1:1 문의", link: "/mypage/support/contact" },
       ],
     },
   ];
+  
   return (
     <MyPageWrapper>
       <Aside>
         <User>최윤경님</User>
         <Id>rose06166</Id>
-        <BoardMenu menus={menus} defaultColor="#000" />
+        <BoardMenu 
+          menus={menus} 
+          defaultColor="#000" 
+          currentCategory={category}
+          currentType={type}
+        />
       </Aside>
       <Main>
         <PageTitle>회원정보 수정</PageTitle>
