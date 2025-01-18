@@ -1,121 +1,105 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import BoardMenu from "../../components/board/BoardMenu";
-import LostItemSearchBar from "../../components/board/LostItemSearchBar";
-import PostList from "../../components/board/PostList";
-import ChevronRight from "../../assets/icons/ChevronRight.svg";
-import ChevronLeft from "../../assets/icons/ChevronLeft.svg";
 import { useParams } from "react-router-dom";
+import SubMenu from "../../components/board/SubMenu";
+import LostBoard from "./item/LostBoard";
+import FoundBoard from "./item/FoundBoard";
+import BoardMenu from "../../components/board/BoardMenu";
 import { useNavigate } from "react-router-dom";
+import AllBoard from "./anonymous/AllBoard";
+import HotBoard from "./anonymous/HotBoard";
+import MusicalBoard from "./review/MusicalBoard";
+import SeatsBoard from "./review/SeatsBoard";
 
 function Board() {
   const { category, type } = useParams();
-  const navigate = useNavigate();
 
-  let categoryName;
-  let navItems;
+  const categories = {
+    item: {
+      name: "분실물",
+      navItems: [
+        { id: "lost", name: "분실" },
+        { id: "found", name: "습득" },
+      ],
+    },
+    anonymous: {
+      name: "익명",
+      navItems: [
+        { id: "all", name: "전체" },
+        { id: "hot", name: "HOT" },
+      ],
+    },
+    review: {
+      name: "리뷰",
+      navItems: [
+        { id: "musical", name: "뮤지컬 리뷰" },
+        { id: "seats", name: "시야 리뷰" },
+      ],
+    },
+  };
+
+  const currentCategory = categories[category];
+
+  const navigate = useNavigate();
 
   const menus = [
     {
+      id: 'item',
       title: "분실물 게시판",
       color: "#A00000",
       subMenus: [
-        { name: "분실", link: "/board/item/lost", color: "#A00000" },
-        { name: "습득", link: "/board/item/found" },
+        { id: 'lost', name: "분실", link: "/board/item/lost", color: "#A00000" },
+        { id: 'found', name: "습득", link: "/board/item/found" },
       ],
     },
     {
+      id: 'anonymous',
       title: "익명 게시판",
       subMenus: [
-        { name: "전체", link: "/board/anonymous/all" },
-        { name: "HOT", link: "/board/anonymous/hot" },
+        { id: 'all', name: "전체", link: "/board/anonymous/all" },
+        { id: 'hot', name: "HOT", link: "/board/anonymous/hot" },
       ],
     },
     {
+      id: 'review',
       title: "리뷰 게시판",
       subMenus: [
-        { name: "뮤지컬 리뷰", link: "/board/review/musical" },
-        { name: "시야 리뷰", link: "/board/review/seats" },
+        { id: 'musical', name: "뮤지컬 리뷰", link: "/board/review/musical" },
+        { id: 'seats', name: "시야 리뷰", link: "/board/review/seats" },
       ],
     },
   ];
-  
-  switch(category) {
-    case "item":
-      categoryName = "분실물";
-      navItems = [
-        { id: 'lost', name: '분실' },
-        { id: 'found', name: '습득' },
-      ];
-      break;
-    case "anonymous":
-      categoryName = "익명";
-      navItems = [
-        { id: 'all', name: '전체' },
-        { id: 'hot', name: 'HOT' },
-      ];
-      break;
-    case "review":
-      categoryName = "리뷰";
-      navItems = [
-        { id: 'musical', name: '뮤지컬 리뷰' },
-        { id: 'seats', name: '시야 리뷰' },
-      ];
-      break;
-  }
-  
-  return (
-    <>
-      <BoardContainer>
-        <BoardMenuWrapper>
-        <BoardMenu menus={menus} />
-        </BoardMenuWrapper>
-        <BoardContent>
-          {/* 헤더*/}
-          <BoardHeader>
-          <h1>{categoryName} 게시판</h1><Button>글쓰기</Button>
-          </BoardHeader>
-          <SubMenu>
-          {navItems.map((item) => (
-          <NavItem
-            key={item.id}
-            isActive={type === item.id}
-            onClick={() => {
-              navigate(`/board/${category}/${item.id}`);
-            }}
-            
-          >
-            {item.name}
-          </NavItem>
-        ))}
-          </SubMenu>
 
-          <Content>
-        {type === 'lost' && <>
-          <ButtonWrapper>
-            <Button background='none' color='#A00000' marginBottom='8px'>검색</Button>
-          </ButtonWrapper>
-          <LostItemSearchBar />
-          <PostList />  
-          <PageNavigatorWrapper>
-          <Img src={ChevronLeft} />
-            <PageNumber>1</PageNumber>
-            <PageNumber>2</PageNumber>
-            <PageNumber>3</PageNumber>
-            <PageNumber color='#A00000'>4</PageNumber>
-          <Img src={ChevronRight} visibility="hidden"/>
-        </PageNavigatorWrapper>
-        </>}
-        {type === 'found' && <div>캐스팅 정보 내용</div>}
-        {type === 'view-guide' && <div>시야 확인 내용</div>}
-        {type === 'reviews' && <div>관람 후기 내용</div>}
-      </Content>
-         
-        </BoardContent>
-      {/* 게시판 목록, 글쓰기, 글 상세 보기 등 구현 예정 */}
+  return (
+    <BoardContainer>
+      <BoardMenuWrapper>
+        <BoardMenu
+          menus={menus}
+          currentCategory={category}
+          currentType={type}
+        />
+      </BoardMenuWrapper>
+      <BoardContent>
+        <TitleWrapper>
+          <Title>{currentCategory?.name} 게시판</Title>
+          <Button>글쓰기</Button>
+        </TitleWrapper>
+        <SubMenu
+          navItems={currentCategory?.navItems || []}
+          currentType={type}
+          basePath={`/board/${category}`}
+        />
+        <Content>
+          {type === "lost" && <LostBoard />}
+          {type === "found" && <FoundBoard />}
+          {/* ...다른 타입 컴포넌트 */}
+          {type === "all" && <AllBoard />}
+          {type === "hot" && <HotBoard />}
+          {type === "musical" && <MusicalBoard />}
+          {type === "seats" && <SeatsBoard />}
+        </Content>
+      </BoardContent>
     </BoardContainer>
-    </>
-    
   );
 }
 
@@ -139,6 +123,23 @@ const BoardMenuWrapper = styled.div`
 const BoardContent = styled.div`
   width: 100%;
 `;
+
+const TitleWrapper = styled.div`
+ display: flex;
+ flex-direction: row;
+ justify-content: space-between;
+`
+const Title = styled.div`
+  color: #000;
+
+/* Headline-md-ko */
+font-family: Pretendard;
+font-size: 36px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+letter-spacing: -0.72px;
+`
 
 const BoardHeader = styled.div`
   display:flex;
@@ -177,52 +178,6 @@ line-height: normal;
 
 `
 
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: row;
-  width: 100%;
-  padding: 0;
-  `
-const SubMenu = styled.div`
-display: flex;
-flex-direction: row;
-gap: 24px;
-margin-bottom: 24px;
-
-div {
-  color: ${(props) => props.color ? props.color : '#919191'};
-  /* Title-md */
-  font-family: Pretendard;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-}
-`
-
-const PageNavigatorWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-  align-items: center; /* 수직 가운데 정렬 */
-  justify-content: center;
-  margin-top: 40px;
-  
-`
-
-const Img = styled.img`
-visibility: ${(props) => props.visibility ? props.visibility : 'visible'};
-`
-
-const PageNumber = styled.div`
-  color: ${(props) => props.color ? props.color : '#919191'};
-`
-
-const NavItem = styled.div`
-  color: ${(isActive) => isActive ? '#A00000' : '#919191'};
-  font-weight: ${(isActive) => isActive ? '700' : '300'};
-`
 
 const Content = styled.div`
 `

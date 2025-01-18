@@ -2,12 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-function BoardMenu({ menus, defaultColor = "#919191" }) {
+function BoardMenu({ menus, currentType, currentCategory, defaultColor = "#919191"}) {
   return (
     <MenuContainer>
       {menus.map((menu, index) => (
         <MenuGroup key={index}>
-          <MainMenu color={menu.color || defaultColor}>{menu.title}</MainMenu>
+          <MainMenu 
+            isActive={currentCategory === menu.id}
+            defaultColor={defaultColor}
+          >{menu.title}</MainMenu>
           <SubMenu>
             {menu.subMenus.map((subMenu, subIndex) => (
               <Li
@@ -54,7 +57,7 @@ const MenuGroup = styled.div`
 `;
 
 const MainMenu = styled.div`
-  color: ${(props) => props.color || "#919191"};
+  color: ${(props) => props.isActive ? "#A00000" : props.defaultColor};
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
@@ -66,7 +69,7 @@ const SubMenu = styled.ul`
   padding: 0px;
   display: flex;
   flex-direction: column;
-  gap: 8px; /* li 간의 간격 설정 */
+  gap: 8px;
 `;
 
 const Li = styled(Link)`
@@ -82,6 +85,5 @@ const Li = styled(Link)`
     content: "-";
     margin-right: 8px;
     color: ${(props) => props.color || "#919191"};
-    text-decoration: none;
   }
 `;
