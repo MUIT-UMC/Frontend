@@ -10,6 +10,7 @@ const mockTodayMusical = [
     name: "베르테르",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhu1LYwXx-Eq6-QrtTz-JYHNhuO_o6fZarhQ&s",
     time: "11:00",
+    detail: "25주년 공연"
   },
   {
     id: 2,
@@ -144,15 +145,26 @@ const Upcoming = () => {
           <p>오늘 티켓 오픈</p>
         </Today>
         <FeaturedMusical>
-  {todayMusicals.map((musical, index) => (
-    <img 
-      key={musical.id} 
-      src={musical.image} 
-      alt={musical.name} 
-      style={{ zIndex: index === 0 ? 1 : -1 }} 
-    />
-  ))}
-</FeaturedMusical>
+          {todayMusicals.map((musical, index) => (
+            <div
+              key={musical.id}
+              className="musical-item"
+              style={{ zIndex: index === 0 ? 1 : -1 }}
+            >
+              <img src={musical.image} alt={musical.name} />
+              <div className="info">
+                <div className="title">
+                  {musical.name}
+                  {musical.details && ` (${musical.details})`}
+                </div>
+                <div className="details">
+                  오늘 {musical.time}
+                </div>
+                <div className="extra-info">2차 티켓 오픈</div>
+              </div>
+            </div>
+          ))}
+        </FeaturedMusical>
       </MainSection>
 
       {/* 하단 섹션 */}
@@ -218,20 +230,45 @@ const FeaturedMusical = styled.div`
    /* 아래로 더 이동 */
   margin-top: 100px; /* 네비게이션 바 아래로 간격을 추가 */
   position: relative;
+ 
+  .musical-item {
+    position: absolute;
+    left: 0; /* 기본 위치 */
+    text-align: center;
 
+    img {
+      height: 584px;
+      object-fit: cover;
+    }
 
-  img {
-    height: 584px;
-    object-fit: cover;
-    position: absolute; /* 이미지들을 겹치게 배치 */
-    left: 0; /* 첫 번째 이미지는 기본 위치 */
+    .info {
+      margin-top: 16px;
+      color: black;
+
+      .title {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .details {
+        font-size: 1rem;
+        color: #555;
+      }
+
+      .extra-info {
+        font-size: 1rem;
+        color:#919191;
+      }
+    }
   }
 
-  img:nth-child(2) {
+  .musical-item:nth-child(2) {
     left: 250px; /* 두 번째 이미지를 오른쪽으로 이동 */
     z-index: -1; /* 첫 번째 이미지 뒤에 배치 */
   }
 `;
+
+
 const TicketListWrapper = styled.div`
   position: relative; /* 자식 요소 위치를 조정하기 위해 설정 */
   margin-top: 60px; /* 상단 섹션과의 간격 */
@@ -293,4 +330,3 @@ const MusicalItem = styled.div`
     }
   }
 `;
-
