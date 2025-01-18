@@ -10,6 +10,7 @@ import AllBoard from "./anonymous/AllBoard";
 import HotBoard from "./anonymous/HotBoard";
 import MusicalBoard from "./review/MusicalBoard";
 import SeatsBoard from "./review/SeatsBoard";
+
 function Board() {
   const { category, type } = useParams();
 
@@ -41,60 +42,6 @@ function Board() {
 
   const navigate = useNavigate();
 
-  let categoryName;
-  let navItems;
-<<<<<<< Updated upstream
-  switch(category) {
-    case "item":
-      categoryName = "분실물";
-      navItems = [
-        { id: 'lost', name: '분실' },
-        { id: 'found', name: '습득' },
-      ];
-      break;
-    case "anonymous":
-      categoryName = "익명";
-      navItems = [
-        { id: 'all', name: '전체' },
-        { id: 'hot', name: 'HOT' },
-      ];
-      break;
-    case "review":
-      categoryName = "리뷰";
-      navItems = [
-        { id: 'musical', name: '뮤지컬 리뷰' },
-        { id: 'seats', name: '시야 리뷰' },
-      ];
-      break;
-  }
-  
-  return (
-    <>
-      <BoardContainer>
-        <BoardMenuWrapper>
-        <BoardMenu />
-        </BoardMenuWrapper>
-        <BoardContent>
-          {/* 헤더*/}
-          <BoardHeader>
-          <h1>{categoryName} 게시판</h1><Button>글쓰기</Button>
-          </BoardHeader>
-          <SubMenu>
-          {navItems.map((item) => (
-          <NavItem
-            key={item.id}
-            isActive={type === item.id}
-            onClick={() => {
-              navigate(`/board/${category}/${item.id}`);
-            }}
-            
-          >
-            {item.name}
-          </NavItem>
-        ))}
-          </SubMenu>
-=======
-
   const menus = [
     {
       id: 'item',
@@ -122,18 +69,16 @@ function Board() {
       ],
     },
   ];
->>>>>>> Stashed changes
 
   return (
     <BoardContainer>
       <BoardMenuWrapper>
-      <BoardMenu
-        menus={menus}
-        currentCategory={category}
-        currentType={type}
-      />
-
-        </BoardMenuWrapper>
+        <BoardMenu
+          menus={menus}
+          currentCategory={category}
+          currentType={type}
+        />
+      </BoardMenuWrapper>
       <BoardContent>
         <TitleWrapper>
           <Title>{currentCategory?.name} 게시판</Title>
@@ -150,7 +95,6 @@ function Board() {
           {/* ...다른 타입 컴포넌트 */}
           {type === "all" && <AllBoard />}
           {type === "hot" && <HotBoard />}
-
           {type === "musical" && <MusicalBoard />}
           {type === "seats" && <SeatsBoard />}
         </Content>

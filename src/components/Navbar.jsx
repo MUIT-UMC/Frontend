@@ -3,166 +3,166 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-import hamburgerIcon from '../assets/icons/Hamburger.svg';
+import HamburgerIcon from '../assets/icons/Hamburger.svg';
 import SearchIcon from '../assets/icons/Search.svg';
 import ProfileIcon from '../assets/icons/Profile.svg';
+import HamburgerIconWhite from '../assets/icons/HamburgerWhite.svg';
+import SearchIconWhite from '../assets/icons/SearchWhite.svg';
+import ProfileIconWhite from '../assets/icons/ProfileWhite.svg';
 
 //  색상
 const COLOR_WHITE = "#FFFFFF";
-const COLOR_MUIT_RED = "#A00000";    // color-muit red-main
+const COLOR_MUIT_RED = "#A00000";
 const COLOR_GRAY_MAINTEXT = "#000000";
 
 const MAX_WIDTH = 1440;
 const SIDE_MARGIN = 100; // 좌우 마진
 const COLUMN_GAP = 20;   // column 간격
 
-//메뉴 색 경우의 수수
-function getMenuColor($detail, $scrolled) {
-  switch (true) {
-    // detail 페이지 & 스크롤 내려간 상태
-    case $detail && $scrolled:
-      return COLOR_GRAY_MAINTEXT; // 검정
 
-    // detail 페이지 & 맨 위
-    case $detail && !$scrolled:
-      return COLOR_WHITE; // 하양
 
-    // detail 아닌 경우(기본)
-    default:
-      return COLOR_GRAY_MAINTEXT; // 검정
-  }
-}
+//export default
+export default function Navbar() {
 
-// 로고 색 경우의 수수
-function getLogoColor($detail, $scrolled) {
-  switch (true) {
-    // detail 페이지 & 스크롤 내려간 상태
-    case $detail && $scrolled:
-      return COLOR_MUIT_RED; // 레드
-
-    // detail 페이지 & 맨 위
-    case $detail && !$scrolled:
-      return COLOR_WHITE; // 하양
-
-    // detail 아닌 경우(기본)
-    default:
-      return COLOR_MUIT_RED; // 레드
-  }
-}
-
-//바탕 색 경우의 수수
-function getNavColor($detail, $scrolled) {
-  switch (true) {
-    // detail 페이지 & 스크롤 내려간 상태
-    case $detail && $scrolled:
-      return COLOR_WHITE; // 하양
-
-    // detail 페이지 & 맨 위
-    case $detail && !$scrolled:
-      return COLOR_MUIT_RED; // 레드
-
-    // detail 아닌 경우(기본)
-    default:
-      return COLOR_WHITE; // 하양
-  }
-}
-
-function Navbar() {
-    
-    // 현재 페이지 경로 확인
   const location = useLocation();
-  // 상세 페이지인지 여부
-  const isDetailPage = location.pathname === '/detail';
 
-  // 스크롤 여부 상태
-  const [scrolled, setScrolled] = useState(false);
+  return (
+    <NavBox>
+      {/* 기본 상단바 */}
+      {["/", "/upcoming", "/vision", "/group-buy", "/event-check", "/board"].includes(location.pathname) && <NavbarDefault/>}
+      {/* 상단바 with 사이드바 버튼 */}
+      {(
+        location.pathname.startsWith("/vision/") ||
+        location.pathname.startsWith("/group-buy/") ||
+        location.pathname.startsWith("/event-check/") ||
+        location.pathname.startsWith("/board/") ||
+        location.pathname.startsWith("/search") ||
+        location.pathname.startsWith("/mypage")
+      ) && <NavbarSidebar/>}
+      {/* 상세페이지 상단바 */}
+      {location.pathname.startsWith("/detail") && <NavbarDetail/>}
+      {/* 관리자페이지 상단바 -> 추후 추가
+      {location.pathname.startsWith("/adminpage") && <NavbarAdmin/>} */}
+    </NavBox>
+  )
+  
+}
 
-  // 상세 페이지일 때만, 스크롤 이벤트 리스너 등록
+function NavbarDefault() {
+  
+  return (
+    <NavContainer>
+      <NavTop>
+        <LeftArea></LeftArea>
+        <CenterArea>
+          <LogoLink to="/">MUIT</LogoLink>
+        </CenterArea>
+        <RightArea>
+          <IconLink to="/search"><img src={SearchIcon} alt="Search Icon" /></IconLink>
+          <IconLink to="/mypage"><img src={ProfileIcon} alt="Profile Icon" /></IconLink>
+        </RightArea>
+      </NavTop>
+      <NavBottom>
+      <MenuArea>
+        <MenuLink to="/" $active={location.pathname === "/"}>
+          뮤지컬 전체 보기
+        </MenuLink>
+        <MenuLink to="/upcoming" $active={location.pathname === "/upcoming"}>
+          오픈예정
+        </MenuLink>
+        <MenuLink to="/vision" $active={location.pathname === "/vision"}>
+          시야확인
+        </MenuLink>
+        <MenuLink to="/group-buy" $active={location.pathname === "/group-buy"}>
+          공동구매
+        </MenuLink>
+        <MenuLink to="/event-check" $active={location.pathname === "/event-check"}>
+          이벤트 확인
+        </MenuLink>
+        <MenuLink to="/board/item/lost" $active={location.pathname === "/board"}> {/* 임시경로로 링크 */}
+          게시판
+        </MenuLink>
+      </MenuArea>
+      </NavBottom>
+    </NavContainer>
+  )
+}
+
+function NavbarSidebar() {
+
+  return (
+    <NavTop>
+      <LeftArea>
+        <SidebarButton>
+          <img src={HamburgerIcon} alt="Sidebar button" />
+            <Sidebar/>
+        </SidebarButton>
+      </LeftArea>
+      <CenterArea>
+        <LogoLink to="/">MUIT</LogoLink>
+      </CenterArea>
+      <RightArea>
+        <IconLink to="/search"><img src={SearchIcon} alt="Search Icon" /></IconLink>
+        <IconLink to="/mypage"><img src={ProfileIcon} alt="Profile Icon" /></IconLink>
+      </RightArea>
+    </NavTop>
+  )
+}
+
+function NavbarDetail() {
+
+  // 스크롤이 1024px을 넘어섰는지 여부
+  const [scrolledBeyond, setScrolledBeyond] = useState(false);
+
   useEffect(() => {
-    if (!isDetailPage) return;
-
+    // 스크롤 이벤트 핸들러
     const handleScroll = () => {
-      // 스크롤이 0보다 크면 true, 0이면 false
-      setScrolled(window.scrollY > 0);
+      if (window.scrollY >= 1024) {
+        setScrolledBeyond(true);
+      } else {
+        setScrolledBeyond(false);
+      }
     };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isDetailPage]);
+    // 이벤트 등록
+    window.addEventListener('scroll', handleScroll);
+    // 정리(clean-up) 함수에서 이벤트 제거
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
 
   return (
-    <NavContainer>
-      {/* 상단부 */}
-      <NavTop $detail={isDetailPage} $scrolled={scrolled}>
-        <LeftArea>
-          {isDetailPage && (
-            <HamburgerMenu>
-              <img src={hamburgerIcon} alt="Hamburger Icon" />
-            </HamburgerMenu>
-          )}  
-        </LeftArea>
-        <CenterArea>
-          <LogoLink to="/" $detail={isDetailPage} $scrolled={scrolled}>MUIT</LogoLink>
-        </CenterArea>
-        <RightArea>
-          <Icon $detail={isDetailPage} $scrolled={scrolled}><img src={SearchIcon} alt="Search Icon" /></Icon>
-          <Icon $detail={isDetailPage} $scrolled={scrolled}><img src={ProfileIcon} alt="Profile Icon" /></Icon>
-        </RightArea>
-      </NavTop>
-
-      {/* 하단부 */}
-
-      {!isDetailPage && (
-        <NavBottom>
-          <MenuArea>
-            <MenuLink
-              to="/"
-              $active={location.pathname === "/"}
-            >
-              뮤지컬 전체 보기
-            </MenuLink>
-            <MenuLink
-              to="/upcoming"
-              $active={location.pathname === "/upcoming"}
-            >
-              오픈예정
-            </MenuLink>
-            <MenuLink
-              to="/vision"
-              $active={location.pathname === "/vision"}
-            >
-              시야확인
-            </MenuLink>
-            <MenuLink
-              to="/group-buy"
-              $active={location.pathname === "/group-buy"}
-            >
-              공동구매
-            </MenuLink>
-            <MenuLink
-              to="/event-check"
-              $active={location.pathname === "/event-check"}
-            >
-              이벤트 확인
-            </MenuLink>
-            <MenuLink
-              to="/board/item/lost"
-              $active={location.pathname === "/board"}
-            >
-              게시판
-            </MenuLink>
-          </MenuArea>
-        </NavBottom>
-      )}
-    </NavContainer>
+    
+    <NavTopDetail $scrolledBeyond={scrolledBeyond}>  {/* 상세페이지용 NavTop */}
+      <LeftArea>
+        <SidebarButton>
+          <img src={scrolledBeyond ? HamburgerIcon : HamburgerIconWhite} alt="Sidebar button" />
+            <Sidebar/>
+        </SidebarButton>
+      </LeftArea>
+      <CenterArea>
+        <LogoLinkDetail to="/" $scrolledBeyond={scrolledBeyond}>MUIT</LogoLinkDetail>  {/* 상세페이지용 LogoLink */}
+      </CenterArea>
+      <RightArea>
+        <IconLink to="/search"><img src={scrolledBeyond ? SearchIcon : SearchIconWhite} alt="Search Icon" /></IconLink>
+        <IconLink to="/mypage"><img src={scrolledBeyond ? ProfileIcon: ProfileIconWhite} alt="Profile Icon" /></IconLink>
+      </RightArea>
+    </NavTopDetail>
   )
+}
+
+
+function Sidebar() {
 
 }
 
-export default Navbar;
+// function NavbarAdmin() {}
+
 
 /* ---------------- Styled Components ---------------- */
+
+const NavBox = styled.header``;
 
 const NavContainer = styled.header`
   display: flex;
@@ -184,7 +184,7 @@ const NavTop = styled.div`
   align-items: center;
   justify-item: center;
 
-  background-color: ${({ $detail, $scrolled }) => getNavColor($detail, $scrolled)};
+  background-color: ${COLOR_WHITE};
 `;
 
 const LeftArea = styled.div`
@@ -209,12 +209,12 @@ const RightArea = styled.div`
   gap: 20px;
 `;
 
-const HamburgerMenu = styled.div`
+const SidebarButton = styled.div`
   width:  36px;
   height: 36px;
   cursor: pointer;
   align-self: center;
-  color: ${({ $detail, $scrolled }) => getMenuColor($detail, $scrolled)};
+  color:  ${COLOR_GRAY_MAINTEXT};
 `;
 
 const LogoLink = styled(Link)`
@@ -224,19 +224,19 @@ const LogoLink = styled(Link)`
   font-weight: 400;
   cursor:  pointer;
 
-  color: ${({ $detail, $scrolled }) => getLogoColor($detail, $scrolled)};
+  color: ${COLOR_MUIT_RED};
 
   &:hover {
     color: #800000;
   }
 `;
 
-const Icon = styled.span`
+const IconLink = styled(Link)`
   width:  36px;
   height: 36px;
   cursor: pointer;
   align-self: center;
-  color: ${({ $detail, $scrolled }) => getMenuColor($detail, $scrolled)};
+  color:  ${COLOR_GRAY_MAINTEXT};
 `;
 
 
@@ -272,3 +272,39 @@ const MenuLink = styled(Link)`
     transition: color 0.2s;
   }
 `;
+
+
+/* 상세페이지 상단바 style */
+
+const NavTopDetail = styled.div`
+  position: fixed;
+  z-index:  999;
+  width:  1240px;
+
+  max-width: ${MAX_WIDTH}px;
+  height: 108px;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: ${COLUMN_GAP}px;
+  padding: 0 ${SIDE_MARGIN}px;
+  align-items: center;
+  justify-item: center;
+
+  background-color: ${({ $scrolledBeyond }) => ($scrolledBeyond ? COLOR_WHITE : COLOR_MUIT_RED)};
+`;
+
+const LogoLinkDetail = styled(Link)`
+  text-decoration: none;
+  font-family:  "BelgianoSerif";
+  font-size: 48px;
+  font-weight: 400;
+  cursor:  pointer;
+
+  color: ${({ $scrolledBeyond }) => ($scrolledBeyond ? COLOR_MUIT_RED : COLOR_WHITE)};
+
+  &:hover {
+    color: #800000;
+  }
+`;
+
