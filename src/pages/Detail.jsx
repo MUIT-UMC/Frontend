@@ -97,10 +97,19 @@ function Detail() {
         {/*하단 nav bar */}
         <PerformanceDetails/>
         </LeftSection>
+
         <RightSection>
+<<<<<<< Updated upstream
           <EventCalendar />
+=======
+          <CalendarWrapper>
+            <Calendar variant="compact"/>
+            <hr />
+            티켓 오픈 컴포넌트
+          </CalendarWrapper>
+
+>>>>>>> Stashed changes
           <GroupPurchaseButton>공동 구매하기</GroupPurchaseButton>
-          
         </RightSection>
         </div>
       </MainContent>
