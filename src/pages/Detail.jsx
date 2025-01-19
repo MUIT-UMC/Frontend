@@ -54,14 +54,14 @@ function Detail() {
         {/*하단 nav bar */}
         <PerformanceDetails/>
         </LeftSection>
+
         <RightSection>
           <CalendarWrapper>
-          <Calendar variant="compact"/>
-          <hr />
-          티켓 오픈 컴포넌트
+            <Calendar variant="compact"/>
+            <hr />
+            티켓 오픈 컴포넌트
           </CalendarWrapper>
           <GroupPurchaseButton>공동 구매하기</GroupPurchaseButton>
-          
         </RightSection>
         </div>
       </MainContent>
