@@ -61,6 +61,7 @@ const VisionDetail = () => {
 
 const Container = styled.div`
     padding: 0px 100px 0px 100px;
+    width:140px;
 
 `
 const SearchBar = styled.form`

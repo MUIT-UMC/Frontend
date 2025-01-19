@@ -1,111 +1,310 @@
-import React from "react";
-import { Link } from "react-router-dom";
+
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-function Navbar() {
-  return (
-    <NavContainer>
-      {/* ───── 윗줄 영역 ───── */}
-      <TopRow>
-        {/* 왼쪽은 비워두고(1fr), 중앙(로고), 오른쪽(아이콘들) 구조 */}
-        <LeftSpace />
-        <CenterLogo>
-          <LogoLink to="/">MUIT</LogoLink>
-        </CenterLogo>
-        <RightIcons>
-          <Icon>🔍</Icon>
-          <Icon>👤</Icon>
-        </RightIcons>
-      </TopRow>
+import HamburgerIcon from '../assets/icons/Hamburger.svg';
+import SearchIcon from '../assets/icons/Search.svg';
+import ProfileIcon from '../assets/icons/Profile.svg';
+import HamburgerIconWhite from '../assets/icons/HamburgerWhite.svg';
+import SearchIconWhite from '../assets/icons/SearchWhite.svg';
+import ProfileIconWhite from '../assets/icons/ProfileWhite.svg';
 
-      {/* ───── 아랫줄 영역 ───── */}
-      <BottomRow>
-        <NavMenu>
-          <MenuLink to="/">뮤지컬 전체보기</MenuLink>
-          <MenuLink to="/upcoming">오픈 예정</MenuLink>
-          <MenuLink to="/vision">시야 확인</MenuLink>
-          <MenuLink to="/seat-check">남는 좌석 확인</MenuLink>
-          <MenuLink to="/group-buy">공동 구매</MenuLink>
-          <MenuLink to="/board">게시판</MenuLink>
-        </NavMenu>
-      </BottomRow>
-    </NavContainer>
-  );
+//  색상
+const COLOR_WHITE = "#FFFFFF";
+const COLOR_MUIT_RED = "#A00000";
+const COLOR_GRAY_MAINTEXT = "#000000";
+
+const MAX_WIDTH = 1440;
+const SIDE_MARGIN = 100; // 좌우 마진
+const COLUMN_GAP = 20;   // column 간격
+
+
+
+//export default
+export default function Navbar() {
+
+  const location = useLocation();
+
+  return (
+    <NavBox>
+      {/* 기본 상단바 */}
+      {["/", "/upcoming", "/vision", "/small-theater", "/event-check", "/board"].includes(location.pathname) && <NavbarDefault/>}
+      {/* 상단바 with 사이드바 버튼 */}
+      {(
+        location.pathname.startsWith("/vision/") ||
+        location.pathname.startsWith("/small-theater/") ||
+        location.pathname.startsWith("/event-check/") ||
+        location.pathname.startsWith("/board/") ||
+        location.pathname.startsWith("/search") ||
+        location.pathname.startsWith("/mypage")
+      ) && <NavbarSidebar/>}
+      {/* 상세페이지 상단바 */}
+      {location.pathname.startsWith("/detail") && <NavbarDetail/>}
+      {/* 관리자페이지 상단바 -> 추후 추가
+      {location.pathname.startsWith("/adminpage") && <NavbarAdmin/>} */}
+    </NavBox>
+  )
+  
 }
 
-export default Navbar;
+function NavbarDefault() {
+  
+  return (
+    <NavContainer>
+      <NavTop>
+        <LeftArea></LeftArea>
+        <CenterArea>
+          <LogoLink to="/">MUIT</LogoLink>
+        </CenterArea>
+        <RightArea>
+          <IconLink to="/search"><img src={SearchIcon} alt="Search Icon" /></IconLink>
+          <IconLink to="/mypage"><img src={ProfileIcon} alt="Profile Icon" /></IconLink>
+        </RightArea>
+      </NavTop>
+      <NavBottom>
+      <MenuArea>
+        <MenuLink to="/" $active={location.pathname === "/"}>
+          뮤지컬 전체 보기
+        </MenuLink>
+        <MenuLink to="/upcoming" $active={location.pathname === "/upcoming"}>
+          오픈예정
+        </MenuLink>
+        <MenuLink to="/vision" $active={location.pathname === "/vision"}>
+          시야확인
+        </MenuLink>
+        <MenuLink to="/small-theater" $active={location.pathname === "/small=theater"}>
+          소극장 공연
+        </MenuLink>
+        <MenuLink to="/event-check" $active={location.pathname === "/event-check"}>
+          이벤트 확인
+        </MenuLink>
+        <MenuLink to="/board/item/lost" $active={location.pathname === "/board"}> {/* 임시경로로 링크 */}
+          게시판
+        </MenuLink>
+      </MenuArea>
+      </NavBottom>
+    </NavContainer>
+  )
+}
 
-/* ───────────────────── Styled Components ───────────────────── */
+function NavbarSidebar() {
+
+  return (
+    <NavTop>
+      <LeftArea>
+        <SidebarButton>
+          <img src={HamburgerIcon} alt="Sidebar button" />
+            <Sidebar/>
+        </SidebarButton>
+      </LeftArea>
+      <CenterArea>
+        <LogoLink to="/">MUIT</LogoLink>
+      </CenterArea>
+      <RightArea>
+        <IconLink to="/search"><img src={SearchIcon} alt="Search Icon" /></IconLink>
+        <IconLink to="/mypage"><img src={ProfileIcon} alt="Profile Icon" /></IconLink>
+      </RightArea>
+    </NavTop>
+  )
+}
+
+function NavbarDetail() {
+
+  // 스크롤이 1024px을 넘어섰는지 여부
+  const [scrolledBeyond, setScrolledBeyond] = useState(false);
+
+  useEffect(() => {
+    // 스크롤 이벤트 핸들러
+    const handleScroll = () => {
+      if (window.scrollY >= 1024) {
+        setScrolledBeyond(true);
+      } else {
+        setScrolledBeyond(false);
+      }
+    };
+    // 이벤트 등록
+    window.addEventListener('scroll', handleScroll);
+    // 정리(clean-up) 함수에서 이벤트 제거
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+
+  return (
+    
+    <NavTopDetail $scrolledBeyond={scrolledBeyond}>  {/* 상세페이지용 NavTop */}
+      <LeftArea>
+        <SidebarButton>
+          <img src={scrolledBeyond ? HamburgerIcon : HamburgerIconWhite} alt="Sidebar button" />
+            <Sidebar/>
+        </SidebarButton>
+      </LeftArea>
+      <CenterArea>
+        <LogoLinkDetail to="/" $scrolledBeyond={scrolledBeyond}>MUIT</LogoLinkDetail>  {/* 상세페이지용 LogoLink */}
+      </CenterArea>
+      <RightArea>
+        <IconLink to="/search"><img src={scrolledBeyond ? SearchIcon : SearchIconWhite} alt="Search Icon" /></IconLink>
+        <IconLink to="/mypage"><img src={scrolledBeyond ? ProfileIcon: ProfileIconWhite} alt="Profile Icon" /></IconLink>
+      </RightArea>
+    </NavTopDetail>
+  )
+}
+
+
+function Sidebar() {
+
+}
+
+// function NavbarAdmin() {}
+
+
+/* ---------------- Styled Components ---------------- */
+
+const NavBox = styled.header``;
 
 const NavContainer = styled.header`
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  max-width: ${MAX_WIDTH}px;
+  background-color: ${COLOR_WHITE};
+  margin: 0 auto;
+  position: relative;
 `;
 
-/* ─── 윗줄: 로고 중앙, 아이콘은 오른쪽 ─── */
-const TopRow = styled.div`
+const NavTop = styled.div`
+  max-width: ${MAX_WIDTH}px;
+  height: 108px;
+
   display: grid;
-  grid-template-columns: 1fr auto 1fr; 
-  /* 1fr(왼쪽 비움) | auto(로고) | 1fr(오른쪽 아이콘) */
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: ${COLUMN_GAP}px;
+  padding: 0 ${SIDE_MARGIN}px;
   align-items: center;
-  padding: 10px 20px;
-  /* border-bottom: 1px solid #eee;  // 아랫줄과 경계선 주고 싶으면 추가 */
+  justify-item: center;
+
+  background-color: ${COLOR_WHITE};
 `;
 
-const LeftSpace = styled.div`
-  /* 왼쪽 비워둔 영역 (grid 첫 컬럼) */
+const LeftArea = styled.div`
+  grid-column: 1 / 5;
+  display:  flex;
+  justify-content:  flex-start;
+  align-items:  center;
 `;
 
-const CenterLogo = styled.div`
-  /* 가운데 로고 (grid 두 번째 컬럼) */
-  display: flex;
-  justify-content: center;
+const CenterArea = styled.div`
+  grid-column: 5 / 9;
+  display:  flex;
+  justify-content:  center;
+  align-items:  center;
 `;
 
-const RightIcons = styled.div`
-  /* 오른쪽 아이콘 (grid 세 번째 컬럼) */
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
+const RightArea = styled.div`
+  grid-column: 9 / 13;
+  display:  flex;
+  justify-content:  flex-end;
+  align-items:  center;
+  gap: 20px;
+`;
+
+const SidebarButton = styled.div`
+  width:  36px;
+  height: 36px;
+  cursor: pointer;
+  align-self: center;
+  color:  ${COLOR_GRAY_MAINTEXT};
 `;
 
 const LogoLink = styled(Link)`
-  font-size: 28px;
-  font-weight: bold;
-  color: #a30000;
   text-decoration: none;
+  font-family:  "BelgianoSerif";
+  font-size: 48px;
+  font-weight: 400;
+  cursor:  pointer;
+
+  color: ${COLOR_MUIT_RED};
+
   &:hover {
     color: #800000;
   }
 `;
 
-const Icon = styled.span`
-  font-size: 18px;
+const IconLink = styled(Link)`
+  width:  36px;
+  height: 36px;
   cursor: pointer;
+  align-self: center;
+  color:  ${COLOR_GRAY_MAINTEXT};
 `;
 
-/* ─── 아랫줄: 메뉴 항목을 좌→우 균등 간격으로 배치 ─── */
-const BottomRow = styled.div`
-  display: flex;
-  justify-content: center; /* NavMenu를 가운데에 배치 */
-  padding: 10px 0;
+
+const NavBottom = styled.div`
+  max-width: ${MAX_WIDTH}px;
+  height: 52px;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: ${COLUMN_GAP}px;
+  padding: 0 ${SIDE_MARGIN}px;
+
+  align-content:  center;
+  justify-content:  space-evenly;
 `;
 
-const NavMenu = styled.nav`
-  /* 예: 화면 폭에 따라 조정 가능 */
-  width: 70%;
-  display: flex;
-  justify-content: space-between; 
-  /* 항목들을 왼→오른쪽 끝까지 균등 분배 */
+const MenuArea = styled.div`
+  grid-column: 1 / 13;
+  display:  flex;
+  justify-content:  space-evenly;
+  align-items:  center;
 `;
 
 const MenuLink = styled(Link)`
-  color: #333;
   text-decoration: none;
+  font-family:  "Pretendard"
   font-size: 16px;
+  font-weight: ${({ $active }) => ($active ? 700 : 500)};
+  color: ${({ $active }) => ($active ? COLOR_MUIT_RED : COLOR_GRAY_MAINTEXT)};
+
   &:hover {
-    color: #a30000;
+    color: ${COLOR_MUIT_RED};
     transition: color 0.2s;
   }
 `;
+
+
+/* 상세페이지 상단바 style */
+
+const NavTopDetail = styled.div`
+  position: fixed;
+  z-index:  999;
+  width:  1240px;
+
+  max-width: ${MAX_WIDTH}px;
+  height: 108px;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: ${COLUMN_GAP}px;
+  padding: 0 ${SIDE_MARGIN}px;
+  align-items: center;
+  justify-item: center;
+
+  background-color: ${({ $scrolledBeyond }) => ($scrolledBeyond ? COLOR_WHITE : COLOR_MUIT_RED)};
+`;
+
+const LogoLinkDetail = styled(Link)`
+  text-decoration: none;
+  font-family:  "BelgianoSerif";
+  font-size: 48px;
+  font-weight: 400;
+  cursor:  pointer;
+
+  color: ${({ $scrolledBeyond }) => ($scrolledBeyond ? COLOR_MUIT_RED : COLOR_WHITE)};
+
+  &:hover {
+    color: #800000;
+  }
+`;
+

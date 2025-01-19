@@ -1,0 +1,6 @@
+/* 글로벌 스타일에서 기본 마진 제거 */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
