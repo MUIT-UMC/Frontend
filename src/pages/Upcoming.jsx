@@ -1,6 +1,7 @@
 // Pages/Upcoming.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import FormattedDate from "../components/date/FormattedDate";
 //import axios from "axios";
 
 // Mock 데이터
@@ -177,7 +178,7 @@ const Upcoming = () => {
               <div className="details">
                <div className="name">{musical.name}</div>
                <div className="datetime">
-                  {musical.date} / {musical.time}
+                 <FormattedDate date={musical.date}/> {musical.time}
                </div>
               </div>
           </MusicalItem>
