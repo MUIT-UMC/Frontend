@@ -12,6 +12,7 @@ import HeartLine from "../assets/icons/heart-line.svg";
 import HeartFull from "../assets/icons/heart-full.svg";
 import Info from "../components/detail/Info";
 import Price from "../components/detail/Price";
+import Calendar from "../components/Calendar";
 
 function Detail() {
   const poster = posterImg;
@@ -53,10 +54,14 @@ function Detail() {
         {/*하단 nav bar */}
         <PerformanceDetails/>
         </LeftSection>
+
         <RightSection>
-          <EventCalendar />
+          <CalendarWrapper>
+            <Calendar variant="compact"/>
+            <hr />
+            티켓 오픈 컴포넌트
+          </CalendarWrapper>
           <GroupPurchaseButton>공동 구매하기</GroupPurchaseButton>
-          
         </RightSection>
         </div>
       </MainContent>
@@ -226,4 +231,17 @@ const SightLink = styled.div`
 
   display: flex;
   align-items: center; /* 수직 가운데 정렬 */
+`
+
+const CalendarWrapper = styled.div`
+  width: 100%;
+  border: 1px solid #E6E6E6;
+
+  
+  hr {
+    border: none;
+    border-top: 1px solid #E6E6E6;
+    width: 100%;
+    margin: 0px 16px;
+  }
 `

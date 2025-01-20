@@ -3,7 +3,7 @@ import styled from "styled-components";
 import NextMonth from "../assets/icons/NextMonth.svg";
 import PrevMonth from "../assets/icons/PrevMonth.svg";
 
-const Calendar = () => {
+const Calendar = ({ variant = "default" }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -42,53 +42,62 @@ const Calendar = () => {
   };
 
   return (
-      <CalendarWrapper>
-          <Header>
-              <NavButton onClick={handlePrevMonth}><img src={PrevMonth}/></NavButton>
-              <MonthYear>
-                  {currentDate.toLocaleString("default", { month: "long" })} {year}
-              </MonthYear>
-              <NavButton onClick={handleNextMonth}><img src={NextMonth}/></NavButton>
-          </Header>
+    <CalendarWrapper variant={variant}>
+      <Header variant={variant}>
+        <NavButton onClick={handlePrevMonth}>
+          <img src={PrevMonth} alt="Previous Month" />
+        </NavButton>
+        <MonthYear variant={variant}>
+        {variant === "compact"
+          ? `${year}.${String(month + 1).padStart(2, "0")}` 
+          : currentDate.toLocaleString("default", { month: "long" }) + ` ${year}`} 
+        </MonthYear>
+        <NavButton onClick={handleNextMonth}>
+          <img src={NextMonth} alt="Next Month" />
+        </NavButton>
+      </Header>
 
-          <DaysGrid>
-              {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-                  <DayName key={day}>{day}</DayName>
-              ))}
-          </DaysGrid>
-          <DaysGrid>
-                  {daysArray.map((day, index) => (
-                      <Day
-                          key={index}
-                          isSelected={selectedDate?.getDate() === day && selectedDate?.getMonth() === month}
-                          onClick={() => handleDateClick(day)}
-                      >
-                          {day || ""}
-                      </Day>
-                  ))}
-          </DaysGrid>
-      </CalendarWrapper>
+      <DaysGrid variant={variant}>
+        {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
+          <DayName key={day} variant={variant}>
+            {day}
+          </DayName>
+        ))}
+      </DaysGrid>
+      <DaysGrid variant={variant}>
+        {daysArray.map((day, index) => (
+          <Day
+            key={index}
+            isSelected={
+              selectedDate?.getDate() === day && selectedDate?.getMonth() === month
+            }
+            onClick={() => handleDateClick(day)}
+            variant={variant}
+          >
+            {day || ""}
+          </Day>
+        ))}
+      </DaysGrid>
+    </CalendarWrapper>
   );
 };
 
 // Styled components
 const CalendarWrapper = styled.div`
-  //border: 1px solid #ccc;
   border-radius: 8px;
   overflow: hidden;
   font-family: Pretendard;
-  
-  width: 100%;
+
+  width: ${({ variant }) => (variant === "compact" ? "300px" : "100%")};
 `;
 
 const Header = styled.div`
   display: flex;
-  width: 100%;
-  justify-content: center;
+  justify-content: ${({ variant }) => (variant === "compact" ? "flex-start" : "center")};
   align-items: center;
-  
   color: #000;
   padding: 20px;
+  padding-left:  ${({ variant }) => (variant === "compact" ? "10px" : "20px")};
 `;
 
 const NavButton = styled.button`
@@ -103,26 +112,24 @@ const NavButton = styled.button`
 `;
 
 const MonthYear = styled.div`
-  font-size: 26px;
+  font-size: ${({ variant }) => (variant === "compact" ? "20px" : "26px")};
   font-weight: bold;
 `;
 
 const DaysGrid = styled.div`
   display: grid;
-  font-size: 24px;
+  font-size: ${({ variant }) => (variant === "compact" ? "16px" : "24px")};
   grid-template-columns: repeat(7, 1fr);
-  gap: 15px;
+  gap: ${({ variant }) => (variant === "compact" ? "10px" : "15px")};
   padding: 10px;
+  padding-top: ${({ variant }) => (variant === "compact" ? "0px" : "10px")};
 `;
 
 const DayName = styled.div`
   text-align: center;
-
-  margin-bottom: 32px;
-
-  color: #000;
-  font-size: 24px;
-  font-style: normal;
+  margin-bottom: ${({ variant }) => (variant === "compact" ? "3px" : "32px")};
+  color: ${({ variant }) => (variant === "compact" ? "#919191" : "#000")};
+  font-size: ${({ variant }) => (variant === "compact" ? "14px" : "24px")};
   font-weight: 500;
 `;
 
@@ -133,19 +140,15 @@ const Day = styled.div`
   align-items: center;
   border-radius: 50%;
 
-  width: 30px;
-  height: 30px;
-
-  margin-bottom: 32px;
+  width: ${({ variant }) => (variant === "compact" ? "24px" : "30px")};
+  height: ${({ variant }) => (variant === "compact" ? "24px" : "30px")};
+  margin-bottom: ${({ variant }) => (variant === "compact" ? "3px" : "32px")};
 
   background: ${({ isSelected }) => (isSelected ? "#A00000" : "white")};
   color: ${({ isSelected }) => (isSelected ? "#FFF" : "#000")};
 
   cursor: pointer;
-
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
+  font-size: ${({ variant }) => (variant === "compact" ? "14px" : "24px")};
 `;
 
 export default Calendar;
