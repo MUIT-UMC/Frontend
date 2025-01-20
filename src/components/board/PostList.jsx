@@ -4,49 +4,49 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import PageNavigator from "./PageNavigator";
 
-function PostList() {
+function PostList({ details, headers, cols }) {
   const navigate = useNavigate();
   
-    const details = [
-      { id:1, name: "아이폰 16 pro 화이트 티타늄", musical: "알라딘", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-      { id:2, name: "가방 (샤넬백)", musical: "알라딘", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-      { id:3,  name: "남성용 반지갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-      { id:4, name: "블랙야크 벙어리장갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-      { id:5, name: "아이폰 14프로", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-    ];
 
   const handleRowClick = (id) => {
     navigate(`/board/lost/${id}`); // 클릭 시 경로 이동
   };
 
   return (
+    <>
     <PostListWrapper>
     <thead>
       <tr>
-        <th>분실물명</th>
-        <th>뮤지컬명</th>
-        <th>분실장소</th>
-        <th>분실일</th>
+        {headers.map((name) => (
+          <th>{name}</th>
+        ))}
       </tr>
     </thead>
     <tbody>
-      {details.map(({ id, name, musical, place, date }) => (
-        <tr key={id} onClick={() => handleRowClick(id)}>
-          <td>{name}</td>
-          <td width="180px">{musical}</td>
-          <td width="220px">{place}</td>
-          <td width="126px">{date}</td>
-        </tr>
-      ))}
+      {details.map((d) => {
+        console.log(d); // 로그 찍기
+        return (
+          <tr key={d.id} onClick={() => handleRowClick(d.id)}>
+            <td>{d.name}</td>
+            <td>{d.musical}</td>
+            <td>{d.place}</td>
+            {
+              d.date ? <td width="126px">{d.date}</td> : <></>
+            }
+          </tr>
+        );
+      })}
     </tbody>
-    <NavWrapper>
-    <PageNavigator
-      currentPage={4} // 현재 페이지
-      totalPages={4} // 전체 페이지 수
-      onPageChange={(page) => console.log(`Move to page: ${page}`)} // 페이지 변경 핸들러
-    />
-    </NavWrapper>
+    
   </PostListWrapper>
+  <NavWrapper>
+  <PageNavigator
+    currentPage={4} // 현재 페이지
+    totalPages={4} // 전체 페이지 수
+    onPageChange={(page) => console.log(`Move to page: ${page}`)} // 페이지 변경 핸들러
+  />
+  </NavWrapper>
+  </>
   )
 }
 
@@ -55,15 +55,16 @@ export default PostList;
 const PostListWrapper = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 32px;
   font-family: Pretendard, sans-serif;
   text-align: center;
-  margin-top: 32px;
+
+
   
   th, td {
     
     padding: 10px;
-    width: ${(props) => props.width ? props.width : ""};
+    width: ${(props) => props.width ? props.width : "auto"};
     
   }
 
@@ -108,7 +109,6 @@ const PostListWrapper = styled.table`
     cursor: pointer;
   }
 `;
-
 const NavWrapper = styled.div`
   display: flex;
   justify-content: center;

@@ -5,11 +5,22 @@ import SearchContainer from '../../../components/board/SearchContainer';
 
 const FoundBoard = () => {
   const fieldsForFour = [
-    { label: "분실일", placeholder: "" },
-    { label: "분실장소", placeholder: "" },
-    { label: "분실물명", placeholder: "" },
+    { label: "습득일", placeholder: "" },
+    { label: "습득장소", placeholder: "" },
+    { label: "습득물명", placeholder: "" },
     { label: "뮤지컬명", placeholder: "" },
   ];
+  const tableHeaders = [
+    "습득물명", "뮤지컬명", "습득장소", "습득일"
+  ]
+  const details = [
+    { id:1, name: "아이폰 16 pro 화이트 티타늄", musical: "알라딘", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+    { id:2, name: "가방 (샤넬백)", musical: "알라딘", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+    { id:3,  name: "남성용 반지갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+    { id:4, name: "블랙야크 벙어리장갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+    { id:5, name: "아이폰 14프로", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+  ];
+
   return (
     <>
       <ButtonWrapper>
@@ -18,7 +29,7 @@ const FoundBoard = () => {
         </Button>
       </ButtonWrapper>
       <SearchContainer fields={fieldsForFour} />
-      <PostList />
+      <PostList details={details} headers={tableHeaders} cols={4}/>
     </>
   );
 };
