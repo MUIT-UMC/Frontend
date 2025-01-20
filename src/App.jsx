@@ -88,5 +88,5 @@ const Container = styled.div`
   font-family: Arial, sans-serif;
   padding: 0px;
   margin: 0px;
-  width: 1440px;
+  min-width: 1440px;
 `;
