@@ -1,20 +1,54 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import {useForm} from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import MuitElement from '../assets/logos/MuitElement.png';
 import Google from '../assets/logos/google.png';
 import Kakao from '../assets/logos/kakao.png';
 import Naver from '../assets/logos/naver.png';
+import SeePassword from '../assets/icons/SeePassword.svg';
+import { useRef, useState } from "react";
 
 const COLOR_MUIT_RED = "#A00000";
 
 function Login() {
+    const schema = yup.object().shape({
+        id: yup.string().required(),
+        password: yup.string().required(),
+    })
+    const navigate = useNavigate();
+    const navigateToSignUp = () => {
+        navigate('/signup');
+    };
+    const [isShowPWChecked, setIsShowPWChecked] = useState(false);
+    const passwordRef = useRef(null);
+    const handleShowPWChecked = async() => {
+        const password = await passwordRef.current
+        if(password === null) return
+
+        await setIsShowPWChecked(!isShowPWChecked)
+        if(!isShowPWChecked){
+            password.type = 'text';
+        } else{
+            password.type = 'password';
+        }
+    }
+
     return(
         <Containter>
             <img src={MuitElement} className="MuitElement"/>
             <LogoLink>MUIT</LogoLink>
             <LoginForm>
-                <Input placeholder="아이디"/>
-                <Input placeholder="비밀번호"/>
+                <Input>
+                    <input type={'id'} placeholder="아이디"/>                
+                </Input> 
+                <Input>
+                    <input type={'password'} ref={passwordRef} placeholder="비밀번호"/>
+                    <img src={SeePassword} onClick={handleShowPWChecked}/>
+                </Input> 
             </LoginForm>
             <OptionArea>
                 <div className="keepLogin">
@@ -29,12 +63,12 @@ function Login() {
             </OptionArea>
             <BtnArea>
                 <LoginBtn>로그인</LoginBtn>
-                <SignUpBtn>회원가입</SignUpBtn>
+                <SignUpBtn onClick={navigateToSignUp}>회원가입</SignUpBtn>
             </BtnArea>
             <SocialLogin>
                 <SocialIcon url={Kakao}/>
                 <SocialIcon url={Naver}/>
-                <SocialIcon url={Google}/>
+                <SocialIcon url={Google} border={'#E6E6E6'}/>
             </SocialLogin>
         </Containter>
     )
@@ -54,7 +88,7 @@ const Containter = styled.div`
         margin-bottom: 32px;
     }
 `
-const LogoLink = styled(Link)`
+const LogoLink = styled.div`
   font-family:  "BelgianoSerif";
   font-size: 80px;
   font-weight: 400;
@@ -65,13 +99,14 @@ const LogoLink = styled(Link)`
   color: ${COLOR_MUIT_RED};
 `
 
-const LoginForm = styled.form`
+const LoginForm = styled.div`
     margin-bottom: 20px;    
 `
-const Input = styled.input`
+const Input = styled.form`
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     width: 500px;
     height: 60px;
@@ -81,13 +116,20 @@ const Input = styled.input`
     background: #FFF;
 
     padding: 8px 20px 8px 20px;
-            
-    font-family: Pretendard;
-    font-size: 16px;
-    font-weight: 500;
 
-    &::placeholder{
+    input::placeholder{
         color: #919191; 
+    }
+    input{
+        border: none;
+        flex: 1;
+
+        font-family: Pretendard;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    input:focus{
+        outline : none;
     }
 `
 const OptionArea = styled.div`
@@ -110,7 +152,7 @@ const OptionArea = styled.div`
         width: 20px;
         height: 20px;
 
-        border-radius: 50%;
+        border-radius: 3px;
         border: 1px solid #898989;
     }
     .LoginCheck:checked{
@@ -168,12 +210,12 @@ const SocialIcon = styled.button`
     box-sizing: border-box;
     height: 40px;
     width: 40px;
-    border: none;
+    border: 1px solid ${(props) => props.border || '#00000000'};
     border-radius: 50%;
     cursor: pointer;
     background: url('${(props) => props.url}');
+
     background-size: cover;
     cursor:pointer;
 `
-
 export default Login;
