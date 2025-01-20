@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import PostList from "../../../components/board/PostList";
-import LostItemSearchBar from '../../../components/board/SearchContainer';
 import SearchBar from "../../../components/board/SearchBar";
 import PostList2 from "../../../components/board/PostList2";
 import musicalPic from "../../../assets/images/aladin-pic.png";
