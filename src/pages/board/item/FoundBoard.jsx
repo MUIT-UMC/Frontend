@@ -1,9 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import PostList from "../../../components/board/PostList";
-import LostItemSearchBar from './../../../components/board/LostItemSearchBar';
+import SearchContainer from '../../../components/board/SearchContainer';
 
 const FoundBoard = () => {
+  const fieldsForFour = [
+    { label: "분실일", placeholder: "" },
+    { label: "분실장소", placeholder: "" },
+    { label: "분실물명", placeholder: "" },
+    { label: "뮤지컬명", placeholder: "" },
+  ];
   return (
     <>
       <ButtonWrapper>
@@ -11,7 +17,7 @@ const FoundBoard = () => {
           검색
         </Button>
       </ButtonWrapper>
-      <LostItemSearchBar />
+      <SearchContainer fields={fieldsForFour} />
       <PostList />
     </>
   );

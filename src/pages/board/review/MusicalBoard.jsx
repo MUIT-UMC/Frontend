@@ -2,13 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import PostList from "../../../components/board/PostList";
 import SearchBar from "../../../components/board/SearchBar";
+import SearchContainer from "../../../components/board/SearchContainer";
 
 const MusicalBoard = () => {
+  const fieldsForTwo = [
+    { label: "뮤지컬명", placeholder: "" },
+    { label: "장소", placeholder: "" },
+  ];
   return (
     <>
-      <ButtonWrapper>
-      <SearchBar />
-      </ButtonWrapper>
+      <SearchContainer fields={fieldsForTwo} />
       <PostList />
     </>
   );
