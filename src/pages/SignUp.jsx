@@ -15,7 +15,7 @@ function SignUp() {
             <LogoLink>MUIT</LogoLink>
             <h3>회원가입 후 MUIT의 다양한 서비스를 경험해보세요</h3>
             <BtnArea>
-                <SignUpBtn bgcolor={COLOR_MUIT_RED} color={'#FFF'}> 개인 회원가입 </SignUpBtn>
+                <SignUpBtn to='/signup/terms' bgcolor={COLOR_MUIT_RED} color={'#FFF'}> 개인 회원가입 </SignUpBtn>
                 <SignUpBtn bgcolor={'#FDDC3F'} color={'#000'}> <img src={Kakao}/>카카오로 가입 </SignUpBtn>
                 <SignUpBtn bgcolor={'#00B818'} color={'#FFF'}><img src={Naver}/> 네이버로 가입 </SignUpBtn>
                 <SignUpBtn bgcolor={'#FFF'} border={'#E6E6E6'} color={'#000'}> <img src={Google}/>구글로 가입 </SignUpBtn>
@@ -59,7 +59,7 @@ const BtnArea = styled.div`
     margin-top: 80px;
     gap: 20px;
 `
-const SignUpBtn = styled.button`
+const SignUpBtn = styled(Link)`
     box-sizing: border-box;
     width: 400px;
     height: 40px;
@@ -75,6 +75,7 @@ const SignUpBtn = styled.button`
     background: ${(props) => props.bgcolor};
 
     color: ${(props) => props.color};
+    text-decoration-line: none;
 
     font-family: Pretendard;
     font-size: 16px;

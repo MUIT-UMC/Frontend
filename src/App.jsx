@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home";
 import Upcoming from "./pages/Upcoming";
-import Detail from "./pages/Detail";
+import Detail from "./pages/detail/Detail";
 import Vision from "./pages/Vision";
 import EventCheck from "./pages/EventCheck";
 import EventDetail from "./pages/EventDetail";
@@ -18,6 +18,8 @@ import LostItemPost from "./pages/board/LostItemPost";
 
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Terms from "./pages/signup/Terms"
+import Info from "./pages/signup/Info";
 import MyPage from "./pages/mypage/MyPage";
 
 import './styles/font.css';
@@ -64,6 +66,9 @@ function App() {
         {/* 9) 로그인/회원가입 */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup/terms" element={<Terms/>}/>
+        <Route path="/signup/info" element={<Info/>}/>
+
         {/* 마이페이지 */}
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:category/:type" element={<MyPage />} />
@@ -83,5 +88,6 @@ const Container = styled.div`
   font-family: Arial, sans-serif;
   padding: 0px;
   margin: 0px;
-  width: 1440px;
+  min-width: 1440px;
+  max-width: 1440px;
 `;

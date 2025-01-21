@@ -18,22 +18,22 @@ function Board() {
     item: {
       name: "분실물",
       navItems: [
-        { id: "lost", name: "분실" },
-        { id: "found", name: "습득" },
+        { id: "lost", name: "분실",  link: "/board/item/lost", },
+        { id: "found", name: "습득", link: "/board/item/found", },
       ],
     },
     anonymous: {
       name: "익명",
       navItems: [
-        { id: "all", name: "전체" },
-        { id: "hot", name: "HOT" },
+        { id: "all", name: "전체", link: "/board/anonymous/all" },
+        { id: "hot", name: "HOT", link: "/board/anonymous/hot" },
       ],
     },
     review: {
       name: "리뷰",
       navItems: [
-        { id: "musical", name: "뮤지컬 리뷰" },
-        { id: "seats", name: "시야 리뷰" },
+        { id: "musical", name: "뮤지컬 리뷰", link: "/board/review/musical" },
+        { id: "seats", name: "시야 리뷰", link: "/board/review/seats" },
       ],
     },
   };

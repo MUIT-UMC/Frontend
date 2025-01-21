@@ -11,7 +11,7 @@ const SubMenu = ({ navItems, currentType, basePath }) => {
         <NavItem
           key={item.id}
           isActive={currentType === item.id}
-          onClick={() => navigate(`${basePath}/${item.id}`)}
+          onClick={() => navigate(item.link)}
         >
           {item.name}
         </NavItem>
