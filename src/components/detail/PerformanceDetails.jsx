@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
+import Review from '../../pages/detail/subpages/Review';
+import Casts from '../../pages/detail/subpages/Casts';
+import Performance from '../../pages/detail/subpages/Performance';
+import Seats from '../../pages/detail/subpages/Seats';
 
 const Content = styled.div`
   padding-top: 32px;
+  width: 820px;
 `;
 
 const navItems = [
@@ -16,24 +21,26 @@ function PerformanceDetails() {
   const [activeTab, setActiveTab] = useState('details');
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
-  const tabRefs = navItems.map(() => React.createRef());
+  const tabRefs = useMemo(() => navItems.map(() => React.createRef()), []);
 
   useEffect(() => {
-    // 컴포넌트가 마운트된 후 기본 탭의 위치와 너비 계산
     const defaultTabIndex = navItems.findIndex((item) => item.id === activeTab);
     const tabElement = tabRefs[defaultTabIndex]?.current;
 
     if (tabElement) {
       const { offsetLeft, offsetWidth } = tabElement;
-      setIndicatorStyle({ left: offsetLeft, width: offsetWidth });
+      if (
+        indicatorStyle.left !== offsetLeft ||
+        indicatorStyle.width !== offsetWidth
+      ) {
+        setIndicatorStyle({ left: offsetLeft, width: offsetWidth });
+      }
     }
-  }, [tabRefs, activeTab]);
+  }, [activeTab, tabRefs, indicatorStyle]);
 
   const handleTabClick = (id, index) => {
     setActiveTab(id);
-
-    // 클릭된 탭의 위치와 너비 계산
-    const tabElement = tabRefs[index].current;
+    const tabElement = tabRefs[index]?.current;
     if (tabElement) {
       const { offsetLeft, offsetWidth } = tabElement;
       setIndicatorStyle({ left: offsetLeft, width: offsetWidth });
@@ -53,19 +60,19 @@ function PerformanceDetails() {
             {item.name}
           </NavItem>
         ))}
-        {/* 하단 슬라이딩 선 */}
         <Indicator style={indicatorStyle} />
       </Navbar>
 
       <Content>
-        {activeTab === 'details' && <div>공연 정보 내용</div>}
-        {activeTab === 'cast' && <div>캐스팅 정보 내용</div>}
-        {activeTab === 'view-guide' && <div>시야 확인 내용</div>}
-        {activeTab === 'reviews' && <div>관람 후기 내용</div>}
+        {activeTab === 'details' && <Performance/>}
+        {activeTab === 'cast' && <Casts />}
+        {activeTab === 'view-guide' && <Seats />}
+        {activeTab === 'reviews' && <Review />}
       </Content>
     </div>
   );
 }
+
 
 const Navbar = styled.nav`
   position: relative;
