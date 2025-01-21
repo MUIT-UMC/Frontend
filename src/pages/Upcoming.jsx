@@ -1,6 +1,7 @@
 // Pages/Upcoming.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import FormattedDate from "../components/date/FormattedDate";
 //import axios from "axios";
 
 // Mock 데이터
@@ -10,6 +11,7 @@ const mockTodayMusical = [
     name: "베르테르",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhu1LYwXx-Eq6-QrtTz-JYHNhuO_o6fZarhQ&s",
     time: "11:00",
+   extraInfo: "25주년 공연"
   },
   {
     id: 2,
@@ -27,6 +29,7 @@ const mockTicketListMusicals = [
     image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
     date: "2025-01-20",
     time: "11:00",
+   info: "일반예매",
   },
   {
     id: 2,
@@ -34,6 +37,8 @@ const mockTicketListMusicals = [
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
     date: "2025-01-20",
     time: "14:00",
+   info: "일반예매",
+   extraInfo: "서대문 전용관",
   },
   {
     id: 3,
@@ -41,6 +46,8 @@ const mockTicketListMusicals = [
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
     date: "2025-01-25",
     time: "14:00",
+   info: "일반예매",
+   extraInfo: "광화문 전용관",
   },
   {
     id: 4,
@@ -48,6 +55,8 @@ const mockTicketListMusicals = [
     image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
     date: "2025-01-30",
     time: "16:00",
+   info: "4차 티켓 오픈",
+    
   },
   {
     id: 5,
@@ -55,6 +64,7 @@ const mockTicketListMusicals = [
     image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
     date: "2025-01-20",
     time: "11:00",
+    info: "일반예매",
   },
   {
     id: 6,
@@ -62,6 +72,8 @@ const mockTicketListMusicals = [
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
     date: "2025-01-20",
     time: "14:00",
+    info: "일반예매",
+    extraInfo: "서대문 전용관",
   },
   {
     id: 7,
@@ -69,6 +81,8 @@ const mockTicketListMusicals = [
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
     date: "2025-01-25",
     time: "14:00",
+    info: "일반예매",
+    extraInfo: "광화문 전용관",
   },
   {
     id: 8,
@@ -76,6 +90,7 @@ const mockTicketListMusicals = [
     image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
     date: "2025-01-30",
     time: "16:00",
+   info: "4차 티켓 오픈",
   },
   {
     id: 9,
@@ -83,6 +98,7 @@ const mockTicketListMusicals = [
     image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
     date: "2025-01-20",
     time: "11:00",
+    info: "일반예매",
   },
   {
     id: 10,
@@ -90,6 +106,8 @@ const mockTicketListMusicals = [
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
     date: "2025-01-20",
     time: "14:00",
+    info: "일반예매",
+    extraInfo: "서대문 전용관",
   },
   {
     id: 11,
@@ -97,6 +115,8 @@ const mockTicketListMusicals = [
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
     date: "2025-01-25",
     time: "14:00",
+   info: "일반예매",
+   extraInfo: "광화문 전용관",
   },
   {
     id: 12,
@@ -104,6 +124,7 @@ const mockTicketListMusicals = [
     image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
     date: "2025-01-30",
     time: "16:00",
+   info: "4차 티켓 오픈",
   },
 ];
 
@@ -111,6 +132,7 @@ const Upcoming = () => {
   const [todayMusicals, setTodayMusicals] = useState([]);
   const [TicketListMusicals, setTicketListMusicals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0); // 현재 표시 중인 뮤지컬 인덱스
 
   useEffect(() => {
     const fetchMusicals = async () => {
@@ -135,8 +157,14 @@ const Upcoming = () => {
     return <div>Loading...</div>;
   }
 
+  const handleMusicalClick = (index) => {
+    setActiveIndex(index); // 클릭한 뮤지컬의 인덱스를 저장
+  };
+
+
   return (
     <>
+    <Container>
       {/* 중앙 섹션 */}
       <MainSection>
         <Today>
@@ -144,34 +172,52 @@ const Upcoming = () => {
           <p>오늘 티켓 오픈</p>
         </Today>
         <FeaturedMusical>
-  {todayMusicals.map((musical, index) => (
-    <img 
-      key={musical.id} 
-      src={musical.image} 
-      alt={musical.name} 
-      style={{ zIndex: index === 0 ? 1 : -1 }} 
-    />
-  ))}
-</FeaturedMusical>
+          {todayMusicals.map((musical, index) => (
+            <div
+              key={musical.id}
+              className={`musical-item ${index === activeIndex ? "active" : ""}`}
+              style={{ zIndex: index === activeIndex ? 2 : 1 }} // 클릭된 이미지가 위로
+              onClick={() => handleMusicalClick(index)}
+            >
+              <img src={musical.image} alt={musical.name} />
+              {index === activeIndex && (
+                <div className="details">
+                  <div className="title">
+                    {musical.name}
+                     {musical.extraInfo&&(<span className="extra-info">{musical.extraInfo}</span>)}
+                  </div>
+                  <div className="datetime">오늘 {musical.time}</div>
+                  <div className="info">2차 티켓 오픈</div>
+                </div>
+              )}
+            </div>
+          ))}
+        </FeaturedMusical>
       </MainSection>
 
       {/* 하단 섹션 */}
       <TicketListWrapper>
-        <TicketListTitle>티켓 오픈 예정</TicketListTitle>
+        <TicketListTitle>티켓 오픈 예정
         <TicketList>
           {TicketListMusicals.map((musical) => (
            <MusicalItem key={musical.id}>
               <img src={musical.image} alt={musical.name} />
               <div className="details">
-               <div className="name">{musical.name}</div>
+               <div className="name">
+                {musical.name}
+                {musical.extraInfo&&(<span className="extra-info">{musical.extraInfo}</span>)}
+                </div>
                <div className="datetime">
-                  {musical.date} / {musical.time}
+                 <FormattedDate date={musical.date}/> {musical.time}
                </div>
+               <div className="info">{musical.info}</div>
               </div>
           </MusicalItem>
         ))}
         </TicketList>
+        </TicketListTitle>
       </TicketListWrapper>
+      </Container>
     </>
   );
 };
@@ -181,10 +227,14 @@ export default Upcoming;
 
 // Styled Components
 
+const Container = styled.div`
+  max-width: 1440px;
+  height: 864px;
+  margin: 0 auto;
+  position: relative;
+`;
 const MainSection = styled.div`
   display: flex;
-  height: calc(100vh - 160px); /* 높이를 늘려 이미지가 더 아래로 내려가도록 설정 */
-  margin-bottom: 180px;
   position: relative; /* 자식 요소의 위치 조정을 위한 설정 */
 `;
 
@@ -196,65 +246,111 @@ const Today = styled.div`
   position: relative;
 
   h1 {
-    font-size: 4rem;
-    margin: 0;
+
     color: #A00000;
-    font-family: "BelgianoSerif";
-    font-weight: 400;
+font-family: "BelgianoSerif";
+margin: 0;
+font-size: 60px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
   }
 
   p {
     font-size: 1rem;
     margin: 0;
     font-weight: bold;
+    font-family: Pretendard;
   }
 `;
 
 const FeaturedMusical = styled.div`
   flex: 1;
-  padding-left: 136px; /* 이미지와 "Today" 간격 늘리기 */
-  padding-right: 609px;
-   /* 아래로 더 이동 */
-  margin-top: 100px; /* 네비게이션 바 아래로 간격을 추가 */
   position: relative;
+  margin-top: 152px;
+  margin-right: 609px;
+  font-family: Pretendard;
 
+  .musical-item {
+    position: absolute;
+    left: 0;
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    cursor: pointer;
+    
+    img {
+      height: 584px;
+      object-fit: cover;
+    }
 
-  img {
-    height: 584px;
-    object-fit: cover;
-    position: absolute; /* 이미지들을 겹치게 배치 */
-    left: 0; /* 첫 번째 이미지는 기본 위치 */
+    .details {
+      margin-top: 16px;
+      color: black;
+
+      .title {
+font-family: Pretendard;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+margin-bottom: 20px;
+
+      }
+
+      .datetime {
+       font-family: Pretendard;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 25px; /* 156.25% */
+      margin-bottom: 4px;
+      }
+
+      .info {
+        font-size: 1rem;
+        color: #919191;
+      }
+      .extra-info{
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 25px;
+        margin-left: 8px;
+      }
+    }
   }
 
-  img:nth-child(2) {
+  .musical-item:nth-child(2) {
     left: 250px; /* 두 번째 이미지를 오른쪽으로 이동 */
-    z-index: -1; /* 첫 번째 이미지 뒤에 배치 */
+  }
+
+  .musical-item.active {
+    z-index: 2; /* 활성화된 이미지가 위로 올라옴 */
   }
 `;
+
 const TicketListWrapper = styled.div`
   position: relative; /* 자식 요소 위치를 조정하기 위해 설정 */
-  margin-top: 60px; /* 상단 섹션과의 간격 */
 `;
 
 const TicketListTitle = styled.div`
+  font-family: Pretendard;
   position: absolute;
   left: 97px; /* 왼쪽 여백 */
   font-size: 35px;
   font-weight: bold;
-  color: black; /* 적절한 색상 선택 */
-  margin-bottom: 32px; 
-
+  color: black; /* 적절한 색상 선택 */ 
+  margin-top: 60px;
 `;
-
 
 const TicketList = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 한 행에 4개씩 배치 */
   gap: 80px; /* 각 사진 간의 간격 */
   justify-content: center; /* 그리드가 중앙 정렬되도록 설정 */
-  padding-left: 145px; 
-  padding-right: 145px; 
- 
+  padding-left: 48px; 
+  margin-top: 37px;
+  margin-bottom: 45px;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
@@ -266,10 +362,9 @@ const TicketList = styled.div`
 `;
 
 const MusicalItem = styled.div`
-  text-align: center;
-  margin-top: 140px;
-  gap:80px;
-
+  text-align: left;
+  font-family: Pretendard;
+ 
   img {
     height: 320px;
     width: 228.571px;
@@ -282,14 +377,34 @@ const MusicalItem = styled.div`
     font-size: 0.9rem;
 
     .name {
-      font-weight: bold;
-      font-size: 1rem;
-      margin-bottom: 5px;
+     font-style: normal;  
+    font-weight: 700;
+      font-size: 24px;
+      margin-bottom: 20px;
     }
 
     .datetime {
-      color: #555;
+      color: black;
+      font-size: 16px;
+      margin-bottom: 4px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 25px; /* 156.25% */
     }
+
+    .info {
+      color: #919191;
+      font-size: 16px;
+      font-weight: normal;
+    }
+
+    .extra-info{
+        font-size: 16px;
+        font-weight: normal;
+        margin-left: 8px;
+        font-weight: 500;
+        line-height: 25px; /* 156.25% */
+      }
+    
   }
 `;
-
