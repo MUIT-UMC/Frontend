@@ -89,4 +89,5 @@ const Container = styled.div`
   padding: 0px;
   margin: 0px;
   min-width: 1440px;
+  max-width: 1440px;
 `;
