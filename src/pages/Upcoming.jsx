@@ -236,7 +236,6 @@ const Container = styled.div`
 const MainSection = styled.div`
   display: flex;
   position: relative; /* 자식 요소의 위치 조정을 위한 설정 */
-  margin-bottom: 0px;
 `;
 
 const Today = styled.div`
@@ -247,11 +246,14 @@ const Today = styled.div`
   position: relative;
 
   h1 {
-    font-size: 4rem;
-    margin: 0;
+
     color: #A00000;
-    font-family: "BelgianoSerif";
-    font-weight: 400;
+font-family: "BelgianoSerif";
+margin: 0;
+font-size: 60px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
   }
 
   p {
@@ -348,6 +350,7 @@ const TicketList = styled.div`
   justify-content: center; /* 그리드가 중앙 정렬되도록 설정 */
   padding-left: 48px; 
   margin-top: 37px;
+  margin-bottom: 45px;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
