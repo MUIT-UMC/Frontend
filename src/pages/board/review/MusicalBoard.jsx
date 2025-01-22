@@ -2,14 +2,28 @@ import React from "react";
 import styled from "styled-components";
 import PostList from "../../../components/board/PostList";
 import SearchBar from "../../../components/board/SearchBar";
+import SearchContainer from "../../../components/board/SearchContainer";
 
 const MusicalBoard = () => {
+  const fieldsForTwo = [
+    { label: "뮤지컬명", placeholder: "" },
+    { label: "장소", placeholder: "" },
+  ];
+  const tableHeaders = [
+    "제목", "뮤지컬명", "장소"
+  ]
+  const details = [
+    { id:1, name: "아이폰 16 pro 화이트 티타늄", musical: "알라딘", place: "링크아트센터드림 드림1관"},
+    { id:2, name: "가방 (샤넬백)", musical: "알라딘", place: "링크아트센터드림 드림1관"},
+    { id:3,  name: "남성용 반지갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관"},
+    { id:4, name: "블랙야크 벙어리장갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관"},
+    { id:5, name: "아이폰 14프로", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관"},
+  ];
+
   return (
     <>
-      <ButtonWrapper>
-      <SearchBar />
-      </ButtonWrapper>
-      <PostList />
+      <SearchContainer fields={fieldsForTwo} />
+      <PostList details={details} headers={tableHeaders} cols={3}/>
     </>
   );
 };

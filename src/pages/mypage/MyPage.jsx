@@ -149,6 +149,7 @@ font-weight: 700;
 line-height: normal;
 `
 const Content = styled.div`
+width: 924px;
 `
 
 const TextButton = styled.button`

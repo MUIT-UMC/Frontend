@@ -1,9 +1,26 @@
 import React from "react";
 import styled from "styled-components";
 import PostList from "../../../components/board/PostList";
-import LostItemSearchBar from './../../../components/board/LostItemSearchBar';
+import SearchContainer from './../../../components/board/SearchContainer';
 
 const LostBoard = () => {
+  const fieldsForFour = [
+    { label: "분실일", placeholder: "" },
+    { label: "분실장소", placeholder: "" },
+    { label: "분실물명", placeholder: "" },
+    { label: "뮤지컬명", placeholder: "" },
+  ];
+  const tableHeaders = [
+    "분실물명", "뮤지컬명", "분실장소", "분실일"
+  ]
+  const details = [
+    { id:1, name: "아이폰 16 pro 화이트 티타늄", musical: "알라딘", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+    { id:2, name: "가방 (샤넬백)", musical: "알라딘", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+    { id:3,  name: "남성용 반지갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+    { id:4, name: "블랙야크 벙어리장갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+    { id:5, name: "아이폰 14프로", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
+  ];
+
   return (
     <>
       <ButtonWrapper>
@@ -11,8 +28,8 @@ const LostBoard = () => {
           검색
         </Button>
       </ButtonWrapper>
-      <LostItemSearchBar />
-      <PostList />
+      <SearchContainer fields={fieldsForFour} />
+      <PostList details={details} headers={tableHeaders} cols="4"/>
     </>
   );
 };

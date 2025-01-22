@@ -9,6 +9,7 @@ import ProfileIcon from '../assets/icons/Profile.svg';
 import HamburgerIconWhite from '../assets/icons/HamburgerWhite.svg';
 import SearchIconWhite from '../assets/icons/SearchWhite.svg';
 import ProfileIconWhite from '../assets/icons/ProfileWhite.svg';
+import DivideBarIcon from '../assets/icons/DivideBar.svg'
 
 //  색상
 const COLOR_WHITE = "#FFFFFF";
@@ -29,13 +30,18 @@ export default function Navbar() {
   return (
     <NavBox>
       {/* 기본 상단바 */}
-      {["/", "/upcoming", "/vision", "/small-theater", "/event-check", "/board"].includes(location.pathname) && <NavbarDefault/>}
+      {["/", "/upcoming", "/vision", "/small-theater", "/event-check", "/board/item/lost",
+      "/board/item/found", "/board/anonymous/all", "/board/anonymous/hot", "/board/review/musical", "/board/review/seats" 
+      ].includes(location.pathname) && <NavbarDefault/>}
       {/* 상단바 with 사이드바 버튼 */}
       {(
         location.pathname.startsWith("/vision/") ||
         location.pathname.startsWith("/small-theater/") ||
         location.pathname.startsWith("/event-check/") ||
-        location.pathname.startsWith("/board/") ||
+        location.pathname.startsWith("/board/lost/") ||
+        location.pathname.startsWith("/board/found/") ||
+        location.pathname.startsWith("/board/.../") ||
+        location.pathname.startsWith("/board/.../") ||
         location.pathname.startsWith("/search") ||
         location.pathname.startsWith("/mypage")
       ) && <NavbarSidebar/>}
@@ -67,19 +73,19 @@ function NavbarDefault() {
         <MenuLink to="/" $active={location.pathname === "/"}>
           뮤지컬 전체 보기
         </MenuLink>
-        <MenuLink to="/upcoming" $active={location.pathname === "/upcoming"}>
+        {/* <MenuLink to="/upcoming" $active={location.pathname === "/upcoming"}>
           오픈예정
-        </MenuLink>
+        </MenuLink> */}
         <MenuLink to="/vision" $active={location.pathname === "/vision"}>
           시야확인
         </MenuLink>
-        <MenuLink to="/small-theater" $active={location.pathname === "/small=theater"}>
+        <MenuLink to="/small-theater" $active={location.pathname === "/small-theater"}>
           소극장 공연
         </MenuLink>
         <MenuLink to="/event-check" $active={location.pathname === "/event-check"}>
           이벤트 확인
         </MenuLink>
-        <MenuLink to="/board/item/lost" $active={location.pathname === "/board"}> {/* 임시경로로 링크 */}
+        <MenuLink to="/board/item/lost" $active={location.pathname === "/board/item/lost"}> {/* 임시경로로 링크 */}
           게시판
         </MenuLink>
       </MenuArea>
@@ -90,12 +96,22 @@ function NavbarDefault() {
 
 function NavbarSidebar() {
 
+  // 사이드바 열림/닫힘 상태 관리
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   // 사이드바 토글글
+   const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+  // 사이드바 닫기
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
     <NavTop>
       <LeftArea>
-        <SidebarButton>
+        <SidebarButton onClick={toggleSidebar}>
           <img src={HamburgerIcon} alt="Sidebar button" />
-            <Sidebar/>
         </SidebarButton>
       </LeftArea>
       <CenterArea>
@@ -105,6 +121,11 @@ function NavbarSidebar() {
         <IconLink to="/search"><img src={SearchIcon} alt="Search Icon" /></IconLink>
         <IconLink to="/mypage"><img src={ProfileIcon} alt="Profile Icon" /></IconLink>
       </RightArea>
+
+      {/* isSidebarOpen이 true일 때 사이드바 렌더링 */}
+      {isSidebarOpen && (
+        <Sidebar onClose={closeSidebar} />
+      )}
     </NavTop>
   )
 }
@@ -131,14 +152,24 @@ function NavbarDetail() {
     };
   }, []);
 
+  // 사이드바 열림/닫힘 상태 관리
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   // 사이드바 토글글
+   const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+  // 사이드바 닫기
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
 
   return (
     
     <NavTopDetail $scrolledBeyond={scrolledBeyond}>  {/* 상세페이지용 NavTop */}
       <LeftArea>
-        <SidebarButton>
+        <SidebarButton onClick={toggleSidebar}>
           <img src={scrolledBeyond ? HamburgerIcon : HamburgerIconWhite} alt="Sidebar button" />
-            <Sidebar/>
         </SidebarButton>
       </LeftArea>
       <CenterArea>
@@ -148,13 +179,56 @@ function NavbarDetail() {
         <IconLink to="/search"><img src={scrolledBeyond ? SearchIcon : SearchIconWhite} alt="Search Icon" /></IconLink>
         <IconLink to="/mypage"><img src={scrolledBeyond ? ProfileIcon: ProfileIconWhite} alt="Profile Icon" /></IconLink>
       </RightArea>
+
+      {/* isSidebarOpen이 true일 때 사이드바 렌더링 */}
+      {isSidebarOpen && (
+        <Sidebar onClose={closeSidebar} />
+      )}
     </NavTopDetail>
   )
 }
 
 
-function Sidebar() {
+function Sidebar({onClose}) {
 
+  //사이드바 외부 영역
+  const handleOverlayClick = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+  //사이드바 내부 영역
+  const handleContainerClick = (e) => {
+    e.stopPropagation();
+  };
+  // 메뉴 링크 클릭
+  const handleLinkClick = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  return (
+    <SidebarOverlay onClick={handleOverlayClick}>
+      <SidebarContainer onClick={handleContainerClick}>
+        <SideMenuArea>
+          <MenuTop>
+            <SideMenuLink to="/">홈</SideMenuLink>
+            <SideMenuLink to="/vision">시야 확인</SideMenuLink>
+            <SideMenuLink to="/event-check">이벤트 확인</SideMenuLink>
+            <SideMenuLink to="/small-theater">소극장 연극</SideMenuLink>
+            <SideMenuLink to="/board/item/lost" >게시판</SideMenuLink>
+          </MenuTop>
+          <Bar><img src={DivideBarIcon} alt="Bar Icon" /></Bar>
+          <MenuBottom>
+            <SideMenuLink to="/login">로그인</SideMenuLink>
+            <SideMenuLink to="/signup">회원가입</SideMenuLink>
+            <SideMenuLink to="/mypage" onClick={handleLinkClick}>마이 페이지</SideMenuLink>
+          </MenuBottom>
+        </SideMenuArea>
+      </SidebarContainer>
+    </SidebarOverlay>
+  )
 }
 
 // function NavbarAdmin() {}
@@ -308,3 +382,65 @@ const LogoLinkDetail = styled(Link)`
   }
 `;
 
+
+/////////////////////// 상세페이지 상단바 style ///////////////////////
+
+const SidebarOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;     /* 화면 전체 너비 */
+  height: 100vh;    /* 화면 전체 높이 */
+  background: rgba(0, 0, 0, 0.5);  /* 반투명 배경 */
+  z-index: 1000;    /* 다른 요소보다 위에 표시되도록 */
+
+  display: flex;
+  /* 사이드바를 우측에서 열고 싶으면 justify-content: flex-end; 로 변경 가능 */
+  justify-content: flex-start;
+`;
+
+const SidebarContainer = styled.div`
+  position: relative;
+  width: 200px;       /* 사이드바 너비 */
+  height: 100%;       /* 오버레이 높이에 맞춤 */
+  background-color: #fff;
+  padding: 20px;
+`;
+
+const SideMenuArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`
+
+const MenuTop = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap:  24px;
+  margin-top: 107px;
+`
+
+const MenuBottom = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap:  24px;
+`
+
+const SideMenuLink = styled(Link)`
+  text-decoration: none;
+  font-family:  "Pretendard";
+  font-size: 16px;
+  font-weight:  500;
+  color:  ${COLOR_GRAY_MAINTEXT};
+  margin-left:  24px;
+
+  &:hover {
+    color: ${COLOR_MUIT_RED};
+    transition: color 0.2s;
+  }
+`
+
+const Bar = styled.div`
+  margin-top: 28px;
+  margin-bottom:  28px;
+`

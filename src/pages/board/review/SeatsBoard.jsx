@@ -1,35 +1,32 @@
 import React from "react";
 import styled from "styled-components";
 import PostList from "../../../components/board/PostList";
-import LostItemSearchBar from '../../../components/board/LostItemSearchBar';
-import SearchBar from "../../../components/board/SearchBar";
-
+import SearchContainer from "../../../components/board/SearchContainer";
 const SeatsBoard = () => {
+  const fieldsForTwo = [
+    { label: "뮤지컬명", placeholder: "" },
+    { label: "장소", placeholder: "" },
+  ];
+  const tableHeaders = [
+    "제목", "뮤지컬명", "장소"
+  ]
+  const details = [
+    { id:1, name: "아이폰 16 pro 화이트 티타늄", musical: "알라딘", place: "링크아트센터드림 드림1관"},
+    { id:2, name: "가방 (샤넬백)", musical: "알라딘", place: "링크아트센터드림 드림1관"},
+    { id:3,  name: "남성용 반지갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관"},
+    { id:4, name: "블랙야크 벙어리장갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관"},
+    { id:5, name: "아이폰 14프로", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관"},
+  ];
+
   return (
     <>
-      <ButtonWrapper>
-      <SearchBar />
-      </ButtonWrapper>
-      <PostList />
+      <SearchContainer fields={fieldsForTwo} />
+      <PostList details={details} headers={tableHeaders} cols={3}/>
     </>
   );
 };
 
 export default SeatsBoard;
-
-const BoardContainer = styled.div`
-  margin: 100px 104px;
-  display: grid;
-  grid-template-columns: auto 1fr; /* 첫 번째 컬럼은 자동 크기, 두 번째 컬럼은 남은 공간을 차지 */
-   grid-auto-rows: auto; /* 행 높이는 자동 크기 */
-  column-gap: 112px; /* 컬럼 간의 간격 설정 */
-`;
-
-const BoardMenuWrapper = styled.div`
-  align-self: start; /* 메뉴를 상단에 고정 (높이 늘어나지 않도록) */
-`;
-
-
 
 const BoardContent = styled.div`
   width: 100%;

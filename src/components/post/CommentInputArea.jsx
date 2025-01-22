@@ -12,7 +12,7 @@ function CommentInputArea() {
       </CommentInputWrapper>
       <OptionWrapper>
       <div style={{display:'flex', flexDirection: 'row', gap: '8px', width: '100%'}}>
-        <img src={Camera} /><Text marginRight='20px'>사진</Text>
+        {/*<img src={Camera} /><Text marginRight='20px'>사진</Text>*/}
         <img src={Lock} /><Text>익명</Text>
       </div>
       <Button>등록</Button>

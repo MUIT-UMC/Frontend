@@ -1,9 +1,11 @@
 
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Link } from 'react-router-dom';
 
 import ArrowPrevIcon from '../assets/icons/ArrowPrev.svg';
 import ArrowNextIcon from '../assets/icons/ArrowNext.svg';
+import Upcoming from "./Upcoming";
 
 // 색상, 폰트 상수, 레이아웃 (디자인 가이드)
 const COLOR_MUIT_RED = "#A00000";
@@ -221,7 +223,7 @@ function Home() {
               RANKING
               {selectedOption === "ranking" && (
                 <OptionSubTitle>
-                  인기 뮤지컬 순위
+                  랭킹
                 </OptionSubTitle>
               )}
             </OptionTitle>
@@ -259,6 +261,8 @@ function Home() {
                     />
                   ))}
                 </DotWrapper>
+                { selectedOption === "ticketOpen" && (<UpcomingLink to="/upcoming">오픈 예정 전체보기</UpcomingLink>) }
+                { selectedOption === "ranking" && (<RankingLink to="/ranking">랭킹 전체보기</RankingLink>) }
               </CardBox>
               <ArrowButton onClick={handleNext}>
                 <ArrowIcon><img src={ArrowNextIcon} alt="Arrow Icon" /></ArrowIcon>
@@ -476,4 +480,36 @@ const Dot = styled.div`
   border-radius: 9999px;
   background-color: ${({ $active }) => ($active ? COLOR_MUIT_RED : COLOR_GRAY_OUTLINE)};
   cursor: pointer;
+`;
+
+const UpcomingLink = styled(Link)`
+  position: absolute;
+  right:  0px;
+  top:  -46px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: "Pretendard";
+  font-weight: 500;
+  font-size: 14px;
+  color:  ${COLOR_MUIT_RED};
+
+  border: 1px solid ${COLOR_MUIT_RED};
+  border-radius: 2px;
+  padding:  4px 12px 4px 12px;
+`;
+
+const RankingLink = styled(Link)`
+  position: absolute;
+  right:  0px;
+  top:  -46px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: "Pretendard";
+  font-weight: 500;
+  font-size: 14px;
+  color:  ${COLOR_MUIT_RED};
+
+  border: 1px solid ${COLOR_MUIT_RED};
+  border-radius: 2px;
+  padding:  4px 12px 4px 12px;
 `;

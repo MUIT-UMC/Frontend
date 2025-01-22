@@ -1,20 +1,17 @@
 import React from "react";
 import styled from "styled-components";
-import posterImg from "../assets/images/miafamiglia-poster.png";
-import starFull from '../assets/icons/star-full.svg';
-import starOutline from '../assets/icons/star-outline.svg';
-import PerformanceDetails from "../components/detail/PerformanceDetails";
-import EventCalendar from "../components/detail/EventCalendar";
-import MainBanner from "../components/detail/MainBanner";
-import ChevronRight from "../assets/icons/ChevronRight.svg";
-import ArrowRight from "../assets/icons/ArrowRight.svg";
-import HeartLine from "../assets/icons/heart-line.svg";
-import HeartFull from "../assets/icons/heart-full.svg";
-import Info from "../components/detail/Info";
-import Price from "../components/detail/Price";
-import Calendar from "../components/Calendar";
+import posterImg from "../../assets/images/miafamiglia-poster.png";
+import starFull from '../../assets/icons/star-full.svg';
+import starOutline from '../../assets/icons/star-outline.svg';
+import PerformanceDetails from "../../components/detail/PerformanceDetails";
+import MainBanner from "../../components/detail/MainBanner";
+import HeartLine from "../../assets/icons/heart-line.svg";
+import Info from "../../components/detail/Info";
+import Price from "../../components/detail/Price";
+import Calendar from "../../components/Calendar";
 
 function Detail() {
+  
   const poster = posterImg;
   const details = [
     { label: "장소", value: "링크아트센터 드림1관", extra: { text: "시야 확인하기" } },
@@ -24,6 +21,7 @@ function Detail() {
     { label: "출연", value: "김도빈, 황민수, 김찬종, 조풍해, 최호승, 장민수, 박영수, 문경초, 박좌현" },
     { label: "가격", value: <Price />, extra: null }, // 가격 상세 구현 필요
   ];
+  
   return (
     <>
       {/*빨간배너 */}
@@ -37,7 +35,6 @@ function Detail() {
         <TitleWrapper>
           <h1>미아 파밀리아</h1>
           <img src={HeartLine} />
-          <button>공동 구매 가능</button>
         </TitleWrapper>
 
         <RatingWrapper>
@@ -71,15 +68,6 @@ function Detail() {
 }
 
 export default Detail;
-
-// Styled Components
-const Container = styled.div`
-  font-family: Arial, sans-serif;
-  padding: 0px;
-  margin: 0px;
-  width: 1440px;
-`;
-
 
 const MainContent = styled.div`
   font-family: Arial, sans-serif;
@@ -128,52 +116,6 @@ const InfoWrapper = styled.div`
   margin-bottom: 37px;
 `;
 
-const InfoImage = styled.div`
-  flex: 1;
-  img {
-    width: 320px;
-    height: 450px;
-    background-color: #f0f0f0;
-  }
-`;
-
-const InfoDetail = styled.div`
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  margin: 0px 40px;
-`;
-
-const Item = styled.div`
-  display: flex;
-`;
-
-const Label = styled.div`
-    color: #000;
-    width: 120px;
-  /* Body-bold */
-  font-family: Pretendard;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-`;
-
-const Value = styled.div`
-  color: ${(props) => props.color? props.color:'#000'};
-  /* Body-me */
-  width: ${(props) => props.width? props.width: '340px'};
-  font-family: Pretendard;
-  font-size: ${(props) => props.fontSize? props.fontSize:'16px'};
-  font-style: normal;
-  font-weight: 500;
-  line-height: 25px; /* 156.25% */
- text-decoration-line: ${(props) => props.strikethrough ? 'line-through' : 'none'};
-  margin-right: ${(props) => props.marginRight ? props.marginRight : '0px'};
-  margin-left: ${(props) => props.marginLeft ? props.marginLeft : '0px'};
-`;
-
 const Rating = styled.div`
 color: #000;
 
@@ -218,30 +160,15 @@ const GroupPurchaseButton = styled.button`
   line-height: normal;
 `
 
-const SightLink = styled.div`
-  color: var(--Gray-sub, #919191);
-
-  /* Body-tiny-md */
-  font-family: Pretendard;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
-  text-align: center;
-
-  display: flex;
-  align-items: center; /* 수직 가운데 정렬 */
-`
-
 const CalendarWrapper = styled.div`
-  width: 100%;
+  width: 300px;
   border: 1px solid #E6E6E6;
 
   
   hr {
     border: none;
     border-top: 1px solid #E6E6E6;
-    width: 100%;
+    width: 90%;
     margin: 0px 16px;
   }
 `

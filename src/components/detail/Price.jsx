@@ -6,18 +6,13 @@ import ArrowRight from "../../assets/icons/ArrowRight.svg";
 const Price = ({ image, width, height, alt, details, valueWidth }) => {
   return (
         <div style={{display: 'flex', flexDirection:'column', gap:'10px'}}>
-          <Value color='#A00000' fontSize='14px'>공동 구매시 20% 할인</Value>
           <div style={{display:'flex', flexDirection:'row'}}>
             <Value width='28px' color='#919191' marginRight='16px'>R석</Value>
-            <Value width='68px' strikethrough='true' color='#919191' marginRight='6px'>70,000원</Value>
-            <img src={ArrowRight} />
-            <Value width='68px' marginLeft='8px'>56,000원</Value>
+            <Value width='68px' marginRight='6px'>70,000원</Value>
           </div>
           <div style={{display:'flex', flexDirection:'row'}}>
             <Value width='28px' color='#919191' marginRight='16px'>S석</Value>
-            <Value width='68px' strikethrough='true' color='#919191' marginRight='6px'>60,000원</Value>
-            <img src={ArrowRight} />
-            <Value width='68px' marginLeft='8px'>48,000원</Value>
+            <Value width='68px' marginRight='6px'>60,000원</Value>
           </div>
           <div style={{display:'flex', flexDirection:'row'}}>
             <Value width='28px' color='#919191' marginRight='16px'>A석</Value>
@@ -86,3 +81,23 @@ const SightLink = styled.div`
   display: flex;
   align-items: center;
 `;
+
+{/*<div style={{display: 'flex', flexDirection:'column', gap:'10px'}}>
+          <Value color='#A00000' fontSize='14px'>공동 구매시 20% 할인</Value>
+          <div style={{display:'flex', flexDirection:'row'}}>
+            <Value width='28px' color='#919191' marginRight='16px'>R석</Value>
+            <Value width='68px' strikethrough='true' color='#919191' marginRight='6px'>70,000원</Value>
+            <img src={ArrowRight} />
+            <Value width='68px' marginLeft='8px'>56,000원</Value>
+          </div>
+          <div style={{display:'flex', flexDirection:'row'}}>
+            <Value width='28px' color='#919191' marginRight='16px'>S석</Value>
+            <Value width='68px' strikethrough='true' color='#919191' marginRight='6px'>60,000원</Value>
+            <img src={ArrowRight} />
+            <Value width='68px' marginLeft='8px'>48,000원</Value>
+          </div>
+          <div style={{display:'flex', flexDirection:'row'}}>
+            <Value width='28px' color='#919191' marginRight='16px'>A석</Value>
+            <Value width='68px'>40,000원</Value>
+          </div>
+        </div> */}
