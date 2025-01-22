@@ -8,31 +8,35 @@ import { useNavigate } from "react-router-dom";
 const mockData = [
     {
       id: 1,
-      name: "종의 기원",
-      image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
-      date: "2025-01-20",
-      time: "11:00",
+      name: "실종",
+      image: "https://s3-alpha-sig.figma.com/img/a2b8/d604/235c8d162f6bd395d254e8ad50658ba1?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=miBOJM5zDybkWKh6th~0e6iYyIjcKtMOMt343ceQvUeGelbLYYa3LE2bEsHa8A4b~RJw7EML6T3MPVRNuXSZqxPVXwKR11XK2fhjc1DgLqzHGke2unn3L-R5Xc--z0Ei4eF5v7dAsd-Hc4fnqYPWT7oMPfCTaRjcOd8mbn7EB097G~TQwpkGatOtkgE9HpQ4-D1ewXAYBeQf3TGAqAXIQflbLNILYhWRsauWGY3ZggSd5B-OFUND7-caIdh2Lra3rCnxS6pah846GsSUdL732AhbgUDruTyWofHpsdwAVlWf6Dl2cDfGOuXIgaXog4bS6PFYIsxT2OMBNxGCevFRSQ__",
+      date: "2025-10-03",
+      time: "19:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 2,
-      name: "페인터즈",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-      date: "2025-01-20",
-      time: "14:00",
+      name: "실종",
+      image: "https://s3-alpha-sig.figma.com/img/a2b8/d604/235c8d162f6bd395d254e8ad50658ba1?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=miBOJM5zDybkWKh6th~0e6iYyIjcKtMOMt343ceQvUeGelbLYYa3LE2bEsHa8A4b~RJw7EML6T3MPVRNuXSZqxPVXwKR11XK2fhjc1DgLqzHGke2unn3L-R5Xc--z0Ei4eF5v7dAsd-Hc4fnqYPWT7oMPfCTaRjcOd8mbn7EB097G~TQwpkGatOtkgE9HpQ4-D1ewXAYBeQf3TGAqAXIQflbLNILYhWRsauWGY3ZggSd5B-OFUND7-caIdh2Lra3rCnxS6pah846GsSUdL732AhbgUDruTyWofHpsdwAVlWf6Dl2cDfGOuXIgaXog4bS6PFYIsxT2OMBNxGCevFRSQ__",
+      date: "2025-10-03",
+      time: "19:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 3,
-      name: "페인터즈",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-      date: "2025-01-25",
-      time: "14:00",
+      name: "실종",
+      image: "https://s3-alpha-sig.figma.com/img/a2b8/d604/235c8d162f6bd395d254e8ad50658ba1?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=miBOJM5zDybkWKh6th~0e6iYyIjcKtMOMt343ceQvUeGelbLYYa3LE2bEsHa8A4b~RJw7EML6T3MPVRNuXSZqxPVXwKR11XK2fhjc1DgLqzHGke2unn3L-R5Xc--z0Ei4eF5v7dAsd-Hc4fnqYPWT7oMPfCTaRjcOd8mbn7EB097G~TQwpkGatOtkgE9HpQ4-D1ewXAYBeQf3TGAqAXIQflbLNILYhWRsauWGY3ZggSd5B-OFUND7-caIdh2Lra3rCnxS6pah846GsSUdL732AhbgUDruTyWofHpsdwAVlWf6Dl2cDfGOuXIgaXog4bS6PFYIsxT2OMBNxGCevFRSQ__",
+      date: "2025-10-03",
+      time: "19:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 4,
-      name: "여신님이 보고계셔",
-      image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
-      date: "2025-01-30",
-      time: "16:00",
+      name: "실종",
+      image: "https://s3-alpha-sig.figma.com/img/a2b8/d604/235c8d162f6bd395d254e8ad50658ba1?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=miBOJM5zDybkWKh6th~0e6iYyIjcKtMOMt343ceQvUeGelbLYYa3LE2bEsHa8A4b~RJw7EML6T3MPVRNuXSZqxPVXwKR11XK2fhjc1DgLqzHGke2unn3L-R5Xc--z0Ei4eF5v7dAsd-Hc4fnqYPWT7oMPfCTaRjcOd8mbn7EB097G~TQwpkGatOtkgE9HpQ4-D1ewXAYBeQf3TGAqAXIQflbLNILYhWRsauWGY3ZggSd5B-OFUND7-caIdh2Lra3rCnxS6pah846GsSUdL732AhbgUDruTyWofHpsdwAVlWf6Dl2cDfGOuXIgaXog4bS6PFYIsxT2OMBNxGCevFRSQ__",
+      date: "2025-10-03",
+      time: "19:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 5,
@@ -40,6 +44,7 @@ const mockData = [
       image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
       date: "2025-01-20",
       time: "11:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 6,
@@ -47,6 +52,7 @@ const mockData = [
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
       date: "2025-01-20",
       time: "14:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 7,
@@ -54,6 +60,7 @@ const mockData = [
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
       date: "2025-01-25",
       time: "14:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 8,
@@ -61,6 +68,7 @@ const mockData = [
       image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
       date: "2025-01-30",
       time: "16:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 9,
@@ -68,6 +76,7 @@ const mockData = [
       image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
       date: "2025-01-20",
       time: "11:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 10,
@@ -75,6 +84,7 @@ const mockData = [
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
       date: "2025-01-20",
       time: "14:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 11,
@@ -82,6 +92,7 @@ const mockData = [
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
       date: "2025-01-25",
       time: "14:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
     {
       id: 12,
@@ -89,6 +100,7 @@ const mockData = [
       image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
       date: "2025-01-30",
       time: "16:00",
+      info: "홍익대학교 학생회관 3층 소극장",
     },
   ];
 
@@ -122,17 +134,33 @@ const SmallTheater=()=>{
     return(
         <>
          <TicketListWrapper>
-         <TicketListTitle onClick={() => navigate("/register-musical")} clas>
-          {"등록하러가기 ⇨"}
-        </TicketListTitle>
+        <Container>
+         <TicketListTitle>현재 진행중인 소극장 공연
+            </TicketListTitle>  
+         <TicketListEnroll onClick={() => navigate("/register-musical")} clas>
+          {"공연 등록하기"}
+        </TicketListEnroll>
+        </Container>
+        <DropdownWrapper>
+        <Dropdown name="region">
+          <option value="">지역 선택</option>
+          <option value="seoul">서울</option>
+          <option value="busan">부산</option>
+          <option value="daegu">대구</option>
+          <option value="incheon">인천</option>
+          <option value="gwangju">광주</option>
+          <option value="daejeon">대전</option>
+        </Dropdown>
+      </DropdownWrapper>
         <TicketList>
           {SmallMusicals.map((musical) => (
            <MusicalItem key={musical.id}>
               <img src={musical.image} alt={musical.name} />
               <div className="details">
-               <div className="name">{musical.name}</div>
+               <div className="title">{musical.name}</div>
+               <div className="info">{musical.info}</div>
                <div className="datetime">
-                  <FormattedDate date={musical.date}/> {musical.time}
+                  2024.<FormattedDate date={musical.date}/> {musical.time}
                </div>
               </div>
           </MusicalItem>
@@ -146,18 +174,50 @@ const SmallTheater=()=>{
 
 export default SmallTheater;
 
+
+
 const TicketListWrapper = styled.div`
   position: relative; /* 자식 요소 위치를 조정하기 위해 설정 */
-  margin-top: 31px; /* 상단 섹션과의 간격 */
+max-width: 1440px;
+  height: 864px;
+  margin: 0 auto;
+`;
+const Container = styled.div`
+  display: flex;
+  align-items: center; /* 세로 정렬을 중앙으로 */
+  margin-top: 100px;
+  gap: 740px; /* Title과 Enroll 사이 간격 */
 `;
 
 const TicketListTitle = styled.div`
-  position: absolute;
-  right: 84px; /* 오른쪽쪽 여백 */
-  font-size: 16px;
-  font-weight: bold;
-  color: #A00000; /* 적절한 색상 선택 */
-  margin-bottom: 31px; 
+  margin-left: 100px;
+  font-family: Pretendard;
+font-size: 36px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+letter-spacing: -0.72px;
+`;
+
+const TicketListEnroll = styled.div`
+margin-right: 100px;
+ font-family: Pretendard;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; 
+color: #FFF; /* 적절한 색상 선택 */
+
+background-color: #A00000;
+display: flex;
+width: 100px;
+height: 28px;
+padding: 4px 12px;
+justify-content: center;
+align-items: center;
+gap: 10px;
+flex-shrink: 0;
+border-radius: 3px;
   cursor: pointer; /* 커서 변경 */
 `;
 
@@ -167,16 +227,19 @@ const TicketList = styled.div`
   grid-template-columns: repeat(4, 1fr); /* 한 행에 4개씩 배치 */
   gap: 80px; /* 각 사진 간의 간격 */
   justify-content: center; /* 그리드가 중앙 정렬되도록 설정 */
-  padding-left: 145px; 
-  padding-right: 145px; 
-}
+  margin-left: 135px;
+  margin-right: 135px;
+  margin-top: 93px;
+  margin-bottom: 45px;
+
+  }
 `;
 
 const MusicalItem = styled.div`
   text-align: left;
-  margin-top: 62px;
-  gap:80px;
-
+  font-family: Pretendard;
+  margin-bottom: -25px;
+ 
   img {
     height: 320px;
     width: 228.571px;
@@ -185,20 +248,69 @@ const MusicalItem = styled.div`
   }
 
   .details {
-    margin-top: 10px;
+    margin-top: 15px;
     font-size: 0.9rem;
 
-    .name {
-    font-family: Pretendard;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    }
+    .title {
+font-family: Pretendard;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+margin-bottom: 18px;
 
-    .datetime {
-      color: black;
-    }
+      }
+
+      .datetime {
+color: #919191;
+
+/* body-16-medium */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 25px; /* 156.25% */
+    
+      }
+
+      .info {
+        color: #000;
+
+      /* body-16-medium */
+      font-family: Pretendard;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 25px; 
+    margin-bottom: 4px;
+      }
   }
 `;
 
+const DropdownWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 100px;
+  margin-top: 32px;
+`;
+
+const Dropdown = styled.select`
+  color: var(--Gray-sub, #919191);
+
+font-family: Pretendard;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 128.571% */
+display: flex;
+width: 104px;
+height: 28px;
+padding: 4px 12px;
+align-items: center;
+gap: 4px;
+position: absolute;
+border-radius: 2px;
+border: 1px solid var(--Gray-sub, #919191);
+background: var(--Gray-white-bg, #FFF);
+cursor: pointer
+`;
