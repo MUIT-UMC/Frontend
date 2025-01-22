@@ -28,20 +28,6 @@ const SeatsBoard = () => {
 
 export default SeatsBoard;
 
-const BoardContainer = styled.div`
-  margin: 100px 104px;
-  display: grid;
-  grid-template-columns: auto 1fr; /* 첫 번째 컬럼은 자동 크기, 두 번째 컬럼은 남은 공간을 차지 */
-   grid-auto-rows: auto; /* 행 높이는 자동 크기 */
-  column-gap: 112px; /* 컬럼 간의 간격 설정 */
-`;
-
-const BoardMenuWrapper = styled.div`
-  align-self: start; /* 메뉴를 상단에 고정 (높이 늘어나지 않도록) */
-`;
-
-
-
 const BoardContent = styled.div`
   width: 100%;
 `;
