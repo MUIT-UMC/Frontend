@@ -1,16 +1,50 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { IoIosSearch } from "react-icons/io";
-import { FaLocationDot } from "react-icons/fa6";
-import { GoChevronRight } from "react-icons/go";
 import Seat1 from '../assets/images/Seat1.png'
-import bluesquare1723 from '../assets/images/bluesquare1-7-23.png'
+import bluesquare1723 from '../assets/images/bluesquare1-7-23.png';
+//import charlotteSeat from "../assets/theaterSeat/charlotte/charlotteSeat";
+import location from '../assets/icons/location.svg';
+import ChevronRight from '../assets/icons/ChevronRight.svg';
+import Search from '../assets/icons/Search2.svg';
+import {
+    A_Before,
+    B_Before,
+    C_Before,
+    D_Before,
+    E_Before,
+    F_Before,
+    G_Before,
+    H_Before,
+    I_Before,
+    J_Before,
+    K_Before,
+    L_Before,
+    M_Before,
+    N_Before,
+    O_Before,
+    A_After,
+    B_After,
+    C_After,
+    D_After,
+    E_After,
+    F_After,
+    G_After,
+    H_After,
+    I_After,
+    J_After,
+    K_After,
+    L_After,
+    M_After,
+    N_After,
+    O_After,
+
+} from "../assets/theaterSeat/charlotte/charlotteSeat";
 
 const VisionDetail = () => {
     const [searchValue, setSearchValue] = useState("");
     const onChange = (e) => {
         setSearchValue(e.target.value);
-      }
+    }
 
     return(
         <Container>
@@ -18,31 +52,36 @@ const VisionDetail = () => {
                 <input className="search-txt"
                     value={searchValue} onChange={onChange}
                     placeholder="뮤지컬이나 공연장을 입력해주세요." />
-                <IoIosSearch
-                    className="search-btn"
-                    size={28} color="#C1C1C1" />
+                <img src={Search}/>
             </SearchBar>
+
             <DetailArea>
-                {/*API받게 될 부분*/}
-                <img src={Seat1} className="seat-img"/>
+                {/*공연장별로 다 따로 페이지를 만들기?*/}
+
+                <SeatArea>
+                    <p>1층</p>
+
+                    <div className="1st-floor">
+                        <img src={A_Before} className="seat-img"/>
+                        <img src={B_Before} className="seat-img"/>
+                        <img src={C_Before} className="seat-img"/>
+                        <img src={D_Before} className="seat-img"/>
+                        <img src={E_Before} className="seat-img"/>
+                    </div>
+                </SeatArea>
 
                 <SeatInfo> 
-                    <FaLocationDot
-                    size={28} color="#A00000"/>
+                    {/*API*/}
+                    <img src={location}/>
 
-                    <h3 className="title-B">블루스퀘어 신한카드홀</h3>    
-                    <p className="body-M-500">서울 용산구 이태원로 294</p>
+                    <h3 className="title-B">샤롯데씨어터</h3>    
+                    <p className="body-M-500">서울특별시 송파구 올림픽로 240</p>
                     <div className="NowShowing"> 
-                        <p className="body-M-400">현재 공연 <span className="ShowTitle">지킬 앤 하이드 </span></p>
-                        <GoChevronRight size={21} color="#919191"/> 
+                        <p className="body-M-400">현재 공연 <span className="ShowTitle">미아 파밀리아</span></p>
+                        <img src={ChevronRight}/>
                     </div>
 
                     <hr className="hr-line"/>
-
-                    <p className="body-M-400">좌석을 선택하세요</p>
-                    <SeatData>
-                        <h3><input/>층 <input/>열 <input/>번 좌석</h3>
-                    </SeatData>
 
                     <View>
                         <img src={bluesquare1723} className="view-img"/>
@@ -53,6 +92,7 @@ const VisionDetail = () => {
                         </div>
                     </View>                  
                 </SeatInfo>
+
             </DetailArea>
         </Container>
     )
@@ -60,9 +100,8 @@ const VisionDetail = () => {
 }
 
 const Container = styled.div`
+    font-family: Pretendard;
     padding: 0px 100px 0px 100px;
-    width:140px;
-
 `
 const SearchBar = styled.form`
   box-sizing: border-box;
@@ -96,7 +135,8 @@ const SearchBar = styled.form`
   }
 `
 const DetailArea = styled.div`
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 125px;
 
     .seat-img{
@@ -104,11 +144,25 @@ const DetailArea = styled.div`
         height: 619px;
     }
 `
+const SeatArea = styled.div`
+    .1st-floor {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3개의 column */
+        gap: 16px; /* 이미지 간 간격 */
+    }
+    img {
+        object-fit: contain;
+        width: 100%; /* 부모 grid cell 크기에 맞춤 */
+        height: auto; /* 비율 유지 */
+    }
+        
+    .seat-img {
+        max-height: 100px;
+    }
+`
 const SeatInfo = styled.div`
     h3{margin:0px;}
     p{margin: 0px;}
-
-    width: 100%;
 
     .NowShowing{
         margin-top:25px;
@@ -139,34 +193,6 @@ const SeatInfo = styled.div`
         color: #000000;
     }
 
-`
-const SeatData = styled.div`
-    margin: 30px 0 30px 0;
-    display: flex;
-    align-items: center;
-
-    font-size: 24px;
-    font-weight: 700;
-    color: #000000;
-
-    input{
-        background: transparent;
-        border:0;
-        border-style:none;
-        border-collapse:collapse;
-
-        border-bottom:solid 1px #C1C1C1; 
-        height: 24px;
-        width: 28px;
-
-        text-align: center;
-        font-size: 24px;
-        font-weight: 700;
-        color: #000000;
-    }
-    input:focus {
-        outline: none;
-    }
 `
 const View = styled.div`
     .view-img{
