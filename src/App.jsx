@@ -21,7 +21,7 @@ import SignUp from "./pages/SignUp";
 import Terms from "./pages/signup/Terms"
 import Info from "./pages/signup/Info";
 import MyPage from "./pages/mypage/MyPage";
-import Search from "./pages/Search";
+//import Search from "./pages/Search";
 
 import './styles/font.css';
 import styled from "styled-components";
