@@ -29,11 +29,12 @@ export default function Navbar() {
   return (
     <NavBox>
       {/* 기본 상단바 */}
-      {["/", "/upcoming", "/vision", "/small-theater", "/event-check", "/board"].includes(location.pathname) && <NavbarDefault/>}
+      {["/", "/vision", "/small-theater", "/event-check", "/board"].includes(location.pathname) && <NavbarDefault/>}
       {/* 상단바 with 사이드바 버튼 */}
       {(
         location.pathname.startsWith("/vision/") ||
-        location.pathname.startsWith("/small-theater/") ||
+        location.pathname.startsWith("/upcoming") ||
+        location.pathname.startsWith("/register-musical") ||
         location.pathname.startsWith("/event-check/") ||
         location.pathname.startsWith("/board/") ||
         location.pathname.startsWith("/search") ||
@@ -66,9 +67,6 @@ function NavbarDefault() {
       <MenuArea>
         <MenuLink to="/" $active={location.pathname === "/"}>
           뮤지컬 전체 보기
-        </MenuLink>
-        <MenuLink to="/upcoming" $active={location.pathname === "/upcoming"}>
-          오픈예정
         </MenuLink>
         <MenuLink to="/vision" $active={location.pathname === "/vision"}>
           시야확인
