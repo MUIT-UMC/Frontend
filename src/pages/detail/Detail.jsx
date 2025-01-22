@@ -11,6 +11,7 @@ import Price from "../../components/detail/Price";
 import Calendar from "../../components/Calendar";
 
 function Detail() {
+  
   const poster = posterImg;
   const details = [
     { label: "장소", value: "링크아트센터 드림1관", extra: { text: "시야 확인하기" } },
@@ -20,6 +21,7 @@ function Detail() {
     { label: "출연", value: "김도빈, 황민수, 김찬종, 조풍해, 최호승, 장민수, 박영수, 문경초, 박좌현" },
     { label: "가격", value: <Price />, extra: null }, // 가격 상세 구현 필요
   ];
+  
   return (
     <>
       {/*빨간배너 */}
