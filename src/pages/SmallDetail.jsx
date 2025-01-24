@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import posterImg from "../assets/images/lost-pic.png";
-import starFull from '../assets/icons/star-full.svg';
-import starOutline from '../assets/icons/star-outline.svg';
 import Info from "../components/detail/Info";
-import Calendar from "../components/Calendar";
 import pic from "../assets/images/lost-pic.png";
 import ChevronDown from '../assets/icons/ChevronDown.svg';
+import DetailImg from "../assets/images/lost-detail.png";
+import CastList from "../components/small-theater/CastList";
 
 function SmallDetail() {
   
   const poster = posterImg;
+  const detailImg=DetailImg;
   const details = [
     { label: "장소", value: "홍익대학교 학생회관 3층 소극장"},
     { label: "공연 기간", value: "2024.10.03 목요일 19시" },
@@ -71,6 +71,18 @@ function SmallDetail() {
         </RightSection>
         </div>
       </MainContent>
+      <BottomSection>
+        <Label>공연 정보
+        <Title>공연시간 정보</Title>
+        <Text>예매가능시간: 관람 3시간 전까지</Text>
+        <Title>공지사항</Title>
+        <Text>예매시에 공연 관리자가 안내하는 입금계좌로 입금하시고, 공연 관리자의 입금 확인을 통해 티켓 예매 확인을 받을 수<br/>
+        있습니다. 공연 관리자가 입금을 확인해야 하므로 티켓 확인까지 시간이 걸릴 수 있습니다.</Text>
+        </Label>
+        <DetailImage><img src={detailImg} alt="Detail Image"/></DetailImage> 
+        <Label>캐스팅 정보</Label>
+        <CastList/>
+      </BottomSection>
    </>
     
   );
@@ -258,4 +270,50 @@ const PurchaseButton = styled.button`
   font-weight: 300;
   line-height: normal;
 `
+/* 하단 */
+const BottomSection=styled.div`
+  margin-top: -40px;
+  margin-left:100px;
+`
+const Label=styled.div`
+color: var(--Muit-Red-main, #A00000);
+flex-direction: column;
 
+/* title-24-bold */
+font-family: Pretendard;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+`
+const Title=styled.div`
+color: #000;
+flex-direction: column;
+margin-top: 28px;
+
+/* Body-bold */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+`
+const Text=styled.div`
+color: #000;
+flex-direction: column;
+margin-top: 15px;
+margin-bottom: 20px;
+
+/* Body-me */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 25px; /* 156.25% */
+`
+const DetailImage=styled.div`
+  width: 500px;
+height: 888px;
+flex-shrink: 0;
+margin-bottom: 60px;
+`
