@@ -1,15 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PageNavigator from "./PageNavigator";
 
 function PostList({ details, headers, cols }) {
   const navigate = useNavigate();
-  
+  const location = useLocation(); // 현재 경로를 가져옴
+
 
   const handleRowClick = (id) => {
-    navigate(`/board/lost/${id}`); // 클릭 시 경로 이동
+    navigate(`${location.pathname}/${id}`);
   };
 
   return (
