@@ -60,6 +60,23 @@ const VisionDetail = () => {
         N: "Before",
         O: "Before",
     });
+    const areaImages = {
+        A: { Before: A_Before, After: A_After },
+        B: { Before: B_Before, After: B_After },
+        C: { Before: C_Before, After: C_After },
+        D: { Before: D_Before, After: D_After },
+        E: { Before: E_Before, After: E_After },
+        F: { Before: F_Before, After: F_After },
+        G: { Before: G_Before, After: G_After },
+        H: { Before: H_Before, After: H_After },
+        I: { Before: I_Before, After: I_After },
+        J: { Before: J_Before, After: J_After },
+        K: { Before: K_Before, After: K_After },
+        L: { Before: L_Before, After: L_After },
+        M: { Before: M_Before, After: M_After },
+        N: { Before: N_Before, After: N_After },
+        O: { Before: O_Before, After: O_After },
+    };
     
 
     const onChange = (e) => {
@@ -68,11 +85,35 @@ const VisionDetail = () => {
 
     const handleFloorToggle = (floor) => {
         setActiveFloor(floor);
+        setSelectedArea(null);
+        setSeatStates({
+            A: "Before",
+            B: "Before",
+            C: "Before",
+            D: "Before",
+            E: "Before",
+            F: "Before",
+            G: "Before",
+            H: "Before",
+            I: "Before",
+            J: "Before",
+            K: "Before",
+            L: "Before",
+            M: "Before",
+            N: "Before",
+            O: "Before",
+        });
     };
-    const handleAreaSelect = (area) => {
-        setSelectedArea(area); 
+    const toggleAreaState = (area) => {
+        setSeatStates((prevStates) => {
+            const newStates = {};
+            Object.keys(prevStates).forEach((key) => {
+                newStates[key] = key === area ? "After" : "Before";
+            });
+            return newStates;
+        });
+        setSelectedArea(area);
     };
-
     return(
         <Container>
             <SearchBar>
@@ -92,27 +133,36 @@ const VisionDetail = () => {
                         background: activeFloor === 1 ? "#A00000" : "#C1C1C1",
                     }}>1층</p>
                     <Floor>
-                        <img src={A_Before} className="left-seat-img"/>
-                        <img src={B_Before} className="center-seat-img"/>
-                        <img src={C_Before} className="right-seat-img"/>
-                        <img src={D_Before} className="left-seat-img"/>
-                        <img src={E_Before} className="center-seat-img"/>
-                        <img src={F_Before} className="right-seat-img"/>
-                        <img src={G_Before} className="left-seat-img"/>
-                        <img src={H_Before} className="center-seat-img"/>
-                        <img src={I_Before} className="right-seat-img"/>
+                        {["A", "B", "C", "D", "E", "F", "G", "H", "I"].map((area) => (
+                            <img
+                                key={area}
+                                src={areaImages[area][seatStates[area]]} // Before/After에 따라 이미지 변경
+                                alt={area}
+                                className={
+                                    ["A", "D", "G"].includes(area) ? "left-seat-img" :
+                                        ["B", "E", "H"].includes(area) ? "center-seat-img" :
+                                            "right-seat-img"
+                                }
+                            />
+                        ))}
                     </Floor>
                     <p className="FloorTag"
                     style={{
                         background: activeFloor === 2 ? "#A00000" : "#C1C1C1",
                     }}>2층</p>
                     <Floor>
-                        <img src={J_Before} className="left-seat-img"/>
-                        <img src={K_Before} className="center-seat-img"/>
-                        <img src={L_Before} className="right-seat-img"/>
-                        <img src={M_Before} className="left-seat-img"/>
-                        <img src={N_Before} className="center-seat-img"/>
-                        <img src={O_Before} className="right-seat-img"/>
+                        {["J", "K", "L", "M", "N", "O"].map((area) => (
+                            <img
+                                key={area}
+                                src={areaImages[area][seatStates[area]]} // Before/After에 따라 이미지 변경
+                                alt={area}
+                                className={
+                                    ["J", "M"].includes(area) ? "left-seat-img" :
+                                        ["K", "N"].includes(area) ? "center-seat-img" :
+                                            "right-seat-img"
+                                }
+                            />
+                        ))}
                     </Floor>
                 </SeatArea>
 
@@ -149,36 +199,52 @@ const VisionDetail = () => {
                             ["A", "B", "C", "D", "E", "F", "G", "H", "I"].map((area) => (
                                 <button
                                     key={area}
-                                    className={`AreaBtn ${
-                                        selectedArea === area ? "active" : ""
-                                    }`}
-                                    onClick={() => handleAreaSelect(area)}
+                                    className={`AreaBtn ${seatStates[area] === "After" ? "active" : ""}`}
+                                    onClick={() => toggleAreaState(area)}
                                 >
                                     {area}
                                 </button>
                             ))}
+
                         {activeFloor === 2 &&
                             ["J", "K", "L", "M", "N", "O"].map((area) => (
                                 <button
                                     key={area}
-                                    className={`AreaBtn ${
-                                        selectedArea === area ? "active" : ""
-                                    }`}
-                                    onClick={() => handleAreaSelect(area)}
+                                    className={`AreaBtn ${seatStates[area] === "After" ? "active" : ""}`}
+                                    onClick={() => toggleAreaState(area)}
                                 >
                                     {area}
                                 </button>
                             ))}
                     </AreaSelector>
+
                     <hr className="hr-line"/>
 
                     <View>
-                        <img src={bluesquare1723} className="view-img"/>
-                        <p className="body-B-500">특징</p>
-                        <div className="feature">
-                            <span className="body-M-400">시야 가림 X</span>
-                            <span className="body-M-400">오페라글라스 O</span>
-                        </div>
+                    {selectedArea === "F" && (
+                            <div>
+                                <p className="body-B-600">F 구역 1열~10열 (1번~9번까지)</p>
+                                <div className="feature">
+                                    <span className="body-M-600">시야 가림 X</span>
+                                    <span className="body-M-600">오페라글라스 O</span>
+                                </div>
+                                <img src={bluesquare1723} className="view-img" />
+                                <p className="body-M-500">F구역 5열 1번</p>
+                            </div>
+
+                        )}
+                        {selectedArea === "O" && (
+                            <div>
+                                <p className="body-B-600">O 구역 1열~10열 (1번~9번까지)</p>
+                                <div className="feature">
+                                    <span className="body-M-600">시야 가림 X</span>
+                                    <span className="body-M-600">오페라글라스 O</span>
+                                </div>
+                                <img src={bluesquare1723} className="view-img" />
+                                <p className="body-M-500">O구역 5열 1번</p>
+                            </div>
+
+                        )}
                     </View>                  
                 </SeatInfo>
 
@@ -352,7 +418,6 @@ const AreaBtn = styled.div`
         }
     }
 `
-
 const AreaSelector = styled.div`
     width: 100%;
     display: flex;
@@ -389,21 +454,28 @@ const AreaSelector = styled.div`
 const View = styled.div`
     .view-img{
         width: 400px;
-        margin-bottom: 30px;
+        //margin-bottom: 30px;
     }
     .feature{
         display: flex;
         gap: 10px;
     }
-    .body-B-500{
+    .body-B-600{
         font-size: 16px;
         font-weight: 700;
         color: #000000;      
     }
-    .body-M-400{
-        font-size: 16px;
+    .body-M-600{
+        color: var(--Gray-maintext, #000);
+        font-size: 14px;
+        font-style: normal;
         font-weight: 500;
-        color: #919191;
+    }
+    .body-M-500{
+        color: var(--Gray-maintext, #919191);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
     }
 `
 export default VisionDetail;
