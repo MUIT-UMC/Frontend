@@ -12,6 +12,7 @@ import EventCheck from "./pages/EventCheck";
 import EventDetail from "./pages/EventDetail";
 import SmallTheater from "./pages/SmallTheater";
 import RegisterMusical from "./pages/RegisterMusical";
+import SmallDetail from "./pages/SmallDetail";
 import Board from "./pages/board/Board";
 import VisionDetail from "./pages/VisionDetail";
 import ItemPost from "./pages/board/ItemPost";
@@ -22,10 +23,14 @@ import SignUp from "./pages/SignUp";
 import Terms from "./pages/signup/Terms"
 import Info from "./pages/signup/Info";
 import MyPage from "./pages/mypage/MyPage";
+
 //import Search from "./pages/Search";
 import WriteAnonymousPost from "./pages/board/WriteAnonymousPost";
 import WriteItemPost from "./pages/board/WriteItemPost";
 import WriteReviewPost from "./pages/board/WriteReviewPost";
+
+import Search from "./pages/Search";
+
 import './styles/font.css';
 import styled from "styled-components";
 
@@ -53,6 +58,8 @@ function App() {
         <Route path="/small-theater" element={<SmallTheater />} />
         {/* 4-1) 뮤지컬 등록 페이지 */}
         <Route path="/register-musical" element={<RegisterMusical />} />
+        {/* 4-2) 뮤지컬 등록 페이지 */}
+        <Route path="/small-detail" element={< SmallDetail/>} />
         {/* 5) 이벤트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />
 
@@ -82,7 +89,12 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:category/:type" element={<MyPage />} />
         {/* 검색 */}
+
         {/*<Route path="/search" element={<Search />} />*/}
+
+        <Route path="/search" element={<Search />} />
+
+
       </Routes>
       </Router>
       </Container>

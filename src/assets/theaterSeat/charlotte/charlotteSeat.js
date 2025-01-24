@@ -5,7 +5,7 @@ import D_Before from "./Before/D.png";
 import E_Before from "./Before/E.png";
 import F_Before from "./Before/F.png";
 import G_Before from "./Before/G.png";
-import H_Before from "./Before/I.png";
+import H_Before from "./Before/H.png";
 import I_Before from "./Before/I.png";
 import J_Before from "./Before/J.png";
 import K_Before from "./Before/K.png";

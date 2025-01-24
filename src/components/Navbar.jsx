@@ -30,12 +30,14 @@ export default function Navbar() {
   return (
     <NavBox>
       {/* 기본 상단바 */}
-      {["/", "/upcoming", "/vision", "/small-theater", "/event-check", "/board/item/lost",
+      {["/", "/vision", "/small-theater", "/event-check", "/board/item/lost",
       "/board/item/found", "/board/anonymous/all", "/board/anonymous/hot", "/board/review/musical", "/board/review/seats" 
       ].includes(location.pathname) && <NavbarDefault/>}
       {/* 상단바 with 사이드바 버튼 */}
       {(
         location.pathname.startsWith("/vision/") ||
+        location.pathname.startsWith("/upcoming") ||
+        location.pathname.startsWith("/register-musical") ||
         location.pathname.startsWith("/small-theater/") ||
         location.pathname.startsWith("/event-check/") ||
         location.pathname.startsWith("/board/item/lost/") ||
