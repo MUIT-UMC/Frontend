@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home";
 import Upcoming from "./pages/Upcoming";
-import Ranking from "./pages/ranking";
+import Ranking from "./pages/Ranking";
 import Detail from "./pages/detail/Detail";
 import Vision from "./pages/Vision";
 import EventCheck from "./pages/EventCheck";
