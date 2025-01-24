@@ -12,6 +12,7 @@ import EventCheck from "./pages/EventCheck";
 import EventDetail from "./pages/EventDetail";
 import SmallTheater from "./pages/SmallTheater";
 import RegisterMusical from "./pages/RegisterMusical";
+import SmallDetail from "./pages/SmallDetail";
 import Board from "./pages/board/Board";
 import VisionDetail from "./pages/VisionDetail";
 import LostItemPost from "./pages/board/LostItemPost";
@@ -50,6 +51,8 @@ function App() {
         <Route path="/small-theater" element={<SmallTheater />} />
         {/* 4-1) 뮤지컬 등록 페이지 */}
         <Route path="/register-musical" element={<RegisterMusical />} />
+        {/* 4-2) 뮤지컬 등록 페이지 */}
+        <Route path="/small-detail" element={< SmallDetail/>} />
         {/* 5) 이벤트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />
 
@@ -75,6 +78,7 @@ function App() {
         <Route path="/mypage/:category/:type" element={<MyPage />} />
         {/* 검색 */}
         {/*<Route path="/search" element={<Search />} />*/}
+
       </Routes>
       </Router>
       </Container>

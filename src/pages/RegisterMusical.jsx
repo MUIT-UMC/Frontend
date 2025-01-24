@@ -25,7 +25,7 @@ const RegisterMusical = () => {
             <Preview>
             <img src={CameraIcon} alt="Camera Icon" />
             </Preview>
-            <FileInput type="file" accept="image/*" onChange={handleImageUpload} />
+  
           </ImageUpload>
         </LeftSection>
         <RightSection>
@@ -64,15 +64,27 @@ const RegisterMusical = () => {
         </RightSection>
       </Form>
       <BottomSection>
+      <Border></Border>
   <Section>
     <SectionTitle>⚠️ 참고사항</SectionTitle>
+    <SectionText>
+      1. 기본 수수료는 5000원입니다.<br/>
+      2. 등록 후, 관리자가 확인 후 페이지에 올라가게 됩니다.<br/>
+      3. 대학생, 아마추어 연극/뮤지컬 모두 가능합니다. <br/>
+      4. 환불은 저희가 해드리지 않습니다. 자신의 인스타그램으로 환불 or 현장에서 하시길 바랍니다.
+      </SectionText>
+   </Section>
+    <Border></Border>
+    <Section>  
     <InputWrapper2>
       <Label>해시태그</Label>
-      <Input type="text" placeholder="예: #극중극 #드라마" />
+      <Input2 type="text" placeholder="예: #극중극 #드라마" />
     </InputWrapper2>
     <InputWrapper2>
       <Label>줄거리</Label>
-      <TextArea placeholder="줄거리를 입력하세요" />
+      <TextArea   placeholder={`공연의 줄거리를 입력하세요
+사진을 추가할 경우 미리보기 포스터로 올라갑니다`}
+      />
     </InputWrapper2>
   </Section>
 
@@ -80,11 +92,13 @@ const RegisterMusical = () => {
     <SectionTitle>공연정보</SectionTitle>
     <InputWrapper2>
       <Label>공연시간 정보</Label>
-      <Input type="text" placeholder="공연시간 정보를 입력하세요" />
+      <TextArea placeholder="예매 가능시간이나 공연시간에 대해 자유롭게 입력하세요" />
     </InputWrapper2>
     <InputWrapper2>
       <Label>공지사항</Label>
-      <TextArea placeholder="공지사항을 입력하세요" />
+      <TextArea placeholder={`공지 사항에 대해 자유롭게 입력하세요
+예: 예매시에 공연 관리자가 안내하는 입금계좌로 입금하시고, 공연 관리자의 입금 확인을 통해 티켓 예매 확인을 받을 수 있습니다. 
+공연 관리자가 입금을 확인해야 하므로 티켓 확인까지 시간이 걸릴 수 있습니다.`} />
     </InputWrapper2>
   </Section>
 
@@ -159,6 +173,7 @@ margin-left: 99px;
 const Form = styled.div`
   display: flex;
   gap: 40px;
+  margin-bottom:60px;
 `;
 
 const LeftSection = styled.div`
@@ -190,6 +205,7 @@ flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top:-30px;
 
   background-color: #F5F5F5;
 
@@ -201,14 +217,13 @@ flex-shrink: 0;
   }
 `;
 
-const FileInput = styled.input`
-  margin-top: 10px;
-`;
+// const FileInput = styled.input`
+//   margin-top: 10px;
+// `;
 
 const InputWrapper = styled.div`
   display: flex;
   align-items: center; /* 텍스트와 인풋을 수평 정렬 */
-  gap: 16px; /* 라벨과 입력 필드 간격 */
 `;
 
 const Label = styled.label`
@@ -225,12 +240,14 @@ line-height: normal;
 
 const Input = styled.input`
   border: none;
-  border-bottom: 1px solid #ccc; /* 밑줄만 표시 */
+  border-bottom: 1px solid #E6E6E6; /* 밑줄만 표시 */
   outline: none; /* 포커스 시 기본 테두리 제거 */
   padding: 4px 0;
-color: #E6E6E6;
-width: 300px;
-
+  color:rgb(0, 0, 0);
+  width: 300px;
+  margin-left: auto; /* 요소를 오른쪽으로 최대한 밀어붙임 */
+  margin-right: 560px; /* 오른쪽에서 560px 떨어지게 함 */
+ 
   &::placeholder {
     color: #919191; /* 플레이스홀더 색상 */
     /* body-14-medium */
@@ -245,12 +262,32 @@ line-height: 18px; /* 128.571% */
     border-bottom: 1px solid #333; /* 포커스 시 밑줄 색상 변경 */
   }
 `;
+
+const Border=styled.div`
+ border: none;
+border-bottom: 1px solid #E6E6E6; /* 밑줄만 표시 */
+width: 924px;
+flex-direction: column;
+margin-bottom:32px;
+`
+const SectionText=styled.div`
+color: #000;
+margin-bottom:32px;
+
+/* body-16-medium */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 25px; /* 156.25% */
+`
+
 const BottomSection = styled.div`
-  padding: 40px 100px;
+  padding: 5px 100px;
 `;
 
 const Section = styled.div`
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 `;
 
 const SectionTitle = styled.h2`
@@ -271,17 +308,53 @@ const InputWrapper2 = styled.div`
   flex-direction: column;
   gap: 8px;
 `;
+const Input2 = styled.input`
+  border: none;
+  border-bottom: 1px solid #E6E6E6; /* 밑줄만 표시 */
+  outline: none; /* 포커스 시 기본 테두리 제거 */
+  padding: 4px 0;
+  color:rgb(0, 0, 0);
+  width: 924px;
+  flex-direction: column;
+  margin-bottom: 28px;
+ 
+  &::placeholder {
+    color: #919191; /* 플레이스홀더 색상 */
+    /* body-14-medium */
+font-family: Pretendard;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 128.571% */
+  }
+
+  &:focus {
+    border-bottom: 1px solid #333; /* 포커스 시 밑줄 색상 변경 */
+  }
+  `
 const TextArea = styled.textarea`
   border: 1px solid #ccc;
   border-radius: 4px;
-  outline: none;
-  padding: 8px;
-  width: 100%;
-  font-size: 14px;
-  resize: none;
+display: flex;
+width: 924px;
+height: 116px;
+padding: 12px;
+flex-direction: column;
+align-items: flex-start;
+gap: 42px;
+flex-shrink: 0;
+
+  
 
   &::placeholder {
-    color: #aaa;
+  color:#919191;
+    /* Body-me */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 25px; /* 156.25% */
+ white-space: pre-wrap;
   }
 
   &:focus {
