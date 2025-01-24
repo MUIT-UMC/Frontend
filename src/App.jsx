@@ -21,6 +21,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Terms from "./pages/signup/Terms"
 import Info from "./pages/signup/Info";
+import Complete from "./pages/signup/Complete";
 import MyPage from "./pages/mypage/MyPage";
 //import Search from "./pages/Search";
 
@@ -72,6 +73,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signup/terms" element={<Terms/>}/>
         <Route path="/signup/info" element={<Info/>}/>
+        <Route path="/signup/complete" element={<Complete/>}/>
 
         {/* 마이페이지 */}
         <Route path="/mypage" element={<MyPage />} />

@@ -52,7 +52,10 @@ function Info() {
     const navigate = useNavigate();
     const onPrevious = () => {
         navigate(-1);
-    }
+    };
+    const EndSignUp = () => {
+        navigate('/signup/complete');
+    };
 
     const [selectedGender, setSelectedGender] = useState(null); // 성별 상태 관리
     const handleGenderSelect = (gender) => {
@@ -176,7 +179,8 @@ function Info() {
                             <Button className="previous"
                             onClick={onPrevious}>이전</Button>
                             <Button className="next"
-                                disabled={!ageCheck}>가입하기</Button>
+                                disabled={!ageCheck}
+                                onClick={EndSignUp}>가입하기</Button>
                         </BtnArea>
 
                     </Form>
