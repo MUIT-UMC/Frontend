@@ -33,6 +33,9 @@ import Search from "./pages/Search";
 
 import './styles/font.css';
 import styled from "styled-components";
+import TicketDetailPage from "./pages/mypage/my/ticket/TicketDetailPage";
+import CancelTicket from "./pages/mypage/my/ticket/CancelTicket";
+import CancelComplete from "./pages/mypage/my/ticket/CancelComplete";
 
 
 
@@ -88,6 +91,11 @@ function App() {
         {/* 마이페이지 */}
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:category/:type" element={<MyPage />} />
+
+        {/* 티켓 상세페이지 */}
+        <Route path="ticket/:number" element={<TicketDetailPage />} />
+        <Route path="ticket/:number/cancel" element={<CancelTicket />} />
+        <Route path="ticket/:number/cancel/complete" element={<CancelComplete />}  />
         {/* 검색 */}
 
         {/*<Route path="/search" element={<Search />} />*/}

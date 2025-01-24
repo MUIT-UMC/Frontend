@@ -1,7 +1,15 @@
-// components/detail/InfoWrapper.jsx
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 const TicketDetail = ({ image, width, height, alt, details, valueWidth }) => {
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
+  const handleCancelClick = () => {
+    const currentUrl = window.location.pathname; // 현재 URL 가져오기
+    navigate(currentUrl + '/cancel'); // '/cancel'을 URL 뒤에 추가하여 이동
+  };
+
   return (
     <Wrapper>
       <InfoImage height={height}>
@@ -44,7 +52,7 @@ const TicketDetail = ({ image, width, height, alt, details, valueWidth }) => {
       <p>단, 예매 당일 밤 12시 이전 취소 시에는 취소 수수료가 없음 (취소 기한내에 한함)</p>
       <p>취소수수료는 취소시점에 따라 달라지며, 취소 진행 시 확인 하실 수 있습니다.</p>
       </Cautions>
-      <button>
+      <button onClick={handleCancelClick}>
         예매 취소
       </button>
       </RightSection>
@@ -172,6 +180,9 @@ font-style: normal;
 font-weight: 700;
 line-height: normal;
   }
+div > span:nth-child(2){
+  margin-left: 12px;
+  }
 span {
 color: var(--Muit-Red-main, #A00000);
 
@@ -183,6 +194,7 @@ font-weight: 500;
 line-height: 25px; /* 156.25% */
 margin-top: 12px;
 }
+
 `
 
 const RightSection = styled.div`

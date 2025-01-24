@@ -47,6 +47,7 @@ export default function Navbar() {
         location.pathname.startsWith("/board/anonymous/write") ||
         location.pathname.startsWith("/board/review/musical/") ||
         location.pathname.startsWith("/board/review/seats/") ||
+        location.pathname.startsWith("/ticket/") ||
         location.pathname.startsWith("/board/.../") ||
         location.pathname.startsWith("/board/.../") ||
         location.pathname.startsWith("/search") ||
