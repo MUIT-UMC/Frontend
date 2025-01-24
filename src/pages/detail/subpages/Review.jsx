@@ -3,6 +3,7 @@ import styled from "styled-components";
 import starFull from '../../../assets/icons/star-full.svg';
 import starOutline from '../../../assets/icons/star-outline.svg';
 import ReviewContainer from "../../../components/detail/ReviewContainer";
+import { RatingStars } from "../../../components/detail/RatingStars";
 
 function Review() {
   const reviewData = [
@@ -10,7 +11,7 @@ function Review() {
       title: "알라딘 관람 후기",
       author: "최윤경",
       date: "2025-01-05",
-      rating: 4.5,
+      rating: 4.0,
       reviewText:
         "알라딘 뮤지컬은 진짜 꿈같은 시간이었어요. 시작부터 끝까지 눈을 뗄 수 없는 화려한 무대 연출과 배우들의 열정적인 연기가 정말 감동적이었어요. 특히 지니 캐릭터는 예상보다 훨씬 더 유쾌하고 재치 넘쳐서 웃음이 끊이지 않았어요. 'A Whole new ∙∙∙",
     },
@@ -42,11 +43,7 @@ function Review() {
         <Left>
         <Title>관람 평점</Title>
         <RatingWrapper>
-          <img src={starFull} alt="Star Full Icon" style={{width: '36px', height: '36px'}}/>
-          <img src={starFull} alt="Star Full Icon" style={{width: '36px', height: '36px'}}/>
-          <img src={starFull} alt="Star Full Icon" style={{width: '36px', height: '36px'}}/>
-          <img src={starFull} alt="Star Full Icon" style={{width: '36px', height: '36px'}}/>
-          <img src={starOutline} alt="Star Outline Icon" style={{width: '36px', height: '36px'}}/>
+          <RatingStars rating={4} starSize={36}/>
           <Rating>4.0</Rating>
         </RatingWrapper>
         </Left>

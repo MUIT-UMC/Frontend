@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import starFull from "../../assets/icons/star-full.svg";
 import starOutline from "../../assets/icons/star-outline.svg";
-
+import { useState } from "react";
   export const InteractiveRatingStars = ({ rating = 0, starSize = 24, onRatingChange }) => {
     const [currentRating, setCurrentRating] = useState(rating);
   

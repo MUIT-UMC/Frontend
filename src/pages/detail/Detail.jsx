@@ -9,6 +9,7 @@ import HeartLine from "../../assets/icons/heart-line.svg";
 import Info from "../../components/detail/Info";
 import Price from "../../components/detail/Price";
 import Calendar from "../../components/Calendar";
+import { RatingStars } from './../../components/detail/RatingStars';
 
 function Detail() {
   
@@ -36,15 +37,12 @@ function Detail() {
           <h1>미아 파밀리아</h1>
           <img src={HeartLine} />
         </TitleWrapper>
-
+        
         <RatingWrapper>
-          <img src={starFull} alt="Star Full Icon" />
-          <img src={starFull} alt="Star Full Icon" />
-          <img src={starFull} alt="Star Full Icon" />
-          <img src={starFull} alt="Star Full Icon" />
-          <img src={starOutline} alt="Star Outline Icon" />
+          <RatingStars rating={4} starSize={36}/>
           <Rating>4.0</Rating>
         </RatingWrapper>
+        
 
         <Info image={poster} alt='포스터 이미지' height='430px' details={details} />
 
@@ -77,7 +75,6 @@ const MainContent = styled.div`
 const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
   gap: 20px;
 
   h1 {
@@ -111,20 +108,16 @@ const TitleWrapper = styled.div`
   }
 `;
 
-const InfoWrapper = styled.div`
-  display: flex;
-  margin-bottom: 37px;
-`;
 
 const Rating = styled.div`
 color: #000;
 
 /* Body-tiny-md */
 font-family: Pretendard;
-font-size: 14px;
+font-size: 16px;
 font-style: normal;
 font-weight: 500;
-line-height: 24px; /* 150% */
+line-height: 36px; /* 150% */
 margin-left: 4px;
 `
 
@@ -138,8 +131,9 @@ const RightSection = styled.div`
 const RatingWrapper = styled.div`
   display:flex; 
   flexDirection: row;
-  margin-top:8px;
   margin-bottom: 20px;
+  position: relative;
+  left: -6px;
 `;
 
 const GroupPurchaseButton = styled.button`
