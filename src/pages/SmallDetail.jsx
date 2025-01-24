@@ -6,6 +6,7 @@ import pic from "../assets/images/lost-pic.png";
 import ChevronDown from '../assets/icons/ChevronDown.svg';
 import DetailImg from "../assets/images/lost-detail.png";
 import CastList from "../components/small-theater/CastList";
+import CreditInfo from "../components/small-theater/CreditInfo";
 
 function SmallDetail() {
   
@@ -29,7 +30,7 @@ function SmallDetail() {
     </Price> }, // 가격 상세 구현 필요
     { label: "티켓 수", value: "200매 (표가 없을 시 구매 불가)" },
   ];
-  
+
   return (
     <>
       {/*빨간배너 */}
@@ -81,7 +82,9 @@ function SmallDetail() {
         </Label>
         <DetailImage><img src={detailImg} alt="Detail Image"/></DetailImage> 
         <Label>캐스팅 정보</Label>
-        <CastList/>
+        <CastList/>  {/*사진 간격 조정필요 */}
+        <Title>감독 및 스태프</Title>
+        <CreditInfo/>
       </BottomSection>
    </>
     
@@ -305,7 +308,7 @@ margin-top: 15px;
 margin-bottom: 20px;
 
 /* Body-me */
-font-family: Pretendard;
+font-family: Inter;;
 font-size: 16px;
 font-style: normal;
 font-weight: 500;
