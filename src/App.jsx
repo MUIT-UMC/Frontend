@@ -22,7 +22,7 @@ import SignUp from "./pages/SignUp";
 import Terms from "./pages/signup/Terms"
 import Info from "./pages/signup/Info";
 import MyPage from "./pages/mypage/MyPage";
-//import Search from "./pages/Search";
+import Search from "./pages/Search";
 
 import './styles/font.css';
 import styled from "styled-components";
@@ -77,7 +77,7 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:category/:type" element={<MyPage />} />
         {/* 검색 */}
-        {/*<Route path="/search" element={<Search />} />*/}
+        <Route path="/search" element={<Search />} />
 
       </Routes>
       </Router>
