@@ -42,6 +42,8 @@ function Board() {
 
   const navigate = useNavigate();
 
+
+
   const menus = [
     {
       id: 'item',
@@ -70,6 +72,18 @@ function Board() {
     },
   ];
 
+  const handleWriteClick = () => {
+    if (type === "lost" || type === "found") {
+      navigate("/board/item/write");
+    }
+    else if (type === "all" || type === "hot") {
+      navigate("/board/anonymous/write");
+    }
+    else if (type === "musical" || type === "seats") {
+      navigate("/board/review/write");
+    }
+  };
+
   return (
     <BoardContainer>
       <BoardMenuWrapper>
@@ -82,7 +96,7 @@ function Board() {
       <BoardContent>
         <TitleWrapper>
           <Title>{currentCategory?.name} 게시판</Title>
-          <Button>글쓰기</Button>
+          <Button onClick={handleWriteClick}>글쓰기</Button>
         </TitleWrapper>
         <SubMenu
           navItems={currentCategory?.navItems || []}
@@ -100,7 +114,7 @@ function Board() {
       </BoardContent>
     </BoardContainer>
   );
-}
+};
 
 export default Board;
 
@@ -176,7 +190,5 @@ font-weight: 500;
 line-height: normal;
 
 `
-
-
 const Content = styled.div`
 `

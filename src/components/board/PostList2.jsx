@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import PageNavigator from "./PageNavigator";
@@ -8,10 +8,12 @@ import ReplyArrow from "../../assets/icons/ReplyArrow.svg";
 import ThumbsUp from "../../assets/icons/ThumbsUp.svg"
 function PostList2({ posts }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleRowClick = (id) => {
-    navigate(`/board/lost/${id}`);
+    navigate(`${location.pathname}/${id}`);
   };
+
 
   return (
     <PostListWrapper>

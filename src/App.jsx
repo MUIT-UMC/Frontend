@@ -15,13 +15,20 @@ import RegisterMusical from "./pages/RegisterMusical";
 import SmallDetail from "./pages/SmallDetail";
 import Board from "./pages/board/Board";
 import VisionDetail from "./pages/VisionDetail";
-import LostItemPost from "./pages/board/LostItemPost";
-
+import ItemPost from "./pages/board/ItemPost";
+import AnonymousPost from "./pages/board/AnonymousPost";
+import ReviewPost from "./pages/board/ReviewPost";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Terms from "./pages/signup/Terms"
 import Info from "./pages/signup/Info";
 import MyPage from "./pages/mypage/MyPage";
+
+//import Search from "./pages/Search";
+import WriteAnonymousPost from "./pages/board/WriteAnonymousPost";
+import WriteItemPost from "./pages/board/WriteItemPost";
+import WriteReviewPost from "./pages/board/WriteReviewPost";
+
 import Search from "./pages/Search";
 
 import './styles/font.css';
@@ -58,8 +65,13 @@ function App() {
 
         {/* 6) 게시판/게시글 */}
         <Route path="/board/:category/:type" element={<Board />} />
-        <Route path="/board/lost/1" element={<LostItemPost />} />
+        <Route path="/board/item/lost/1" element={<ItemPost />} />
+        <Route path="/board/anonymous/all/1" element={<AnonymousPost />} />
+        <Route path="/board/review/musical/1" element={<ReviewPost />} />
 
+        <Route path="/board/item/write" element={<WriteItemPost />} />
+        <Route path="/board/anonymous/write" element={<WriteAnonymousPost />} />
+        <Route path="/board/review/write" element={<WriteReviewPost />} />
         
         <Route path="/event-check/:musicalId" element={<EventDetail/>}/>
 
@@ -77,7 +89,11 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:category/:type" element={<MyPage />} />
         {/* 검색 */}
+
+        {/*<Route path="/search" element={<Search />} />*/}
+
         <Route path="/search" element={<Search />} />
+
 
       </Routes>
       </Router>

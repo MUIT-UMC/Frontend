@@ -40,8 +40,13 @@ export default function Navbar() {
         location.pathname.startsWith("/register-musical") ||
         location.pathname.startsWith("/small-theater/") ||
         location.pathname.startsWith("/event-check/") ||
-        location.pathname.startsWith("/board/lost/") ||
-        location.pathname.startsWith("/board/found/") ||
+        location.pathname.startsWith("/board/item/lost/") ||
+        location.pathname.startsWith("/board/item/found/") ||
+        location.pathname.startsWith("/board/anonymous/all/") ||
+        location.pathname.startsWith("/board/anonymous/hot/") ||
+        location.pathname.startsWith("/board/anonymous/write") ||
+        location.pathname.startsWith("/board/review/musical/") ||
+        location.pathname.startsWith("/board/review/seats/") ||
         location.pathname.startsWith("/board/.../") ||
         location.pathname.startsWith("/board/.../") ||
         location.pathname.startsWith("/search") ||
