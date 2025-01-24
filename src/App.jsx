@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home";
 import Upcoming from "./pages/Upcoming";
+import Ranking from "./pages/ranking";
 import Detail from "./pages/detail/Detail";
 import Vision from "./pages/Vision";
 import EventCheck from "./pages/EventCheck";
@@ -23,13 +24,11 @@ import SignUp from "./pages/SignUp";
 import Terms from "./pages/signup/Terms"
 import Info from "./pages/signup/Info";
 import MyPage from "./pages/mypage/MyPage";
+import Search from "./pages/Search";
 
-//import Search from "./pages/Search";
 import WriteAnonymousPost from "./pages/board/WriteAnonymousPost";
 import WriteItemPost from "./pages/board/WriteItemPost";
 import WriteReviewPost from "./pages/board/WriteReviewPost";
-
-import Search from "./pages/Search";
 
 import './styles/font.css';
 import styled from "styled-components";
@@ -97,10 +96,9 @@ function App() {
         <Route path="ticket/:number/cancel" element={<CancelTicket />} />
         <Route path="ticket/:number/cancel/complete" element={<CancelComplete />}  />
         {/* 검색 */}
-
-        {/*<Route path="/search" element={<Search />} />*/}
-
         <Route path="/search" element={<Search />} />
+        {/* 랭킹 */}
+        <Route path="/ranking" element={<Ranking />} />
 
 
       </Routes>
