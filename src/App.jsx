@@ -77,6 +77,7 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:category/:type" element={<MyPage />} />
         {/* 검색 */}
+        {/*<Route path="/search" element={<Search />} />*/}
 
       </Routes>
       </Router>
