@@ -92,11 +92,13 @@ const RegisterMusical = () => {
     <SectionTitle>공연정보</SectionTitle>
     <InputWrapper2>
       <Label>공연시간 정보</Label>
-      <Input2 type="text" placeholder="공연시간 정보를 입력하세요" />
+      <TextArea placeholder="예매 가능시간이나 공연시간에 대해 자유롭게 입력하세요" />
     </InputWrapper2>
     <InputWrapper2>
       <Label>공지사항</Label>
-      <TextArea placeholder="공지사항을 입력하세요" />
+      <TextArea placeholder={`공지 사항에 대해 자유롭게 입력하세요
+예: 예매시에 공연 관리자가 안내하는 입금계좌로 입금하시고, 공연 관리자의 입금 확인을 통해 티켓 예매 확인을 받을 수 있습니다. 
+공연 관리자가 입금을 확인해야 하므로 티켓 확인까지 시간이 걸릴 수 있습니다.`} />
     </InputWrapper2>
   </Section>
 
