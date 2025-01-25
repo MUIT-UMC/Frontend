@@ -6,9 +6,10 @@ import ArrowRight from "../../assets/icons/ArrowRight.svg";
 const Info = ({ image, width, height, alt, details, valueWidth }) => {
   return (
     <Wrapper>
+      {image &&
       <InfoImage height={height}>
-        <img alt={alt} src={image}/>
-      </InfoImage>
+         <img alt={alt} src={image}/>
+      </InfoImage>}
       <InfoDetail>
         {details.map(({ label, value, extra }, index) => (
           <Item key={index}>
@@ -35,6 +36,7 @@ export default Info;
 const Wrapper = styled.div`
   display: flex;
   margin-bottom: 37px;
+  gap: 40px;
 `;
 
 const InfoImage = styled.div`
@@ -51,7 +53,6 @@ const InfoDetail = styled.div`
   display: flex;
   flex-direction: column;
   gap: 28px;
-  margin: 0px 40px;
 `;
 
 const Item = styled.div`

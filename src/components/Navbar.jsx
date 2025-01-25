@@ -37,11 +37,19 @@ export default function Navbar() {
       {(
         location.pathname.startsWith("/vision/") ||
         location.pathname.startsWith("/upcoming") ||
+        location.pathname.startsWith("/ranking") ||
         location.pathname.startsWith("/register-musical") ||
+        location.pathname.startsWith("/register-musical/") ||
         location.pathname.startsWith("/small-theater/") ||
         location.pathname.startsWith("/event-check/") ||
-        location.pathname.startsWith("/board/lost/") ||
-        location.pathname.startsWith("/board/found/") ||
+        location.pathname.startsWith("/board/item/lost/") ||
+        location.pathname.startsWith("/board/item/found/") ||
+        location.pathname.startsWith("/board/anonymous/all/") ||
+        location.pathname.startsWith("/board/anonymous/hot/") ||
+        location.pathname.startsWith("/board/anonymous/write") ||
+        location.pathname.startsWith("/board/review/musical/") ||
+        location.pathname.startsWith("/board/review/seats/") ||
+        location.pathname.startsWith("/ticket/") ||
         location.pathname.startsWith("/board/.../") ||
         location.pathname.startsWith("/board/.../") ||
         location.pathname.startsWith("/search") ||
@@ -49,6 +57,8 @@ export default function Navbar() {
       ) && <NavbarSidebar/>}
       {/* 상세페이지 상단바 */}
       {location.pathname.startsWith("/detail") && <NavbarDetail/>}
+      {location.pathname.startsWith("/small-detail") && <NavbarDetail/>}
+
       {/* 관리자페이지 상단바 -> 추후 추가
       {location.pathname.startsWith("/adminpage") && <NavbarAdmin/>} */}
     </NavBox>

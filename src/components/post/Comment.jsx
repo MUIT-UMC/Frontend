@@ -10,7 +10,7 @@ function Comment() {
           <TopLeft>
             <UserName>익명1</UserName>
             <Text>2025-01-05</Text>
-            <Text>신고하기</Text>
+            {/*<Text>신고하기</Text>*/}
           </TopLeft>
           <TopRight>
             <div style={{display:'flex', flexDirection: 'row', gap: '4px'}}>

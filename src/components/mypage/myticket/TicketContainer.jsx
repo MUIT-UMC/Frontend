@@ -2,9 +2,17 @@
 import React from "react";
 import styled from "styled-components";
 import ChevronRight from "../../../assets/icons/ChevronRight.svg";
+import { useNavigate } from "react-router-dom";
 const TicketContainer = ({ image, width, height, alt, details, valueWidth }) => {
+
+  const navigate = useNavigate();
+  
+  const handleClick = (ticketNumber) => {
+    navigate(`/ticket/${ticketNumber}`);
+  };
+
   return (
-    <Wrapper>
+    <Wrapper onClick={() => handleClick(details[0].value)}>
       <InfoImage>
         <img alt={alt} src={image}/>
       </InfoImage>
@@ -15,7 +23,10 @@ const TicketContainer = ({ image, width, height, alt, details, valueWidth }) => 
         {details.map(({ label, value, extra }, index) => (
           <Item key={index}>
             <Label>{label}</Label>
-            <Value width={valueWidth}>{value}</Value>
+            <Value 
+              width={valueWidth} 
+              color={label === "취소가능일시" ? "#A00000" : undefined}
+            >{value}</Value>
           </Item>
         ))}
       </InfoDetail>
@@ -89,7 +100,6 @@ line-height: 18px; /* 128.571% */
 const Value = styled.div`
   color: ${(props) => (props.color ? props.color : "#000")};
   width: ${(props) => (props.width ? props.width : "340px")};
-  color: #000;
 
 /* Body-tiny-md */
 font-family: Inter;

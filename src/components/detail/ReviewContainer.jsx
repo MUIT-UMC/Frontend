@@ -2,39 +2,28 @@ import React from "react";
 import styled from "styled-components";
 import starFull from '../../assets/icons/star-full.svg';
 import starOutline from '../../assets/icons/star-outline.svg';
-  const ReviewContainer = ({ data }) => {
-    const { title, author, date, rating, reviewText } = data;
-  
-    // 별점 개수 계산
-    const fullStars = Math.floor(rating);
-    const outlineStars = 5 - fullStars;
-  
-    return (
-      <Container>
-        <Top>
-          <Title>{title}</Title>
-          <Text color="#919191">{`${author} | ${date}`}</Text>
-        </Top>
-        <RatingWrapper>
-          {Array(fullStars)
-            .fill()
-            .map((_, i) => (
-              <img key={`full-${i}`} src={starFull} alt="Star Full Icon" />
-            ))}
-          {Array(outlineStars)
-            .fill()
-            .map((_, i) => (
-              <img key={`outline-${i}`} src={starOutline} alt="Star Outline Icon" />
-            ))}
-          <Rating>{`${rating.toFixed(1)}/5.0`}</Rating>
-        </RatingWrapper>
-        <Text>{reviewText}</Text>
-        <Bottom>
-          <Text color="#919191">더보기</Text>
-        </Bottom>
-      </Container>
-    );
-  };
+import { RatingStars } from "./RatingStars";
+const ReviewContainer = ({ data }) => {
+  const { title, author, date, rating, reviewText } = data;
+
+  return (
+    <Container>
+      <Top>
+        <Title>{title}</Title>
+        <Text color="#919191">{`${author} | ${date}`}</Text>
+      </Top>
+      <RatingWrapper>
+        <RatingStars rating={rating} starSize={20} /> {/* RatingStars 사용 */}
+        <Rating>{`${rating.toFixed(1)}/5.0`}</Rating>
+      </RatingWrapper>
+      <Text>{reviewText}</Text>
+      <Bottom>
+        <Text color="#919191">더보기</Text>
+      </Bottom>
+    </Container>
+  );
+};
+
 export default ReviewContainer;
 
 const Container = styled.div`
