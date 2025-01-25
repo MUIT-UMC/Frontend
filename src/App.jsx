@@ -13,6 +13,7 @@ import EventCheck from "./pages/EventCheck";
 import EventDetail from "./pages/EventDetail";
 import SmallTheater from "./pages/SmallTheater";
 import RegisterMusical from "./pages/RegisterMusical";
+import RegisterCheck from "./pages/RegisterCheck";
 import SmallDetail from "./pages/SmallDetail";
 import Board from "./pages/board/Board";
 import VisionDetail from "./pages/VisionDetail";
@@ -57,11 +58,13 @@ function App() {
         <Route path="/vision" element={<Vision />} />
         {/* 3-1) 시야확인 상세 */}
         <Route path="/vision/1" element={<VisionDetail />} />
-        {/* 4) 소규모 공연 */}
+        {/* 4) 소극장 공연 */}
         <Route path="/small-theater" element={<SmallTheater />} />
         {/* 4-1) 뮤지컬 등록 페이지 */}
         <Route path="/register-musical" element={<RegisterMusical />} />
-        {/* 4-2) 뮤지컬 등록 페이지 */}
+        {/* 4-2) 뮤지컬 등록확인인 페이지 */}
+        <Route path="/register-musical/check" element={<RegisterCheck />} />       
+        {/* 4-3) 소극장 상세 페이지 */}
         <Route path="/small-detail" element={< SmallDetail/>} />
         {/* 5) 이벤트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />

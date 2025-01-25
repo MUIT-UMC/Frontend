@@ -7,7 +7,6 @@ import JihwooImage from "../../assets/images/amateur-actor/jihwoo.png";
 import SeungminImage from "../../assets/images/amateur-actor/seungmin.png";
 import SeoyeonImage from "../../assets/images/amateur-actor/seoyeon.png";
 
-
 function CastList() {
   const mockData = [
     {
@@ -55,8 +54,8 @@ function CastList() {
           <ProfileWrapper>
             <img src={actor.image} alt={actor.name} />
           </ProfileWrapper>
-          <div>{actor.name}</div>
-          <div>{actor.info}</div>
+          <ActorName>{actor.name}</ActorName>
+          <ActorInfo>{actor.info}</ActorInfo>
         </Actor>
       ))}
     </ActorsWrapper>
@@ -66,13 +65,12 @@ function CastList() {
 export default CastList;
 
 const ProfileWrapper = styled.div`
-  position: relative;
   width: 140px;
   height: 140px;
   border-radius: 70%;
   border-bottom-right-radius: 10%;
   overflow: hidden;
-  flex-direction: column;
+  margin-top:40px;
 
   img {
     width: 100%;
@@ -81,24 +79,39 @@ const ProfileWrapper = styled.div`
   }
 `;
 
-
 const Actor = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start; /
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+`;
+
+const ActorName = styled.div`
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+`;
+
+const ActorInfo = styled.div`
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  color: #989898;
 `;
 
 const ActorsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0px;
-   align-items: flex-start; /
-  
-  /* 한 줄에 4개씩 정렬 */
+  gap: 12px; /* 간격을 더 좁게 조정 */
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  align-items: flex-start; /* 수직 방향으로도 정렬 */
+  padding: 0; /* 여백을 없애기 */
+
   > div {
-    flex: 0 0 calc(25% - 100px); /* 4개씩 배치하고 간격 맞추기 */
+    flex: 0 0 calc(25% - 10px); /* 한 줄에 4개 배치 */
     box-sizing: border-box;
   }
 `;
+
