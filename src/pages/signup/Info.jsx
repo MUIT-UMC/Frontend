@@ -27,6 +27,7 @@ function Info() {
             .email('유효한 이메일 주소를 입력해 주세요.')
             .required("이메일을 반드시 입력해 주세요."),
     });
+    
     const {
         register,
         handleSubmit,
@@ -240,7 +241,7 @@ const InfoArea = styled.div`
   }
 `
 const Form = styled.form`
-display: flex;
+    display: flex;
   flex-direction: column;
   gap: 40px; 
 `
