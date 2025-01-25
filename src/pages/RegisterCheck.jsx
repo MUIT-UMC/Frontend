@@ -81,6 +81,7 @@ const Container = styled.div`
   background-color: rgb(255, 255, 255);
   max-width: 1440px;
   height: 864px;
+  margin-top:-60px;
 `;
 
 const Card = styled.div`

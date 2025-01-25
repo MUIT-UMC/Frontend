@@ -15,6 +15,7 @@ import SmallTheater from "./pages/SmallTheater";
 import RegisterMusical from "./pages/RegisterMusical";
 import RegisterCheck from "./pages/RegisterCheck";
 import SmallDetail from "./pages/SmallDetail";
+import BuyTicket from "./pages/BuyTicket";
 import Board from "./pages/board/Board";
 import VisionDetail from "./pages/VisionDetail";
 import ItemPost from "./pages/board/ItemPost";
@@ -66,6 +67,8 @@ function App() {
         <Route path="/register-musical/check" element={<RegisterCheck />} />       
         {/* 4-3) 소극장 상세 페이지 */}
         <Route path="/small-detail" element={< SmallDetail/>} />
+        {/* 4-4) 소극장 구매매 페이지 */}
+        <Route path="/small-detail/buy" element={< BuyTicket/>} />
         {/* 5) 이벤트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />
 
