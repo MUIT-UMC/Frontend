@@ -39,6 +39,7 @@ export default function Navbar() {
         location.pathname.startsWith("/upcoming") ||
         location.pathname.startsWith("/ranking") ||
         location.pathname.startsWith("/register-musical") ||
+        location.pathname.startsWith("/register-musical/") ||
         location.pathname.startsWith("/small-theater/") ||
         location.pathname.startsWith("/event-check/") ||
         location.pathname.startsWith("/board/item/lost/") ||
