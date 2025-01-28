@@ -34,8 +34,8 @@ const Step2 = () => {
               </TicketPrice>
             </div>
           </StepInfo>
-          <Button onClick={() => navigate('/step1')}>이전</Button>  {/* 이전 페이지로 이동 */}
-          <Button onClick={() => navigate('/step3')}>다음</Button>  {/* 다음 페이지로 이동 */}
+          <Button onClick={() => navigate('..')}>이전</Button>  {/* 이전 페이지로 이동 */}
+          <Button onClick={() => navigate('../step3')}>다음</Button>  {/* 다음 페이지로 이동 */}
           <div>
             <h4>할인 선택</h4>
             <Button onClick={() => handleDiscountChange('없음')}>할인 없음</Button>
@@ -48,11 +48,11 @@ const Step2 = () => {
   export default Step2;
 
   // 스타일 컴포넌트
-const Container = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-padding: 20px;
+  const Container = styled.div`
+  max-width: 1440px;
+  height: 864px;
+  margin: 0 auto;
+  position: relative;
 `;
 
 const StepWrapper = styled.div`

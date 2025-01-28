@@ -41,6 +41,7 @@ export default function Navbar() {
         location.pathname.startsWith("/register-musical") ||
         location.pathname.startsWith("/register-musical/") ||
         location.pathname.startsWith("/small-theater/") ||
+        location.pathname.startsWith("/small-detail/buy") ||
         location.pathname.startsWith("/event-check/") ||
         location.pathname.startsWith("/board/item/lost/") ||
         location.pathname.startsWith("/board/item/found/") ||
@@ -57,7 +58,11 @@ export default function Navbar() {
       ) && <NavbarSidebar/>}
       {/* 상세페이지 상단바 */}
       {location.pathname.startsWith("/detail") && <NavbarDetail/>}
-      {location.pathname.startsWith("/small-detail") && <NavbarDetail/>}
+      {(
+        location.pathname.startsWith("/small-detail/buy") // 특정 경로에서 제외
+    ? null
+      :location.pathname.startsWith("/small-detail")
+) && <NavbarDetail />}
 
       {/* 관리자페이지 상단바 -> 추후 추가
       {location.pathname.startsWith("/adminpage") && <NavbarAdmin/>} */}

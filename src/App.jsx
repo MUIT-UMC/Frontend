@@ -68,7 +68,7 @@ function App() {
         {/* 4-3) 소극장 상세 페이지 */}
         <Route path="/small-detail" element={< SmallDetail/>} />
         {/* 4-4) 소극장 구매매 페이지 */}
-        <Route path="/small-detail/buy" element={< BuyTicket/>} />
+        <Route path="/small-detail/buy/*" element={< BuyTicket/>} />
         {/* 5) 이벤트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />
 
