@@ -38,6 +38,7 @@ import styled from "styled-components";
 import TicketDetailPage from "./pages/mypage/my/ticket/TicketDetailPage";
 import CancelTicket from "./pages/mypage/my/ticket/CancelTicket";
 import CancelComplete from "./pages/mypage/my/ticket/CancelComplete";
+import MusicalRanking from "./pages/test/MusicalRanking";
 
 
 
@@ -107,6 +108,8 @@ function App() {
         <Route path="/search" element={<Search />} />
         {/* 랭킹 */}
         <Route path="/ranking" element={<Ranking />} />
+
+        <Route path="/test/rank" element={<MusicalRanking/>} />
 
 
       </Routes>
