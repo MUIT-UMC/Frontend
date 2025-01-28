@@ -6,6 +6,7 @@ import EventSearchBar from "../components/eventcheck/EventSearchBar";
 import MusicalEvent from "../components/eventcheck/MusicalEvent";
 import EventContent from "../components/eventcheck/EventContent";
 
+import useCustomFetch from "../hooks/useCustomFetch";
 
 const COLOR_MUIT_RED = "#A00000";
 
@@ -188,6 +189,10 @@ const mockMusicalEvent = [
 ]
 
 function EventCheck() {
+  const {data : events, isLoading, isError} = useCustomFetch(`events/`);
+  console.log(events.data);
+
+
   const [musicalEvent, setMusicalEvent] = useState([]);
   const [loading, setLoading] = useState([]);
 

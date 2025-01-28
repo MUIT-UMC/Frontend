@@ -13,7 +13,7 @@ function ChangePassword() {
   const navigate = useNavigate();
   const GoBack = () => {
     navigate(-1);
-  }
+  };
 
   // 인증 처리 (임시 버튼 기반)
   const handleAuthentication = () => {
