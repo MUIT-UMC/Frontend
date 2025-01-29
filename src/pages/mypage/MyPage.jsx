@@ -6,6 +6,7 @@ import Tickets from "./my/Tickets";
 import MyPosts from "./my/MyPosts";
 import LikedMusical from "./my/LikedMusical";
 import EditAccount from "./account/EditAccount";
+import EditField from "./account/Edit/EditField";
 import ChangePassword from "./account/ChangePassword";
 import LinkSettings from "./account/LinkSettings";
 import AddressManagement from "./account/AddressManagement";
@@ -13,7 +14,7 @@ import LoginManagement from "./account/LoginManagement";
 import SupportContact from "./support/SupportContact";
 import AllBoard from './../board/anonymous/HotBoard';
 function MyPage() {
-  const { category, type } = useParams();
+  const { category, type, field } = useParams();
 
   const menus = [
     {
@@ -29,7 +30,7 @@ function MyPage() {
       id: "account",
       title: "계정 관리",
       subMenus: [
-        { id: 'edit', name: "회원정보 수정", link: "/mypage/account/edit" },
+        { id: 'edit', name: "회원정보 수정", link: "/mypage/account/edit"||"/mypage/account/edit/:field" },
         { id: 'change-password', name: "비밀번호 변경", link: "/mypage/account/change-password" },
         { id: 'link-settings', name: "계정 연결 설정", link: "/mypage/account/link-settings" },
         { id: 'address', name: "배송지 관리", link: "/mypage/account/address" },
@@ -82,7 +83,7 @@ function MyPage() {
           {type === "tickets" && <Tickets />}
           {type === "posts" && <MyPosts />}
           {type === "liked-musicals" && <LikedMusical />}
-          {type === "edit" && <EditAccount />}
+          {type === "edit" && (field ? <EditField field={field} /> : <EditAccount />)}
           {type === "change-password" && <ChangePassword />}
           {type === "link-settings" && <LinkSettings />}
           {type === "address" && <AddressManagement />}
