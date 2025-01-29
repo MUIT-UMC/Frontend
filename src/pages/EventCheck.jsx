@@ -6,7 +6,6 @@ import EventSearchBar from "../components/eventcheck/EventSearchBar";
 import MusicalEvent from "../components/eventcheck/MusicalEvent";
 import EventContent from "../components/eventcheck/EventContent";
 
-import useCustomFetch from "../hooks/useCustomFetch";
 import useFetch from "../hooks/useFetch";
 
 const COLOR_MUIT_RED = "#A00000";
