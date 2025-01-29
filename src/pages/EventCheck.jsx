@@ -7,6 +7,7 @@ import MusicalEvent from "../components/eventcheck/MusicalEvent";
 import EventContent from "../components/eventcheck/EventContent";
 
 import useCustomFetch from "../hooks/useCustomFetch";
+import useFetch from "../hooks/useFetch";
 
 const COLOR_MUIT_RED = "#A00000";
 
@@ -189,32 +190,9 @@ const mockMusicalEvent = [
 ]
 
 function EventCheck() {
-  const {data : events, isLoading, isError} = useCustomFetch(`events/`);
-  console.log(events.data);
+  {/*const {data : events, isLoading, isError} = useCustomFetch(`events/`);*/}
 
-
-  const [musicalEvent, setMusicalEvent] = useState([]);
-  const [loading, setLoading] = useState([]);
-
-  useEffect(() => {
-      const fetchMusicalEvent = async () =>{
-          try{
-              setMusicalEvent(mockMusicalEvent);
-          }
-          catch(error) {
-            console.error("Error", error);
-          }
-          finally{
-            setLoading(false);
-          }
-      }
-      fetchMusicalEvent();
-  }, []);
-  
-  if(loading){
-    return <div>Loading...</div>
-  }
-  
+  const {data: events, error, isLoading} = useFetch(`http://13.209.69.125:8080/events/`);
 
   return (
     <Container>
@@ -239,16 +217,16 @@ function EventCheck() {
         </div>
 
         <EventListArea>
-          {musicalEvent.map((musical) => (
+          {events?.result?.eventResultListDTOList.map((musical) => (
             <MusicalEvent
-            key={musical.id}
-            id={musical.id}
-            title={musical.title}
-            img={musical.img}
-            theater={musical.theater}
-            begin={musical.begin}
-            end={musical.end}
-            event={musical.event}
+            key={musical.musicalId}
+            id={musical.musicalId}
+            title={musical.musicalName}
+            //img={musical.img}
+            theater={musical.theaterName}
+            begin={musical.perFrom}
+            end={musical.perTo}
+            event={musical.eventResultListDTO}
             />
           ))}
         </EventListArea>

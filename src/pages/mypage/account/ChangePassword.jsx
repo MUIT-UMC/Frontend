@@ -115,25 +115,22 @@ export default ChangePassword;
 
 const Container = styled.div`
   font-family: Pretendard;
-  padding: 16px 60px;
-
-  .Title{
-    color: #000;
-
-    /* Body-me */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-  }
-  .colored{
-    color: #A00000;
-  }
+  padding: 16px 0px;
 `;
 const AuthArea = styled.div`
   display: flex;
   flex-direction: column;
   gap: 60px;
+
+  .Title{
+    font-size: 16px;
+    font-weight: 500;
+    color: #000000;
+  }
+  .colored{
+    color: #A00000;
+  }
+
 
   .Authorize{
     display: flex;

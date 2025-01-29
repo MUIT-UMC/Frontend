@@ -3,22 +3,26 @@ import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 
 function EditAccount() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // 인증 상태 관리
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   const GoBack = () => {
     navigate(-1);
   };
+  const handleEdit = (field) => {
+    navigate(`/mypage/account/edit/${field}`);
+  }
+
   const handleAuthentication = () => {
     // 실제 API 호출로 변경 필요
     setIsAuthenticated(true);
   };
 
   return (
-    <div>
+    <Container>
       {isAuthenticated ? (
-        <Container>
+        <div>
           <InputArea>
             <p className="body-B-600">이름</p>
             <Input>
@@ -30,7 +34,7 @@ function EditAccount() {
             <p className="body-B-600">아이디</p>
             <Input>
               <input />
-              <EditButton>수정</EditButton>
+              <EditButton onClick={() => handleEdit("id")}>수정</EditButton>
             </Input>
           </InputArea>
 
@@ -38,7 +42,7 @@ function EditAccount() {
             <p className="body-B-600">이메일</p>
             <Input>
               <input />
-              <EditButton>수정</EditButton>
+              <EditButton onClick={() => handleEdit("email")}>수정</EditButton>
             </Input>
           </InputArea>
 
@@ -46,11 +50,12 @@ function EditAccount() {
             <p className="body-B-600">휴대폰</p>
             <Input>
               <input />
-              <EditButton>수정</EditButton>
+              <EditButton onClick={() => handleEdit("phone")}>수정</EditButton>
             </Input>
           </InputArea>
+        </div>
 
-        </Container>) : (
+        ) : (
         <AuthArea>
           <p className="Title">정보를 안전하게 보호하기 위해 <span className="colored">비밀번호를 다시 한 번 확인</span>합니다.</p>
 
@@ -76,17 +81,15 @@ function EditAccount() {
 
         </AuthArea>
       )}
-    </div>
+    </Container>
   );
 }
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-
   font-family: Pretendard;
-
-  padding-top: 60px;
+  padding: 16px 0px;
 `
 const InputArea = styled.div`
   display: flex;
@@ -154,6 +157,15 @@ const AuthArea = styled.div`
   display: flex;
   flex-direction: column;
   gap: 60px;
+  
+  .Title{
+    font-size: 16px;
+    font-weight: 500;
+    color: #000000;
+  }
+  .colored{
+    color: #A00000;
+  }
 
   .Authorize{
     display: flex;
