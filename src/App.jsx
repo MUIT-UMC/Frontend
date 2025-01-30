@@ -19,7 +19,7 @@ import BuyTicket from "./pages/BuyTicket";
 import Board from "./pages/board/Board";
 import VisionDetail from "./pages/VisionDetail";
 import ItemPost from "./pages/board/post/ItemPost";
-import FoundPost from "./pages/board/post/foundPost";
+import FoundPost from "./pages/board/post/FoundPost";
 import AnonymousPost from "./pages/board/post/AnonymousPost";
 import ReviewPost from "./pages/board/post/ReviewPost";
 import Login from "./pages/Login";
