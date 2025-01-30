@@ -1,26 +1,54 @@
 import React from "react";
 import styled from "styled-components";
-import itemImg from "../../assets/images/lost-item-1.png";
-import CommentInputArea from "../../components/post/CommentInputArea";
-import Comment from "../../components/post/Comment";
-import Reply from "../../components/post/Reply";
-import Info from "../../components/detail/Info";
-import { RatingStars } from "../../components/detail/RatingStars";
-
+import itemImg from "../../../assets/images/lost-item-1.png";
+import CommentInputArea from "../../../components/post/CommentInputArea";
+import Comment from "../../../components/post/Comment";
+import Reply from "../../../components/post/Reply";
+import Info from "../../../components/detail/Info";
+import { RatingStars } from "../../../components/detail/RatingStars";
+import { useParams } from "react-router-dom";
+import useFetch from "../../../hooks/useFetch";
 function ReviewPost() {
 
+  const { postId } = useParams();
+  console.log(postId);
+  const { data, error, loading } = useFetch(`http://13.209.69.125:8080/reviews/${postId}`);
+  console.log('데이터', data);
+  const { data: comment, error: commentError, loading: commentLoading } = useFetch(
+    `http://13.209.69.125:8080/comments/${postId}?page=0&size=20`
+  );
   
-  const title = "알라딘 관람 후기";
+  console.log("코멘트 데이터:", comment);
+  console.log("에러:", commentError);
+  console.log("로딩:", commentLoading);
+  // 로딩 상태 체크
+  if (loading) return <div>로딩 중...</div>;
+
+  // 오류 상태 체크
+  if (error) return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
+
+  // 데이터가 없을 경우 처리
+  if (!data || !data.result) return <div>데이터가 없습니다.</div>;
+
+  // console.log('데이터', data);
+  
+  const d = data.result;
+  const title = d.title;
   const board = "뮤지컬 리뷰";
   const user = "익명";
-  const date = "2025-01-05";
-  const image = itemImg;
-    const details = [
-      { label: "뮤지컬명", value: "알라딘"},
-      { label: "장소", value: "링크아트센터드림 드림1관" },
-      { label: "평점", value: <RatingStars rating={5} starSize={36}/> },
-      { label: "특징", value: "알라딘 뮤지컬은 진짜 꿈같은 시간이었어요. 시작부터 끝까지 눈을 뗄 수 없는 화려한 무대 연출과 배우들의 열정적인 연기가 정말 감동적이었어요. 특히 지니 캐릭터는 예상보다 훨씬 더 유쾌하고 재치 넘쳐서 웃음이 끊이지 않았어요. 'A Whole New World' 장면은 라이브로 보니 감동이 배가 되더라고요. 저는 2층 중앙 좌석에서 봤는데, 전체 무대가 한눈에 들어와서 연출을 제대로 감상할 수 있었어요. 가족들과 함께한 시간이 정말 소중하게 느껴졌습니다." },
-    ];
+  const date = d.createdAt?.split('T')[0];
+  const image = d?.imgUrls;
+
+  const listSize = comment?.result?.listSize;
+  // console.log('image', image);
+  const details = [
+    { label: "뮤지컬명", value: d.musicalName},
+    { label: "장소", value: d.location },
+    { label: "평점", value: <RatingStars rating={d.rating} starSize={36}/> },
+    { label: "특징", value: d.content},
+  ];
+
+  console.log(d.rating);
   return (
     <>
       <ReviewPostContainer>
@@ -41,14 +69,12 @@ function ReviewPost() {
         <Hr marginTop='60px' marginBottom='20px'/>
 
         {/*댓글 작성부분 - 한 컴포넌트로 묶기 */}
-        <PostTitle marginBottom='20px'>댓글 3개</PostTitle>
-        <CommentInputArea />
+        <PostTitle marginBottom='20px'>댓글 {listSize}개</PostTitle>
+        <CommentInputArea postId={postId}/>
         <CommentWrapper>
-          <Comment />
-          <div>
-            <Comment />
-            <Reply />
-          </div>
+        {comment?.result?.comments?.map((data) => (
+          <Comment key={data.id} data={data} />
+        ))}
         </CommentWrapper>
                 
 
@@ -137,8 +163,8 @@ const Hr = styled.hr`
 
 const CommentWrapper = styled.div`
   padding-top: 20px;
-  & > *:not(:last-child) {
-    border-bottom: 1px solid #E6E6E6;
+  & > div:not(:last-child) {
+    border-bottom: 1px solid #E6E6E6; /* 각 댓글 사이에 구분선 추가 */
   }
 `;
 
