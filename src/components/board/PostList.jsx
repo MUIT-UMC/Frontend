@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import PageNavigator from "./PageNavigator";
-
-function PostList({ details, headers, cols }) {
+function PostList({ details, headers, cols, currentPage, totalPages, onPageChange }) {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 경로를 가져옴
 
@@ -15,40 +14,28 @@ function PostList({ details, headers, cols }) {
 
   return (
     <>
-    <PostListWrapper>
-    <thead>
-      <tr>
-        {headers.map((name) => (
-          <th>{name}</th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {details.map((d) => {
-        console.log(d); // 로그 찍기
-        return (
-          <tr key={d.id} onClick={() => handleRowClick(d.id)}>
-            <td>{d.name}</td>
-            <td>{d.musical}</td>
-            <td>{d.place}</td>
-            {
-              d.date ? <td width="126px">{d.date}</td> : <></>
-            }
+      <PostListWrapper>
+        <thead>
+          <tr>
+            {headers.map((name) => (
+              <th key={name}>{name}</th>
+            ))}
           </tr>
-        );
-      })}
-    </tbody>
-    
-  </PostListWrapper>
-  <NavWrapper>
-  <PageNavigator
-    currentPage={4} // 현재 페이지
-    totalPages={4} // 전체 페이지 수
-    onPageChange={(page) => console.log(`Move to page: ${page}`)} // 페이지 변경 핸들러
-  />
-  </NavWrapper>
-  </>
-  )
+        </thead>
+        <tbody>
+          {details.map((d) => (
+            <tr key={d.id} onClick={() => handleRowClick(d.id)}>
+              <td>{d.title}</td>
+              <td>{d.musicalName}</td>
+              <td>{d.location}</td>
+              {d.lostDate ? <td>{d.lostDate.split("T")[0]}</td> : null}
+            </tr>
+          ))}
+        </tbody>
+      </PostListWrapper>
+
+    </>
+  );
 }
 
 export default PostList;
