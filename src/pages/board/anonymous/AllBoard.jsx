@@ -3,41 +3,50 @@ import styled from "styled-components";
 import SearchBar from "../../../components/board/SearchBar";
 import PostList2 from "../../../components/board/PostList2";
 import musicalPic from "../../../assets/images/aladin-pic.png";
+import useFetch from '../../../hooks/useFetch';
+import useCustomFetch from "../../../hooks/useCustomFetch";
+import { useEffect } from "react";
+import { useState } from "react";
+
 const AllBoard = () => {
-  const posts = [
-    {
-      id: 1,
-      title: "알라딘 어떤 거 같아?",
-      content: "방금 보고 왔는데 생각보다 재밌었음...",
-      likes: 10,
-      comments: 4,
-      time: "방금",
-      image: musicalPic,
-    },
-    {
-      id: 2,
-      title: "미아 파밀리아 후기",
-      content: "노래도 좋고 무대 연출이 진짜 감동적이었음.",
-      likes: 25,
-      comments: 8,
-      time: "1시간 전",
-    },
-    {
-      id: 3,
-      title: "뮤지컬 초보 추천해주세요",
-      content: "뮤지컬을 처음 보려 하는데 어떤 걸 추천하시나요?",
-      likes: 5,
-      comments: 2,
-      time: "2시간 전",
-    },
-  ];
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const url = `http://13.209.69.125:8080/posts/?page=0&size=20`;
+
+  const { data, error, loading } = useCustomFetch(url);
+
+  if (!data || data.result.posts.length === 0) {
+    return <p>게시글이 없습니다.</p>;
+  }
+
+  // API에서 받은 데이터와 상태 처리
+    const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
+    console.log(totalPages);
+  
+    useEffect(() => {
+      localStorage.setItem("currentPage", currentPage);
+    }, [currentPage]);
+  
+
   return (
     <>
       <Text>좋아요 10개를 받으면 HOT 게시물로 자동 선정됩니다.</Text>
       <ButtonWrapper>
-      <SearchBar />
+        <SearchBar />
       </ButtonWrapper>
-      <PostList2  posts={posts}/>
+      {loading && <div>로딩 중...</div>}
+      {error && <div>에러 발생: {error}</div>}
+      {!loading && !error && 
+      <>
+      <PostList2 posts={data.result.posts} />
+      <PageNavigator
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+      </>
+      }
     </>
   );
 };
