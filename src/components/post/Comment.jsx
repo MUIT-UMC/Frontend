@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CommentBubble from "../../assets/icons/CommentBubbleIcon.svg";
 import ReplyArrow from "../../assets/icons/ReplyArrow.svg";
-function Comment() {
+import Reply from "./Reply";
+function Comment({data}) {
+  console.log('Comment.jsx', data);
   return (
-      <CommentWrapper>
+    <Wrapper>
+    <CommentWrapper>
         <Top>
           <TopLeft>
-            <UserName>익명1</UserName>
-            <Text>2025-01-05</Text>
+            <UserName>{data.nickname}</UserName>
+            <Text>{data.createdAt.split('T')[0]}</Text>
             {/*<Text>신고하기</Text>*/}
           </TopLeft>
           <TopRight>
@@ -21,20 +24,32 @@ function Comment() {
           
         </Top>
         <Bottom>
-          <CommentText>저 이거 화장실에서 떨어져있는거 본거같기두..</CommentText>
+          <CommentText>{data.content}</CommentText>
         </Bottom>
       </CommentWrapper>
+      {Array.isArray(data.replies) && data.replies.length > 0 ? (
+        <ReplyWrapper>
+          {data.replies.map((reply) => (
+            <Reply key={reply.id} data={reply} />
+          ))}
+        </ReplyWrapper>
+      ) : null}
+      
+    </Wrapper>
+      
   )
 }
 
 export default Comment;
 
+const Wrapper = styled.div`
+width: 1240px;
+`
 const ReplyWrapper = styled.div`
   display: flex;
   flex-direction: row;
   margin-left: 56px;
-
-
+  width: 100%;
 `
 const CommentWrapper = styled.div`
 margin-top: 20px;
