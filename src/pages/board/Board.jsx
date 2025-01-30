@@ -10,16 +10,19 @@ import AllBoard from "./anonymous/AllBoard";
 import HotBoard from "./anonymous/HotBoard";
 import MusicalBoard from "./review/MusicalBoard";
 import SeatsBoard from "./review/SeatsBoard";
+import { useState } from "react";
+import { useEffect } from "react";
 
 function Board() {
   const { category, type } = useParams();
-
+  const navigate = useNavigate();
+  
   const categories = {
     item: {
       name: "분실물",
       navItems: [
-        { id: "lost", name: "분실",  link: "/board/item/lost", },
-        { id: "found", name: "습득", link: "/board/item/found", },
+        { id: "lost", name: "분실", link: "/board/item/lost" },
+        { id: "found", name: "습득", link: "/board/item/found" },
       ],
     },
     anonymous: {
@@ -39,10 +42,6 @@ function Board() {
   };
 
   const currentCategory = categories[category];
-
-  const navigate = useNavigate();
-
-
 
   const menus = [
     {
@@ -75,11 +74,9 @@ function Board() {
   const handleWriteClick = () => {
     if (type === "lost" || type === "found") {
       navigate("/board/item/write");
-    }
-    else if (type === "all" || type === "hot") {
+    } else if (type === "all" || type === "hot") {
       navigate("/board/anonymous/write");
-    }
-    else if (type === "musical" || type === "seats") {
+    } else if (type === "musical" || type === "seats") {
       navigate("/board/review/write");
     }
   };
