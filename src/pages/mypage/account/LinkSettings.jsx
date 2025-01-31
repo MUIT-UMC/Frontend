@@ -9,14 +9,12 @@ import Naver from '../../../assets/logos/naver.png';
 function LinkSettings() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // ✅ 연결 여부를 관리하는 상태
   const [linkedAccounts, setLinkedAccounts] = useState({
     kakao: false,
     google: false,
     naver: false
   });
 
-  // ✅ 버튼 클릭 시 연결 여부 토글
   const toggleLink = (account) => {
     setLinkedAccounts((prev) => ({
       ...prev,

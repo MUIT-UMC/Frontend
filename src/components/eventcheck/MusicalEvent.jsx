@@ -17,7 +17,7 @@ const MusicalEvent = (props) => {
         })
     }
 
-    const {data: musicals, error, loading} = useFetch(`http://13.209.69.125:8080/musicals/${props.id}`);
+    const {data: musicals, error, loading} = useFetch(`/musicals/${props.id}`);
     console.log(musicals?.result?.posterUrl);
 
     return(
