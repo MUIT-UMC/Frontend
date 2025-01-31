@@ -60,7 +60,7 @@ function WriteItemPost({category}) {
     console.log("formData", formData);    
     try {
       const response = await axios.post(
-        `http://13.209.69.125:8080/losts/?postType=${categoryState}`,
+        `/losts/?postType=${categoryState}`,
         formData,
         {
           headers: {

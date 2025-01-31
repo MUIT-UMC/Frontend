@@ -16,7 +16,7 @@ const AllBoard = () => {
     localStorage.setItem("currentPage", currentPage);
   }, [currentPage]);
 
-  const url = `${import.meta.env.VITE_API_URL}/posts/?${currentPage}&size=20`;
+  const url = `/posts/?${currentPage}&size=20`;
 
   const { data, error, loading } = useCustomFetch(url);
 

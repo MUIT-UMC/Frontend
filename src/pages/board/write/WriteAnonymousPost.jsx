@@ -29,7 +29,7 @@ function WriteAnonymousPost() {
 
     try {
       const response = await axios.post(
-        "http://13.209.69.125:8080/posts/",
+        "/posts/",
         postData,
         {
           headers: {

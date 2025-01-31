@@ -11,10 +11,10 @@ function FoundPost() {
 
   const { postId } = useParams();
   console.log(postId);
-  const { data, error, loading } = useFetch(`${import.meta.env.VITE_API_URL}/losts/${postId}`);
+  const { data, error, loading } = useFetch(`/losts/${postId}`);
   console.log('데이터', data);
   const { data: comment, error: commentError, loading: commentLoading } = useFetch(
-    `${import.meta.env.VITE_API_URL}/comments/${postId}?page=0&size=20`
+    `/comments/${postId}?page=0&size=20`
   );
   
   console.log("코멘트 데이터:", comment);

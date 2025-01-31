@@ -18,11 +18,11 @@ function AnonymousPost() {
   console.log(commentTrigger);
 
   // 게시글 데이터 
-  const { data, error, loading } = useFetch(`${import.meta.env.VITE_API_URL}/posts/${postId}`)
+  const { data, error, loading } = useFetch(`/posts/${postId}`)
   console.log('데이터', data);
   // 🔹 댓글 데이터 (commentTrigger 변경 시 재요청)
   const { data: comment, error: commentError, loading: commentLoading } = useFetch(
-    `${import.meta.env.VITE_API_URL}/comments/${postId}?page=0&size=20`,
+    `/comments/${postId}?page=0&size=20`,
     {},
     [commentTrigger] // 🔹 댓글 트리거 추가 (의존성 배열)
   );

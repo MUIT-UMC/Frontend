@@ -45,7 +45,7 @@ function WriteReviewPost() {
     try {
       console.log(categoryState);
       const response = await axios.post(
-        `http://13.209.69.125:8080/reviews/?postType=${categoryState}`,
+        `/reviews/?postType=${categoryState}`,
         formData,
         {
           headers: {
