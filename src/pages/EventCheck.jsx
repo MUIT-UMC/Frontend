@@ -11,7 +11,7 @@ import useFetch from "../hooks/useFetch";
 const COLOR_MUIT_RED = "#A00000";
 
 function EventCheck() {
-  const {data: events, error, isLoading} = useFetch(`http://13.209.69.125:8080/events/`);
+  const {data: events, error, isLoading} = useFetch(`/events/`);
 
   return (
     <Container>

@@ -188,10 +188,10 @@ const mockMusicalEvent = [
 function EventDetail() {
     const { musicalId } = useParams();
 
-    const {data: musicalEvents, error, loading} = useFetch(`http://13.209.69.125:8080/events/${musicalId}`);
+    const {data: musicalEvents, error, loading} = useFetch(`/events/${musicalId}`);
     console.log(musicalEvents?.result);
 
-    const {data: musicals, error2, loading2} = useFetch(`http://13.209.69.125:8080/musicals/${musicalId}`);
+    const {data: musicals, error2, loading2} = useFetch(`/musicals/${musicalId}`);
     console.log(musicals?.result?.posterUrl);
 
 
@@ -203,11 +203,11 @@ function EventDetail() {
             <img src={ChevronRight} className="ChevronRight"/>
           </div>
           <p className="body-M-600">{musicalEvents?.result?.theatreName}</p>
-          <p className="body-M-500">{musicalEvents?.result?.perFrom}~{musicalEvents?.result?.per}</p>
+          <p className="body-M-500">{musicalEvents?.result?.perFrom}~{musicalEvents?.result?.perTo}</p>
           <img src={musicals?.result?.posterUrl} className="Poster"/>
         </MusicalInfo>
         <EventInfo>
-          {musicalEvents?.result.eventResultListDTO?.map((musical) => (
+          {musicalEvents?.result?.eventResultListDTO.map((musical) => (
             <EventContent
               key={musical.id}
               content={musical.name}

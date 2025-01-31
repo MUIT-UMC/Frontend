@@ -43,6 +43,8 @@ function Authenticate({ setIsAuthenticated }) {
 };
 
 const AuthArea = styled.div`
+  font-family: Pretendard;
+
   display: flex;
   flex-direction: column;
   gap: 60px;
