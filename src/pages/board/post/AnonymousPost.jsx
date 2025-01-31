@@ -11,25 +11,35 @@ import useFetch from "../../../hooks/useFetch";
 function AnonymousPost() {
   const {postId} = useParams();
   console.log(postId);
+
+  // 코멘트 입력 시 댓글 자동 재렌더링 - 미완성 
+  const [commentTrigger, setCommentTrigger] = useState(0);
+  console.log(commentTrigger);
+
+  // 게시글 데이터 
   const { data, error, loading } = useFetch(`http://13.209.69.125:8080/posts/${postId}`)
   
+  // 🔹 댓글 데이터 (commentTrigger 변경 시 재요청)
   const { data: comment, error: commentError, loading: commentLoading } = useFetch(
-    `http://13.209.69.125:8080/comments/${postId}?page=0&size=20`
+    `http://13.209.69.125:8080/comments/${postId}?page=0&size=20`,
+    {},
+    [commentTrigger] // 🔹 댓글 트리거 추가 (의존성 배열)
   );
-
   console.log("코멘트 데이터:", comment);
   console.log("에러:", commentError);
   console.log("로딩:", commentLoading);
 
-  // 로딩 상태 체크
+  // 🔹 댓글이 등록되면 commentTrigger 업데이트
+  const handleCommentAdded = () => {
+    setCommentTrigger((prev) => prev + 1);
+  };
+  
+  // 로딩, 오류, 데이터가 없을 경우의 처리 
   if (loading) return <div>로딩 중...</div>;
-
-  // 오류 상태 체크
   if (error) return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
-
-  // 데이터가 없을 경우 처리
   if (!data || !data.result) return <div>데이터가 없습니다.</div>;
 
+  // 화면 구성에 쓰이는 데이터들 
   const d = data.result;
   const title = d.title;
   const board = "분실";
@@ -38,7 +48,7 @@ function AnonymousPost() {
   const content = d.content;
   const image = d?.imgUrls;
   const listSize = comment?.result?.listSize;
-  console.log('댓글', listSize);
+
   return (
     <>
       <AnonymousPostContainer>
@@ -69,7 +79,7 @@ function AnonymousPost() {
         </IconWrapper>
         </CommentSectionTop>
         
-        <CommentInputArea postId={postId}/>
+        <CommentInputArea postId={postId} setCommentTrigger={setCommentTrigger} commentTrigger={commentTrigger}/>
         <CommentWrapper>
         {comment?.result?.comments?.map((data) => (
           <Comment key={data.id} data={data} />
@@ -196,12 +206,6 @@ const Text = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: 25px; /* 156.25% */
-`
-
-const PostLikesSection = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
 `
 
 const CommentSectionTop = styled.div`
