@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { forwardRef } from "react";
 
 import styled from "styled-components";
 import useFetch from "../../hooks/useFetch";

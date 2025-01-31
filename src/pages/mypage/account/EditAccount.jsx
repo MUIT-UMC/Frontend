@@ -16,11 +16,6 @@ function EditAccount() {
     navigate(`/mypage/account/edit/${field}`);
   }
 
-  const handleAuthentication = () => {
-    // 실제 API 호출로 변경 필요
-    setIsAuthenticated(true);
-  };
-
   return (
     <Container>
       {isAuthenticated ? (
@@ -73,6 +68,7 @@ const Container = styled.div`
 const InputArea = styled.div`
   display: flex;
   gap: 64px;
+  align-items: center;
 
   .body-B-600{
     width: 64px;

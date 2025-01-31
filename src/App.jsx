@@ -104,6 +104,7 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:category/:type" element={<MyPage />} />
         <Route path="/mypage/:category/:type/:field" element={<MyPage />} />
+        
 
         {/* 티켓 상세페이지 */}
         <Route path="ticket/:number" element={<TicketDetailPage />} />
