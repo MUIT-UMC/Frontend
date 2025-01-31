@@ -1,64 +1,124 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Camera from "../../assets/icons/Camera.svg";
-import { InteractiveRatingStars } from './../../components/detail/InteractiveRatingStars';
+import axios from "axios";
+import { InteractiveRatingStars } from "../../../components/detail/InteractiveRatingStars";
+
 function WriteReviewPost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-
+  const [musicalName, setMusicalName] = useState("");
+  const [location, setLocation] = useState("");
+  const [rating, setRating] = useState(0);
+  const [category, setCategory] = useState("뮤지컬 리뷰");
   const [isButtonDisabled, setButtonDisabled] = useState(true);
+  const [categoryState, setCategoryState] = useState(category || "REVIEW"); // category 상태 추가
 
   useEffect(() => {
-    setButtonDisabled(!(title.trim() && content.trim()));
-  }, [title, content]);
+    setButtonDisabled(!(title.trim() && content.trim() && musicalName.trim() && location.trim()));
+  }, [title, content, musicalName, location]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const reviewRequestDTO = {
+      memberId: 1, // 회원 ID (적절한 값으로 대체하세요)
+      isAnonymous: true,
+      musicalId: 2, // 뮤지컬 ID (적절한 값으로 대체하세요)
+      title: title.trim(),
+      content: content.trim(),
+      rating: rating, // 평점이 필요하지 않다면 생략 가능
+    };
+
+    const formData = new FormData();
+
+    formData.append(
+      "reviewRequestDTO",
+      new Blob([JSON.stringify(reviewRequestDTO)], { type: "application/json" })
+    ); 
+    
+
+    try {
+      const response = await axios.post(
+        `http://13.209.69.125:8080/reviews/?postType=${categoryState}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }
+        }
+      ); // API URL 변경 필요
+      alert("게시글이 성공적으로 등록되었습니다!");
+      console.log(response.data);
+    } catch (error) {
+      alert("게시글 등록 중 오류가 발생했습니다.");
+      console.error(error);
+    }
+  };
 
   return (
-    <>
-      <WritePostContainer>
-        <InputWrapper>
-          <Input
-            placeholder="제목을 입력하세요"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <Button disabled={isButtonDisabled}>등록</Button>
-        </InputWrapper>
-        <Text>분실물 게시판</Text>
-        <Hr marginTop="20px" marginBottom="36px" />
-        <Content>
-
-          <Form>
-          <div style={{display: 'flex', flexDirection: 'row',}}>
+    <WritePostContainer>
+      <InputWrapper>
+        <Input
+          placeholder="제목을 입력하세요"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <Button disabled={isButtonDisabled} onClick={handleSubmit}>
+          등록
+        </Button>
+      </InputWrapper>
+      <Text>리뷰 게시판</Text>
+      <Hr marginTop="20px" marginBottom="36px" />
+      <Content>
+        <Form onSubmit={handleSubmit}>
+          <div>
             <label>분류</label>
             <SelectWrapper>
-            <select name="language" >
-              <option value="korean" selected>뮤지컬 리뷰</option>
-              <option value="english">시야 리뷰</option>
-            </select>
+              <select
+                value={category}
+                onChange={(e) => setCategoryState(e.target.value)}
+              >
+                <option value="REVIEW">뮤지컬 리뷰</option>
+                <option value="SIGHT">시야 리뷰</option>
+              </select>
             </SelectWrapper>
           </div>
           <div>
             <label>뮤지컬명</label>
-            <input type='text' placeholder="뮤지컬 이름을 검색하세요"/>
+            <input
+              type="text"
+              placeholder="뮤지컬 이름을 검색하세요"
+              value={musicalName}
+              onChange={(e) => setMusicalName(e.target.value)}
+            />
           </div>
           <div>
             <label>장소</label>
-            <input type='text' placeholder="뮤지컬 장소를 입력하세요"/>
+            <input
+              type="text"
+              placeholder="뮤지컬 장소를 입력하세요"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
           </div>
           <div>
             <label>평점</label>
-            <InteractiveRatingStars starSize={36}/>
+            <InteractiveRatingStars
+              starSize={36}
+              value={rating}
+              onChange={(value) => setRating(value)}
+            />
           </div>
           <div>
             <label>내용</label>
-            <textarea type='text' placeholder="악의적인 비방과 욕설이 포함된 글은 무통보 삭제될 수 있습니다. 모든 게시글은 익명으로 올라갑니다. "/>
+            <textarea
+              placeholder="악의적인 비방과 욕설이 포함된 글은 무통보 삭제될 수 있습니다."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
           </div>
         </Form>
-        
-        </Content>
-        
-      </WritePostContainer>
-    </>
+      </Content>
+    </WritePostContainer>
   );
 }
 
@@ -108,43 +168,6 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-  }
-`;
-
-const ContentWrapper = styled.div`
-  margin-bottom: 40px;
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  height: 600px;
-  padding: 0px;
-  border: none;
-  border-radius: 4px;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 25px;
-  color: #000;
-  resize: none;
-
-  &:focus {
-    outline: none;
-  }
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  gap: 16px;
-  justify-content: flex-end;
-`;
-
-const CancelButton = styled(Button)`
-  background-color: var(--Gray-outline, #E6E6E6);
-  color: #000;
-
-  &:hover {
-    background-color: #cfcfcf;
   }
 `;
 

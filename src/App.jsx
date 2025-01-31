@@ -18,9 +18,10 @@ import SmallDetail from "./pages/SmallDetail";
 import BuyTicket from "./pages/BuyTicket";
 import Board from "./pages/board/Board";
 import VisionDetail from "./pages/VisionDetail";
-import ItemPost from "./pages/board/ItemPost";
-import AnonymousPost from "./pages/board/AnonymousPost";
-import ReviewPost from "./pages/board/ReviewPost";
+import ItemPost from "./pages/board/post/ItemPost";
+import FoundPost from "./pages/board/post/FoundPost";
+import AnonymousPost from "./pages/board/post/AnonymousPost";
+import ReviewPost from "./pages/board/post/ReviewPost";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Terms from "./pages/signup/Terms"
@@ -29,15 +30,16 @@ import Complete from "./pages/signup/Complete";
 import MyPage from "./pages/mypage/MyPage";
 import Search from "./pages/Search";
 
-import WriteAnonymousPost from "./pages/board/WriteAnonymousPost";
-import WriteItemPost from "./pages/board/WriteItemPost";
-import WriteReviewPost from "./pages/board/WriteReviewPost";
+import WriteAnonymousPost from "./pages/board/write/WriteAnonymousPost";
+import WriteItemPost from "./pages/board/write/WriteItemPost";
+import WriteReviewPost from "./pages/board/write/WriteReviewPost";
 
 import './styles/font.css';
 import styled from "styled-components";
 import TicketDetailPage from "./pages/mypage/my/ticket/TicketDetailPage";
 import CancelTicket from "./pages/mypage/my/ticket/CancelTicket";
 import CancelComplete from "./pages/mypage/my/ticket/CancelComplete";
+import MusicalRanking from "./pages/test/MusicalRanking";
 
 
 
@@ -74,9 +76,12 @@ function App() {
 
         {/* 6) 게시판/게시글 */}
         <Route path="/board/:category/:type" element={<Board />} />
-        <Route path="/board/item/lost/1" element={<ItemPost />} />
-        <Route path="/board/anonymous/all/1" element={<AnonymousPost />} />
-        <Route path="/board/review/musical/1" element={<ReviewPost />} />
+        <Route path="/board/item/lost/:postId" element={<ItemPost />} />
+        <Route path="/board/item/found/:postId" element={<FoundPost />} />
+        <Route path="/board/anonymous/all/:postId" element={<AnonymousPost />} />
+        <Route path="/board/anonymous/hot/:postId" element={<AnonymousPost />} />
+        <Route path="/board/review/musical/:postId" element={<ReviewPost />} />
+        <Route path="/board/review/seats/:postId" element={<ReviewPost />} />
 
         <Route path="/board/item/write" element={<WriteItemPost />} />
         <Route path="/board/anonymous/write" element={<WriteAnonymousPost />} />
@@ -98,6 +103,7 @@ function App() {
         {/* 마이페이지 */}
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:category/:type" element={<MyPage />} />
+        <Route path="/mypage/:category/:type/:field" element={<MyPage />} />
 
         {/* 티켓 상세페이지 */}
         <Route path="ticket/:number" element={<TicketDetailPage />} />
@@ -107,6 +113,8 @@ function App() {
         <Route path="/search" element={<Search />} />
         {/* 랭킹 */}
         <Route path="/ranking" element={<Ranking />} />
+
+        <Route path="/test/rank" element={<MusicalRanking/>} />
 
 
       </Routes>

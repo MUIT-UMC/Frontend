@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { forwardRef } from "react";
 
 import styled from "styled-components";
+import useFetch from "../../hooks/useFetch";
 
 import EventContent from "./EventContent";
 import Heart from "../../assets/icons/heart-line.svg";
@@ -16,10 +17,13 @@ const MusicalEvent = (props) => {
         })
     }
 
+    const {data: musicals, error2, isLoading2} = useFetch(`http://13.209.69.125:8080/musicals/${props.id}`);
+    console.log(musicals?.result?.posterUrl);
+
     return(
         <Card>
             <MusicalInfo>
-                <img src={props.img} className="poster" onClick={cardClick}/>
+                <img src={musicals?.result?.posterUrl } className="poster" onClick={cardClick}/>
                 <MusicalDetail>
                     <div className="detail-text">
                         <h3 className="title-B-600">{props.title}</h3>
@@ -34,10 +38,10 @@ const MusicalEvent = (props) => {
             <EventArea>
                 {props?.event.map((musical)=>(
                     <EventContent
-                    key={musical.order}
-                    content={musical.content}
-                    startAt={musical.startAt}
-                    finishAt={musical.finishAt}
+                    key={musical.id}
+                    content={musical.name}
+                    startAt={musical.evFrom}
+                    finishAt={musical.evTo}
                     />
                 ))}
             </EventArea>

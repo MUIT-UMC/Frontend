@@ -10,23 +10,32 @@ import Info from "../../components/detail/Info";
 import Price from "../../components/detail/Price";
 import Calendar from "../../components/Calendar";
 import { RatingStars } from './../../components/detail/RatingStars';
+import useFetch from "../../hooks/useFetch";
 
 function Detail() {
   
-  const poster = posterImg;
+  const url = `http://13.209.69.125:8080/musicals/2`;
+  const { data, error, loading } = useFetch(url);
+
+  if (loading) return <div>Loading...</div>;
+  if (error || !data.isSuccess) return <div>데이터를 불러오지 못했습니다.</div>;
+
+  const musical = data.result;
+  const name = musical.name;
+  const poster = musical.posterUrl || "";
   const details = [
-    { label: "장소", value: "링크아트센터 드림1관", extra: { text: "시야 확인하기" } },
-    { label: "공연 기간", value: "2024.12.10 ~ 2025.03.23" },
-    { label: "공연 시간", value: "110분 (인터미션 없음)" },
-    { label: "관람 연령", value: "중학생 이상 관람가" },
-    { label: "출연", value: "김도빈, 황민수, 김찬종, 조풍해, 최호승, 장민수, 박영수, 문경초, 박좌현" },
-    { label: "가격", value: <Price />, extra: null }, // 가격 상세 구현 필요
+    { label: "장소", value: musical.place },
+    { label: "공연 기간", value: `${musical.perFrom} ~ ${musical.perTo}` },
+    { label: "공연 시간", value: musical.runTime },
+    { label: "관람 연령", value: musical.ageLimit },
+    { label: "출연", value: musical.actorPreview.join(", ") },
+    { label: "가격", value: <Price prices={musical.priceInfo} /> },
   ];
-  
+
   return (
     <>
       {/*빨간배너 */}
-      <MainBanner />
+      <MainBanner data={musical}/>
       {/* 본문 */}
       <MainContent>
         <div style={{margin:'60px 100px', display: 'flex', flexDirection: 'row', justifyContent:'space-between'}}>
@@ -34,7 +43,7 @@ function Detail() {
         <LeftSection>
 
         <TitleWrapper>
-          <h1>미아 파밀리아</h1>
+          <h1>{name}</h1>
           <img src={HeartLine} />
         </TitleWrapper>
         

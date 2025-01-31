@@ -3,8 +3,12 @@ import styled from "styled-components";
 import PostList from "../../../components/board/PostList";
 import SearchBar from "../../../components/board/SearchBar";
 import SearchContainer from "../../../components/board/SearchContainer";
-
+import { useState } from "react";
+import PageNavigator from "../../../components/board/PageNavigator";
+import useCustomFetch from "../../../hooks/useCustomFetch";
+import { useEffect } from "react";
 const MusicalBoard = () => {
+  
   const fieldsForTwo = [
     { label: "뮤지컬명", placeholder: "" },
     { label: "장소", placeholder: "" },
@@ -12,18 +16,41 @@ const MusicalBoard = () => {
   const tableHeaders = [
     "제목", "뮤지컬명", "장소"
   ]
-  const details = [
-    { id:1, name: "아이폰 16 pro 화이트 티타늄", musical: "알라딘", place: "링크아트센터드림 드림1관"},
-    { id:2, name: "가방 (샤넬백)", musical: "알라딘", place: "링크아트센터드림 드림1관"},
-    { id:3,  name: "남성용 반지갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관"},
-    { id:4, name: "블랙야크 벙어리장갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관"},
-    { id:5, name: "아이폰 14프로", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관"},
-  ];
+  
+  const [postType] = useState("LOST");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [size] = useState(20); // 한 페이지당 게시물 수
+  console.log("첫", currentPage);
+
+  const url = `http://13.209.69.125:8080/reviews/?postType=REVIEW&page=${currentPage}&size=20`;
+
+  const { data, error, loading } = useCustomFetch(url);
+
+  console.log('데이터', data);
+
+  
+    // API에서 받은 데이터와 상태 처리
+    const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
+    console.log(totalPages);
+  
+    useEffect(() => {
+      localStorage.setItem("currentPage", currentPage);
+    }, [currentPage]);
+  
+  
+    if (loading) return <div>로딩 중...</div>;
+    if (error) return <div>에러 발생: {error}</div>;
+
 
   return (
     <>
       <SearchContainer fields={fieldsForTwo} />
-      <PostList details={details} headers={tableHeaders} cols={3}/>
+      <PostList details={data.result.posts} headers={tableHeaders} cols={3}/>
+      <PageNavigator
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
     </>
   );
 };

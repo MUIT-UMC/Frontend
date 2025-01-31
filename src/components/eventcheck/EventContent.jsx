@@ -7,7 +7,7 @@ const EventContent = (props) => {
         <Container>
             <div className="circle" />
             <EventCard>
-                <p className="body-M-600">{props.startAt}~{props.finishAt}</p>
+                <p className="body-M-600">{props.startAt} ~ {props.finishAt}</p>
                 <p className="S-body-M-600">{props.content}</p>
             </EventCard>
         </Container>

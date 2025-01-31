@@ -1,23 +1,44 @@
 import React from "react";
 import styled from "styled-components";
-import itemImg from "../../assets/images/lost-item-1.png";
-import CommentInputArea from "../../components/post/CommentInputArea";
-import Comment from "../../components/post/Comment";
-import Reply from "../../components/post/Reply";
-import Info from "../../components/detail/Info";
-import ThumbsUp from "../../assets/icons/ThumbsUp.svg";
-
+import itemImg from "../../../assets/images/lost-item-1.png";
+import CommentInputArea from "../../../components/post/CommentInputArea";
+import Comment from "../../../components/post/Comment";
+import Reply from "../../../components/post/Reply";
+import Info from "../../../components/detail/Info";
+import ThumbsUp from "../../../assets/icons/ThumbsUp.svg";
+import { useParams } from "react-router-dom";
+import useFetch from "../../../hooks/useFetch";
 function AnonymousPost() {
-
+  const {postId} = useParams();
+  console.log(postId);
+  const { data, error, loading } = useFetch(`http://13.209.69.125:8080/posts/${postId}`)
   
-  const title = "아이폰 16프로 화이트 티타늄";
-  const board = "익명 게시판";
-  const user = "익명";
-  const date = "2025-01-05";
-  const image = itemImg;
-  const content = "방금 보고 왔는데 생각보다 재밌었음..."
-  const likes = "10"
+  const { data: comment, error: commentError, loading: commentLoading } = useFetch(
+    `http://13.209.69.125:8080/comments/${postId}?page=0&size=20`
+  );
 
+  console.log("코멘트 데이터:", comment);
+  console.log("에러:", commentError);
+  console.log("로딩:", commentLoading);
+
+  // 로딩 상태 체크
+  if (loading) return <div>로딩 중...</div>;
+
+  // 오류 상태 체크
+  if (error) return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
+
+  // 데이터가 없을 경우 처리
+  if (!data || !data.result) return <div>데이터가 없습니다.</div>;
+
+  const d = data.result;
+  const title = d.title;
+  const board = "분실";
+  const user = d.nickname ? d.nickname : null;
+  const date = d.createdAt?.split('T')[0];
+  const content = d.content;
+  const image = d?.imgUrls;
+  const listSize = comment?.result?.listSize;
+  console.log('댓글', listSize);
   return (
     <>
       <AnonymousPostContainer>
@@ -41,20 +62,18 @@ function AnonymousPost() {
 
         {/*댓글 작성부분 - 한 컴포넌트로 묶기 */}
         <CommentSectionTop>
-        <PostTitle marginBottom='20px'>댓글 3개</PostTitle>
+        <PostTitle marginBottom='20px'>댓글 {listSize}개</PostTitle>
         <IconWrapper>
           <img src={ThumbsUp} alt="likes" />
-          <Text color='#919191'>{likes}</Text>
+          <Text color='#919191'></Text>
         </IconWrapper>
         </CommentSectionTop>
         
-        <CommentInputArea />
+        <CommentInputArea postId={postId}/>
         <CommentWrapper>
-          <Comment />
-          <div>
-            <Comment />
-            <Reply />
-          </div>
+        {comment?.result?.comments?.map((data) => (
+          <Comment key={data.id} data={data} />
+        ))}
         </CommentWrapper>
                 
 
@@ -143,8 +162,8 @@ const Hr = styled.hr`
 
 const CommentWrapper = styled.div`
   padding-top: 20px;
-  & > *:not(:last-child) {
-    border-bottom: 1px solid #E6E6E6;
+  & > div:not(:last-child) {
+    border-bottom: 1px solid #E6E6E6; /* 각 댓글 사이에 구분선 추가 */
   }
 `;
 
