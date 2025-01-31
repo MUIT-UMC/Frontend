@@ -2,16 +2,19 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { InteractiveRatingStars } from "../../../components/detail/InteractiveRatingStars";
+import { useNavigate } from "react-router-dom";
 
 function WriteReviewPost() {
+
+  const navigate = useNavigate();
+  
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [musicalName, setMusicalName] = useState("");
   const [location, setLocation] = useState("");
   const [rating, setRating] = useState(0);
-  const [category, setCategory] = useState("뮤지컬 리뷰");
   const [isButtonDisabled, setButtonDisabled] = useState(true);
-  const [categoryState, setCategoryState] = useState(category || "REVIEW"); // category 상태 추가
+  const [categoryState, setCategoryState] = useState("REVIEW"); // category 상태 추가
 
   useEffect(() => {
     setButtonDisabled(!(title.trim() && content.trim() && musicalName.trim() && location.trim()));
@@ -19,14 +22,17 @@ function WriteReviewPost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const reviewRequestDTO = {
       memberId: 1, // 회원 ID (적절한 값으로 대체하세요)
       isAnonymous: true,
-      musicalId: 2, // 뮤지컬 ID (적절한 값으로 대체하세요)
       title: title.trim(),
       content: content.trim(),
+      musicalId: 2, // 뮤지컬 ID (적절한 값으로 대체하세요)
       rating: rating, // 평점이 필요하지 않다면 생략 가능
     };
+
+    console.log('평점', reviewRequestDTO);
 
     const formData = new FormData();
 
@@ -35,8 +41,9 @@ function WriteReviewPost() {
       new Blob([JSON.stringify(reviewRequestDTO)], { type: "application/json" })
     ); 
     
-
+    console.log('폼데이터', formData);
     try {
+      console.log(categoryState);
       const response = await axios.post(
         `http://13.209.69.125:8080/reviews/?postType=${categoryState}`,
         formData,
@@ -48,6 +55,7 @@ function WriteReviewPost() {
       ); // API URL 변경 필요
       alert("게시글이 성공적으로 등록되었습니다!");
       console.log(response.data);
+      navigate("/board/review/musical");
     } catch (error) {
       alert("게시글 등록 중 오류가 발생했습니다.");
       console.error(error);
@@ -74,7 +82,7 @@ function WriteReviewPost() {
             <label>분류</label>
             <SelectWrapper>
               <select
-                value={category}
+                value={categoryState}
                 onChange={(e) => setCategoryState(e.target.value)}
               >
                 <option value="REVIEW">뮤지컬 리뷰</option>
@@ -105,7 +113,7 @@ function WriteReviewPost() {
             <InteractiveRatingStars
               starSize={36}
               value={rating}
-              onChange={(value) => setRating(value)}
+              onRatingChange={setRating}
             />
           </div>
           <div>

@@ -1,7 +1,7 @@
 import React from "react";
 import BoardMenu from "../../components/board/BoardMenu";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Tickets from "./my/Tickets";
 import MyPosts from "./my/MyPosts";
 import LikedMusical from "./my/LikedMusical";
@@ -13,9 +13,11 @@ import AddressManagement from "./account/AddressManagement";
 import LoginManagement from "./account/LoginManagement";
 import SupportContact from "./support/SupportContact";
 import AllBoard from './../board/anonymous/HotBoard';
+
 function MyPage() {
   const { category, type, field } = useParams();
 
+  const navigate = useNavigate();
   const menus = [
     {
       id: "my",
@@ -74,11 +76,20 @@ function MyPage() {
         </div>
         <AsideBottom>
           <TextButton>로그아웃</TextButton>
-          <TextButton color="#FF1E00">회원탈퇴</TextButton>
+          <TextButton color="#FF1E00"
+          onClick={()=>navigate('/mypage/account-deletion')}>회원탈퇴</TextButton>
         </AsideBottom>
       </Aside>
       <Main>
+        <TopWrapper>
         <PageTitle>{titles[type]}</PageTitle>
+        {titles[type] == '1:1 문의' ? 
+          <Button onClick={() => navigate("/mypage/support/contact/write")}>
+            문의하기
+          </Button> : null
+        }
+        </TopWrapper>
+        
         <Content>
           {type === "tickets" && <Tickets />}
           {type === "posts" && <MyPosts />}
@@ -175,3 +186,34 @@ const AsideBottom = styled.div`
   gap: 12px;
 `
 
+const Button = styled.button`
+ display: flex;
+    width: 80px;
+    height: 28px;
+    padding: 5px 14px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 3px;
+    background: ${(props) => props.background ? props.background :'#A00000'};
+    border: 1px solid var(--Muit-Red-main, #A00000);
+    margin: 0px;
+    margin-bottom: ${(props) => props.marginBottom? props.marginBottom : '0px' };
+
+    color: ${(props) => props.color ? props.color : '#FFF' };
+
+/* Body-tiny-md */
+font-family: Pretendard;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+
+`
+
+const TopWrapper = styled.div`
+  display: flex;
+  flex-direcion: row;
+  justify-content: space-between;
+`

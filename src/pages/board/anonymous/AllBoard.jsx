@@ -2,31 +2,35 @@ import React from "react";
 import styled from "styled-components";
 import SearchBar from "../../../components/board/SearchBar";
 import PostList2 from "../../../components/board/PostList2";
-import musicalPic from "../../../assets/images/aladin-pic.png";
-import useFetch from '../../../hooks/useFetch';
 import useCustomFetch from "../../../hooks/useCustomFetch";
 import { useEffect } from "react";
 import { useState } from "react";
+import PageNavigator from "../../../components/board/PageNavigator";
 
 const AllBoard = () => {
 
-  const [currentPage, setCurrentPage] = useState(1);
+  // 현재 페이지 세팅 
+  const [currentPage, setCurrentPage] = useState(0);
 
-  const url = `http://13.209.69.125:8080/posts/?page=0&size=20`;
+  useEffect(() => {
+    localStorage.setItem("currentPage", currentPage);
+  }, [currentPage]);
+
+  const url = `${import.meta.env.VITE_API_URL}/posts/?${currentPage}&size=20`;
 
   const { data, error, loading } = useCustomFetch(url);
 
+  console.log("데이터", data);
   if (!data || data.result.posts.length === 0) {
     return <p>게시글이 없습니다.</p>;
   }
 
-  // API에서 받은 데이터와 상태 처리
-    const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
-    console.log(totalPages);
-  
-    useEffect(() => {
-      localStorage.setItem("currentPage", currentPage);
-    }, [currentPage]);
+// API에서 받은 데이터와 상태 처리
+  const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
+  console.log(totalPages);
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>에러 발생: {error}</div>;
   
 
   return (
@@ -41,10 +45,10 @@ const AllBoard = () => {
       <>
       <PostList2 posts={data.result.posts} />
       <PageNavigator
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
       </>
       }
     </>

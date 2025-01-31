@@ -10,6 +10,7 @@ import { useState } from "react";
       setCurrentRating(newRating);
       if (onRatingChange) {
         onRatingChange(newRating);
+        console.log(currentRating);
       }
     };
   
