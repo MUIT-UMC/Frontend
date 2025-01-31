@@ -76,7 +76,8 @@ function MyPage() {
         </div>
         <AsideBottom>
           <TextButton>로그아웃</TextButton>
-          <TextButton color="#FF1E00">회원탈퇴</TextButton>
+          <TextButton color="#FF1E00"
+          onClick={()=>navigate('/mypage/account-deletion')}>회원탈퇴</TextButton>
         </AsideBottom>
       </Aside>
       <Main>
