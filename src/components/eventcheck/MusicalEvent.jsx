@@ -6,6 +6,8 @@ import useFetch from "../../hooks/useFetch";
 import EventContent from "./EventContent";
 import Heart from "../../assets/icons/heart-line.svg";
 
+import formatDate from "../../utils/formatDate";
+
 
 const MusicalEvent = (props) => {
     const navigate = useNavigate();
@@ -17,7 +19,6 @@ const MusicalEvent = (props) => {
     }
 
     const {data: musicals, error, loading} = useFetch(`/musicals/${props.id}`);
-    console.log(musicals?.result?.posterUrl);
 
     return(
         <Card>
@@ -28,7 +29,7 @@ const MusicalEvent = (props) => {
                         <h3 className="title-B-600">{props.title}</h3>
                         <div>
                             <p className="body-M-600">{props.theater}</p>
-                            <p className="body-M-500">{props.begin}~{props.end}</p>
+                            <p className="body-M-500">{formatDate(props.begin)}~{formatDate(props.end)}</p>
                         </div>
                     </div>
                     <img className="heart-icon" src={Heart}/>
