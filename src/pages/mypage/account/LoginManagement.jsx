@@ -22,30 +22,9 @@ function LoginManagement() {
 }
 
 const Container = styled.div`
-
+  font-family: Pretendard;
+  padding: 16px 0px;
 `
-const AuthArea = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-
-  .Title{
-    font-size: 16px;
-    font-weight: 500;
-    color: #000000;
-  }
-  .colored{
-    color: #A00000;
-  }
-
-
-  .Authorize{
-    display: flex;
-    flex-direction: column;
-    align-items: center;  
-    gap: 80px;
-  }
-`;
 
 
 export default LoginManagement;
