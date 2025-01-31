@@ -1,25 +1,51 @@
 import React from "react";
 import styled from "styled-components";
-import itemImg from "../../assets/images/lost-item-1.png";
-import CommentInputArea from "../../components/post/CommentInputArea";
-import Comment from "../../components/post/Comment";
-import Reply from "../../components/post/Reply";
-import Info from "../../components/detail/Info";
-
+import itemImg from "../../../assets/images/lost-item-1.png";
+import CommentInputArea from "../../../components/post/CommentInputArea";
+import Comment from "../../../components/post/Comment";
+import Reply from "../../../components/post/Reply";
+import Info from "../../../components/detail/Info";
+import { useParams } from "react-router-dom";
+import useFetch from "../../../hooks/useFetch";
 function ItemPost() {
 
+  const { postId } = useParams();
+  console.log(postId);
+  const { data, error, loading } = useFetch(`http://13.209.69.125:8080/losts/${postId}`);
+  console.log('데이터', data);
+  const { data: comment, error: commentError, loading: commentLoading } = useFetch(
+    `http://13.209.69.125:8080/comments/${postId}?page=0&size=20`
+  );
   
-  const title = "아이폰 16프로 화이트 티타늄";
+  console.log("코멘트 데이터:", comment);
+  console.log("에러:", commentError);
+  console.log("로딩:", commentLoading);
+  // 로딩 상태 체크
+  if (loading) return <div>로딩 중...</div>;
+
+  // 오류 상태 체크
+  if (error) return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
+
+  // 데이터가 없을 경우 처리
+  if (!data || !data.result) return <div>데이터가 없습니다.</div>;
+
+  // console.log('데이터', data);
+  
+  const d = data.result;
+  const title = d.title;
   const board = "분실";
-  const user = "최윤경";
-  const date = "2025-01-05";
-const image = itemImg;
+  const user = d.nickname;
+  const date = d.createdAt.split('T')[0];
+  const image = d?.imgUrls;
+
+  const listSize = comment?.result?.listSize;
+  // console.log('image', image);
     const details = [
-      { label: "뮤지컬명", value: "알라딘"},
-      { label: "장소", value: "링크아트센터드림 드림1관" },
-      { label: "일시", value: "2025.01.05 | 14:00-16:00" },
-      { label: "물품명", value: "아이폰 16 pro 화이트 티타늄" },
-      { label: "특징", value: "짱구케이스 끼고 있고...맹구 콧물 돌아가는 모양의 케이스에요..배경화면은 사진으로 참고할게요 이렇게 생겼습니다. 여자화장실 세면대쪽 손 씻을때 빠졌을까요 아니면 공연장에서 주머니에서 빠졌을까요ㅜㅜ 찾거나 보신 분들은 댓글로 남겨주세요...감사합니다ㅠㅠ" },
+      { label: "뮤지컬명", value: d.musicalName},
+      { label: "장소", value: d.location },
+      { label: "일시", value: d?.lostDate?.split('T')[0] },
+      { label: "물품명", value: d.lostItem },
+      { label: "특징", value: d.content },
     ];
 
     
@@ -40,14 +66,12 @@ const image = itemImg;
         <Hr marginTop='60px' marginBottom='20px'/>
 
         {/*댓글 작성부분 - 한 컴포넌트로 묶기 */}
-        <PostTitle marginBottom='20px'>댓글 3개</PostTitle>
-        <CommentInputArea />
+        <PostTitle marginBottom='20px'>댓글 {listSize}개</PostTitle>
+        <CommentInputArea postId={postId}/>
         <CommentWrapper>
-          <Comment />
-          <div>
-            <Comment />
-            <Reply />
-          </div>
+        {comment?.result?.comments?.map((data) => (
+          <Comment key={data.id} data={data} />
+        ))}
         </CommentWrapper>
                 
 
@@ -134,60 +158,9 @@ const Hr = styled.hr`
 `;
 
 
-const ItemInfoWrapper = styled.div`
-  display: flex;
-  margin-bottom: 37px;
-`;
-
-const ItemImage = styled.div`
-  flex: 1;
-  img {
-    width: 320px;
-    height: 320px;
-    background-color: #f0f0f0;
-  }
-`;
-
-const ItemDetail = styled.div`
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  margin: 0px 40px;
-`;
-
-const Item = styled.div`
-  display: flex;
-`;
-
-const Label = styled.div`
-    color: #000;
-    width: 120px;
-  /* Body-bold */
-  font-family: Pretendard;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-`;
-
-const Value = styled.div`
-  color: ${(props) => props.color? props.color:'#000'};
-  /* Body-me */
-  width: ${(props) => props.width? props.width: '600px'};
-  font-family: Pretendard;
-  font-size: ${(props) => props.fontSize? props.fontSize:'16px'};
-  font-style: normal;
-  font-weight: 500;
-  line-height: 30px; /* 156.25% */
- text-decoration-line: ${(props) => props.strikethrough ? 'line-through' : 'none'};
-  margin-right: ${(props) => props.marginRight ? props.marginRight : '0px'};
-  margin-left: ${(props) => props.marginLeft ? props.marginLeft : '0px'};
-`;
-
 const CommentWrapper = styled.div`
   padding-top: 20px;
-  & > *:not(:last-child) {
-    border-bottom: 1px solid #E6E6E6;
+  & > div:not(:last-child) {
+    border-bottom: 1px solid #E6E6E6; /* 각 댓글 사이에 구분선 추가 */
   }
 `;

@@ -3,21 +3,70 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Camera from '../../assets/icons/Camera.svg';
 import Lock from '../../assets/icons/Lock.svg';
-function CommentInputArea() {
+import { useState } from "react";
+import axios from "axios";
+
+{/* 에러 500 서버오류 의심? */}
+function CommentInputArea({ postId }) {
+  // console.log('게시글', postId);
+  const [memberId, setMemberId] = useState(1);
+  const [comment, setComment] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(true); // Default to anonymous
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    if (comment.trim() === "") return; // Don't submit if comment is empty
+
+    setLoading(true);
+    setError(null);
+    console.log(comment);
+    try {
+      console.log('content: ', comment, ' memberId: ', memberId, ' isAnonymous: ', isAnonymous);
+
+      const response = await axios.post(`http://13.209.69.125:8080/comments/${postId}`, {
+        content: comment,
+        memberId: memberId,  // Replace with actual memberId if available
+        isAnonymous: isAnonymous,
+      });
+
+      console.log(response);
+      if (response.data.isSuccess) {
+        alert("댓글이 등록되었습니다.");
+        setComment(""); // Clear the comment input after successful submission
+      } else {
+        setError("댓글 등록에 실패했습니다.");
+      }
+    } catch (err) {
+      setError("네트워크 오류가 발생했습니다.");
+      console.log(response);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <CommentInputWrapper> 
         <Text color='#000'>하지희</Text>
-        <TextArea id="user-comment" rows="6" cols="22" placeholder="내용을 입력하세요." />
+        <TextArea 
+        id="user-comment" 
+        rows="6" cols="22" 
+        placeholder="내용을 입력하세요."
+        value={comment}
+        onChange={handleCommentChange}  />
       </CommentInputWrapper>
       <OptionWrapper>
       <div style={{display:'flex', flexDirection: 'row', gap: '8px', width: '100%'}}>
         {/*<img src={Camera} /><Text marginRight='20px'>사진</Text>*/}
         <img src={Lock} /><Text>익명</Text>
       </div>
-      <Button>등록</Button>
+      <Button onClick={handleSubmit} disabled={loading}>등록</Button>
       </OptionWrapper>
-      
+      {error && <ErrorMessage>{error}</ErrorMessage>}
       
     </>
   )
@@ -112,4 +161,10 @@ font-style: normal;
 font-weight: 500;
 line-height: normal;
 
+`
+const ErrorMessage = styled.div`
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  font-family: Pretendard;
 `

@@ -1,11 +1,11 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import PageNavigator from "./PageNavigator";
 import CommentBubbleOutLine from "../../assets/icons/CommentBubbleOutLine.svg";
 import ReplyArrow from "../../assets/icons/ReplyArrow.svg";
-import ThumbsUp from "../../assets/icons/ThumbsUp.svg"
+import ThumbsUp from "../../assets/icons/ThumbsUp.svg";
+
 function PostList2({ posts }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,31 +14,38 @@ function PostList2({ posts }) {
     navigate(`${location.pathname}/${id}`);
   };
 
-
   return (
     <PostListWrapper>
-      {posts.map((post) => (
-        <PostWrapper key={post.id} onClick={() => handleRowClick(post.id)}>
-          <Left>
-            <Title>{post.title}</Title>
-            <Text>{post.content}</Text>
-            <IconsWrapper>
-              <IconWrapper>
-                <img src={ThumbsUp} alt="likes" />
-                <Text color='#919191'>{post.likes}</Text>
-              </IconWrapper>
-              <IconWrapper>
-                <img src={CommentBubbleOutLine} alt="comments" />
-                <Text color='#919191'>{post.comments}</Text>
-              </IconWrapper>
-              <Text color='#919191'>{post.time}</Text>
-            </IconsWrapper>
-          </Left>
-          <Right> 
-            { post.image ? <Img src={post.image} alt="musical" /> : <></>}
-          </Right>
-        </PostWrapper>
-      ))}
+      {Array.isArray(posts) && posts.length > 0 ? (
+        posts.map((post) => {
+          console.log(post);
+          return (
+            <PostWrapper key={post.id} onClick={() => handleRowClick(post.id)}>
+              <Left>
+                <Title>{post.title}</Title>
+                <Text>{post.content}</Text>
+                <IconsWrapper>
+                  <IconWrapper>
+                    <img src={ThumbsUp} alt="likes" />
+                    <Text color="#919191">{post.likes || 0}</Text>
+                  </IconWrapper>
+                  <IconWrapper>
+                    <img src={CommentBubbleOutLine} alt="comments" />
+                    <Text color="#919191">{post.comments || 0}</Text>
+                  </IconWrapper>
+                  <Text color="#919191">{post.createdAt}</Text>
+                </IconsWrapper>
+              </Left>
+              <Right>
+                {post.image && <Img src={post.image} alt="musical" />}
+              </Right>
+            </PostWrapper>
+          );
+        })
+      ) : (
+
+        <></>
+      )}
       <NavWrapper>
         <PageNavigator
           currentPage={1} // 현재 페이지
@@ -51,7 +58,6 @@ function PostList2({ posts }) {
 }
 
 export default PostList2;
-
 
 const PostListWrapper = styled.div`
   width: 100%;

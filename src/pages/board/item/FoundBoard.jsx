@@ -2,8 +2,22 @@ import React from "react";
 import styled from "styled-components";
 import PostList from "../../../components/board/PostList";
 import SearchContainer from '../../../components/board/SearchContainer';
-
+import { useState, useEffect } from "react";
+import useFetch from "../../../hooks/useFetch";
+import useCustomFetch from "../../../hooks/useCustomFetch";
+import PageNavigator from "../../../components/board/PageNavigator";
 const FoundBoard = () => {
+
+  const [postType] = useState("LOST");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [size] = useState(20); // 한 페이지당 게시물 수
+  console.log("첫", currentPage);
+
+  const url = `http://13.209.69.125:8080/losts/?postType=FOUND&page=${currentPage}`;
+
+  const { data, error, loading } = useCustomFetch(url);
+
+  console.log('데이터', data);
   const fieldsForFour = [
     { label: "습득일", placeholder: "" },
     { label: "습득장소", placeholder: "" },
@@ -13,13 +27,18 @@ const FoundBoard = () => {
   const tableHeaders = [
     "습득물명", "뮤지컬명", "습득장소", "습득일"
   ]
-  const details = [
-    { id:1, name: "아이폰 16 pro 화이트 티타늄", musical: "알라딘", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-    { id:2, name: "가방 (샤넬백)", musical: "알라딘", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-    { id:3,  name: "남성용 반지갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-    { id:4, name: "블랙야크 벙어리장갑", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-    { id:5, name: "아이폰 14프로", musical: "미아 파밀리아", place: "링크아트센터드림 드림1관", date: '2025.01.05'},
-  ];
+  // API에서 받은 데이터와 상태 처리
+    const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
+    console.log(totalPages);
+  
+    useEffect(() => {
+      localStorage.setItem("currentPage", currentPage);
+    }, [currentPage]);
+  
+  
+    if (loading) return <div>로딩 중...</div>;
+    if (error) return <div>에러 발생: {error}</div>;
+  
 
   return (
     <>
@@ -29,7 +48,18 @@ const FoundBoard = () => {
         </Button>
       </ButtonWrapper>
       <SearchContainer fields={fieldsForFour} />
-      <PostList details={details} headers={tableHeaders} cols={4}/>
+      {loading && <div>로딩 중...</div>}
+      {error && <div>에러 발생: {error}</div>}
+      {!loading && !error && (
+        <>
+          <PostList details={data.result.posts} headers={tableHeaders} cols="4" />
+          <PageNavigator
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
+      )}
     </>
   );
 };

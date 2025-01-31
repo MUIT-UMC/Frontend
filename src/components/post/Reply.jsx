@@ -38,7 +38,7 @@ export default Reply;
 const ReplyWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  margin-left: 56px;
+  width: 1184px;
 
 
 `
@@ -63,6 +63,7 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 margin-bottom: 20px;
+width: 100%;
 `
 
 
@@ -81,6 +82,7 @@ const TopRight = styled.div`
 
 const Bottom = styled.div`
 margin-bottom: 20px;
+wdith: 100%;
 `
 
 const Text = styled.div`

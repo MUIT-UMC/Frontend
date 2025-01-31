@@ -4,8 +4,17 @@ import PostList from "../../../components/board/PostList";
 import SearchBar from "../../../components/board/SearchBar";
 import PostList2 from "../../../components/board/PostList2";
 import musicalPic from "../../../assets/images/aladin-pic.png";
+import useFetch from "../../../hooks/useFetch";
+import { useState, useEffect } from "react";
 
 const HotBoard = () => {
+  const [postType] = useState("HOT");
+  const [page, setPage] = useState(0);
+  const [size] = useState(20);
+  const [url, setUrl] = useState("");
+
+   const { data, error, loading } = useFetch(`http://13.209.69.125:8080/losts/?postType=${postType}&page=${page}`);
+
   const posts = [
     {
       id: 1,
@@ -33,6 +42,14 @@ const HotBoard = () => {
       time: "2시간 전",
     },
   ];
+
+  const details = data?.result?.postResultListDTO || [];
+
+  if (!data || details.length === 0) {
+    return <p>게시글이 없습니다.</p>;
+  }
+
+  
   return (
     <>
       <Text>좋아요 10개를 받으면 HOT 게시물로 자동 선정됩니다.</Text>

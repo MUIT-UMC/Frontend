@@ -6,7 +6,7 @@ import ArrowRight from "../../assets/icons/ArrowRight.svg";
 const Info = ({ image, width, height, alt, details, valueWidth }) => {
   return (
     <Wrapper>
-      {image &&
+      {image && image.length > 0 &&
       <InfoImage height={height}>
          <img alt={alt} src={image}/>
       </InfoImage>}

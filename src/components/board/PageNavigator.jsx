@@ -14,21 +14,21 @@ const PageNavigator = ({ currentPage, totalPages, onPageChange }) => {
     <PageNavigatorWrapper>
       <Img
         src={ChevronLeft}
-        visibility={currentPage === 1 ? "hidden" : "visible"}
+        visibility={currentPage === 0 ? "hidden" : "visible"}
         onClick={() => handlePageClick(currentPage - 1)}
       />
       {Array.from({ length: totalPages }, (_, index) => (
         <PageNumber
-          key={index + 1}
-          color={currentPage === index + 1 ? "#A00000" : undefined}
-          onClick={() => handlePageClick(index + 1)}
+          key={index}
+          color={currentPage === index ? "#A00000" : undefined}
+          onClick={() => handlePageClick(index)}
         >
           {index + 1}
         </PageNumber>
       ))}
       <Img
         src={ChevronRight}
-        visibility={currentPage === totalPages ? "hidden" : "visible"}
+        visibility={currentPage === totalPages-1 ? "hidden" : "visible"}
         onClick={() => handlePageClick(currentPage + 1)}
       />
     </PageNavigatorWrapper>
