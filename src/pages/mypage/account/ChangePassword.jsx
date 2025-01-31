@@ -7,7 +7,6 @@ import SeePassword from "../../../assets/icons/SeePassword.svg"
 
 function ChangePassword() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // 인증 상태 관리
-  const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -16,11 +15,6 @@ function ChangePassword() {
     navigate(-1);
   };
 
-  // 인증 처리 (임시 버튼 기반)
-  const handleAuthentication = () => {
-    // 실제 API 호출로 변경 필요
-    setIsAuthenticated(true);
-  };
 
   // 비밀번호 변경 로직
   const handleChangePassword = () => {

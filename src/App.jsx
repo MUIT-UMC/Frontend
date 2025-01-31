@@ -114,6 +114,7 @@ function App() {
         <Route path="/mypage/support/contact/write/complete" element={<ConctactComplete />} />
         <Route path="/mypage/account-deletion" element={<AccountDeletion />} />
         <Route path="/mypage/account-deletion/complete" element={<AccountDeletionComplete />} />
+
        {/* 티켓 상세페이지 */}
         <Route path="ticket/:number" element={<TicketDetailPage />} />
         <Route path="ticket/:number/cancel" element={<CancelTicket />} />
@@ -124,7 +125,6 @@ function App() {
         <Route path="/ranking" element={<Ranking />} />
 
         <Route path="/test/rank" element={<MusicalRanking/>} />
-
 
       </Routes>
       </Router>
