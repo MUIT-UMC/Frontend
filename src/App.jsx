@@ -28,6 +28,7 @@ import Terms from "./pages/signup/Terms"
 import Info from "./pages/signup/Info";
 import Complete from "./pages/signup/Complete";
 import MyPage from "./pages/mypage/MyPage";
+import ContactPost from "./pages/mypage/support/ContactPost";
 import Search from "./pages/Search";
 
 import WriteAnonymousPost from "./pages/board/write/WriteAnonymousPost";
@@ -40,6 +41,8 @@ import TicketDetailPage from "./pages/mypage/my/ticket/TicketDetailPage";
 import CancelTicket from "./pages/mypage/my/ticket/CancelTicket";
 import CancelComplete from "./pages/mypage/my/ticket/CancelComplete";
 import MusicalRanking from "./pages/test/MusicalRanking";
+import WriteContact from "./pages/mypage/support/WriteContact";
+import ConctactComplete from "./pages/mypage/support/ContactComplete";
 
 
 
@@ -104,7 +107,9 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/:category/:type" element={<MyPage />} />
         <Route path="/mypage/:category/:type/:field" element={<MyPage />} />
-
+        <Route path="/mypage/support/contact/write" element={<WriteContact />} />
+        <Route path="/mypage/support/contact/1" element={<ContactPost />} />
+        <Route path="/mypage/support/contact/write/complete" element={<ConctactComplete />} />
         {/* 티켓 상세페이지 */}
         <Route path="ticket/:number" element={<TicketDetailPage />} />
         <Route path="ticket/:number/cancel" element={<CancelTicket />} />
