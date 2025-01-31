@@ -5,15 +5,15 @@ import Calendar from "../components/Calendar";
 import ChevronRight from '../assets/icons/ChevronRight.svg'
 
 import useFetch from "../hooks/useFetch";
+import formatDate from "../utils/formatDate";
 
 function EventDetail() {
     const { musicalId } = useParams();
 
     const {data: musicalEvents, error, loading} = useFetch(`/events/${musicalId}`);
-    console.log(musicalEvents?.result);
 
     const {data: musicals, error2, loading2} = useFetch(`/musicals/${musicalId}`);
-    console.log(musicals?.result?.posterUrl);
+
 
 
     return(
@@ -24,7 +24,7 @@ function EventDetail() {
             <img src={ChevronRight} className="ChevronRight"/>
           </div>
           <p className="body-M-600">{musicalEvents?.result?.theatreName}</p>
-          <p className="body-M-500">{musicalEvents?.result?.perFrom}~{musicalEvents?.result?.perTo}</p>
+          <p className="body-M-500">{formatDate(musicalEvents?.result?.perFrom)}~{formatDate(musicalEvents?.result?.perTo)}</p>
           <img src={musicals?.result?.posterUrl} className="Poster"/>
         </MusicalInfo>
         <EventInfo>

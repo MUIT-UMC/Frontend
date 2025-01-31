@@ -7,11 +7,22 @@ import MusicalEvent from "../components/eventcheck/MusicalEvent";
 import EventContent from "../components/eventcheck/EventContent";
 
 import useFetch from "../hooks/useFetch";
+import { useQuery } from "@tanstack/react-query";
 
 const COLOR_MUIT_RED = "#A00000";
 
 function EventCheck() {
-  const {data: events, error, isLoading} = useFetch(`/events/`);
+  const [page, setPage] = useState(0); 
+
+  const { data: events, error, isLoading } = useFetch(`/events?page=${page}`);
+  console.log("현재 페이지:", page);
+
+  const handlePrevPage = () => {
+    if (page > 0) setPage(page - 1);
+  };
+  const handleNextPage = () => {
+    setPage(page + 1);
+  };
 
   return (
     <Container>
@@ -35,19 +46,32 @@ function EventCheck() {
           </Select>
         </div>
 
-        <EventListArea>
-          {events?.result?.eventResultListDTOList.map((musical) => (
-            <MusicalEvent
-            key={musical.musicalId}
-            id={musical.musicalId}
-            title={musical.musicalName}
-            theater={musical.theaterName}
-            begin={musical.perFrom}
-            end={musical.perTo}
-            event={musical.eventResultListDTO}
-            />
-          ))}
-        </EventListArea>
+        {isLoading ? (
+          <p>이벤트를 불러오는 중...</p>
+        ) : (
+          <EventListArea>
+            {events?.result?.content.map((musical) => (
+              <MusicalEvent
+                key={musical.musicalId}
+                id={musical.musicalId}
+                title={musical.musicalName}
+                theater={musical.theatreName}
+                begin={musical.perFrom}
+                end={musical.perTo}
+                event={musical.eventResultListDTO}
+              />
+            ))}
+          </EventListArea>
+        )}
+        <Pagination>
+          <button onClick={handlePrevPage} disabled={page === 0}>
+            이전
+          </button>
+          <span>{page+1}</span>
+          <button onClick={handleNextPage}>
+            다음
+          </button>
+        </Pagination>
       </NowShowing>
     </Container>
   );
@@ -117,4 +141,29 @@ const Select = styled.select`
   font-style: normal;
   font-weight: 500;
 `
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+
+  button {
+    padding: 8px 16px;
+    border-radius: 3px;
+    background: #a00000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+  
+  span {
+    font-size: 16px;
+    font-weight: bold;
+  }
+`;
 export default EventCheck;
