@@ -51,7 +51,7 @@ const Step2 = () => {
             </Row>
             <Row>
               <Label>할인</Label>
-              <Value>0원</Value>
+              <Value active>0원</Value>
             </Row>
             <Row>
               <Label>배송료</Label>
@@ -61,8 +61,8 @@ const Step2 = () => {
             <TotalLabel>총 결제 금액</TotalLabel>
             <TotalValue>10,000원</TotalValue>
           </TotalRow>
-          <Button onClick={() => navigate('..')}>이전</Button>  {/* 이전 페이지로 이동 */}
-        <Button onClick={() => navigate('../step3')}>다음</Button>  {/* 다음 페이지로 이동 */}
+          <Button onClick={() => navigate('../step3')} active>다음</Button>  {/* 이전 페이지로 이동 */}
+        <Button onClick={() => navigate('..')}>이전</Button>  {/* 다음 페이지로 이동 */}
           </Summary>
         </Content>
           </Container>
@@ -79,7 +79,7 @@ const Container = styled.div`
   position: relative;
   padding: 40px;
   font-family: "Pretendard", sans-serif;
- gap: 115px;
+ gap: 80px;
 `;
 
 const Sidebar = styled.div`
@@ -114,7 +114,7 @@ line-height: 25px; /* 156.25% */
 const Content = styled.div`
     display: flex;
   flex: 1;
-  gap:110px;
+  gap:80px;
 `;
 const LeftContent = styled.div`
 margin-top:-40px;
@@ -219,15 +219,15 @@ const Summary = styled.div`
 `;
 
 const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  display: flex;;
+  margin-bottom: 20px;
   font-size: 16px;
+gap:47px;
 `;
 
 const Label = styled.div`
   color: #000;
-
+width: 100px;; 
 /* Body-bold */
 font-family: Pretendard;
 font-size: 16px;
@@ -237,8 +237,9 @@ line-height: normal;
 `;
 
 const Value = styled.div`
-  color: #000;
-margin-right:200px;
+  color: ${({ active }) => (active ? "#A00000" : "#000")};
+  width: 100%;
+
 /* Body-me */
 font-family: Pretendard;
 font-size: 16px;
@@ -249,27 +250,56 @@ line-height: 25px; /* 156.25% */
 
 const TotalRow = styled.div`
   display: flex;
-  justify-content: space-between;
   font-size: 18px;
   font-weight: bold;
-  margin-top: 200px;
+  margin-top: 140px;
+  gap: 40px;
+  flex-direction: row;
+  margin-bottom: 40px;
 `;
 
-const TotalLabel = styled.div``;
+const TotalLabel = styled.div`
+color: #000;
+margin-top: 10px;
+
+/* Body-bold */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;`;
 
 const TotalValue = styled.div`
-  color: #b71c1c;
+  color: var(--Muit-Red-main, #A00000);
+
+/* Title-semibo */
+font-family: Pretendard;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
 `;
 
 const Button = styled.button`
-background-color: #007bff;
-color: white;
-padding: 10px 20px;
-border: none;
+border-radius: 3px;
+border: 1px solid  ${({ active }) => (active ? "#A00000" : "#E6E6E6")};
+background: ${({ active }) => (active ? "#A00000" : "#FFF")};
+display: flex;
+width: 400px;
+height: 40px;
+padding: 10px 172px;
+justify-content: center;
+align-items: center;
+gap: 10px;
 cursor: pointer;
-border-radius: 5px;
-&:hover {
-  background-color: #0056b3;
-}
+color: ${({ active }) => (active ? "#FFF" : "#000")};
+
+/* Body-bold */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+margin-bottom:18px;
 `;
 

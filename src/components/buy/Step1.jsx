@@ -138,6 +138,7 @@ border: 1px solid var(--Muit-Red-main, #A00000);
 background: var(--Muit-Red-main, #A00000);
 color: #FFF;
 margin-top:25px;
+cursor: pointer;
 
 /* Body-bold */
 font-family: Pretendard;
