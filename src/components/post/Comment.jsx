@@ -4,7 +4,7 @@ import styled from "styled-components";
 import CommentBubble from "../../assets/icons/CommentBubbleIcon.svg";
 import ReplyArrow from "../../assets/icons/ReplyArrow.svg";
 import Reply from "./Reply";
-function Comment({data}) {
+function Comment({data, noneCommentIcon}) {
   console.log('Comment.jsx', data);
   return (
     <Wrapper>
@@ -12,13 +12,16 @@ function Comment({data}) {
         <Top>
           <TopLeft>
             <UserName>{data.nickname}</UserName>
-            <Text>{data.createdAt.split('T')[0]}</Text>
+            <Text>{data.createdAt?.split('T')[0]}</Text>
             {/*<Text>신고하기</Text>*/}
           </TopLeft>
           <TopRight>
+            {noneCommentIcon ? null :
             <div style={{display:'flex', flexDirection: 'row', gap: '4px'}}>
               <img src={CommentBubble} /><Text>댓글</Text>
             </div>
+            }
+            
             <Text style={{display: 'none'}}>수정</Text><Text style={{display: 'none'}}>삭제</Text>
           </TopRight>
           
