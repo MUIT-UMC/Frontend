@@ -2,10 +2,11 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import EventContent from "../components/eventcheck/EventContent";
-
 import Calendar from "../components/Calendar";
-
 import { GoChevronRight } from "react-icons/go";
+import ChevronRight from '../assets/icons/ChevronRight.svg'
+
+import useFetch from "../hooks/useFetch";
 
 const mockMusicalEvent = [
     {
@@ -186,46 +187,32 @@ const mockMusicalEvent = [
 
 function EventDetail() {
     const { musicalId } = useParams();
-    const [musicalEvent, setMusicalEvent] = useState([]);
-    const [loading, setLoading] = useState([]);
 
-    useEffect(() => {
-        const fetchMusicalEvent = async () => {
-            try {
-                setMusicalEvent(mockMusicalEvent);
-            }
-            catch (error) {
-                console.error("Error", error);
-            }
-            finally {
-                setLoading(false);
-            }
-        }
-        fetchMusicalEvent();
-    }, []);
-    if (loading) {
-        return <div>Loading...</div>
-    }
-    console.log(musicalEvent[0]?.event);
+    const {data: musicalEvents, error, loading} = useFetch(`http://13.209.69.125:8080/events/${musicalId}`);
+    console.log(musicalEvents?.result);
+
+    const {data: musicals, error2, loading2} = useFetch(`http://13.209.69.125:8080/musicals/${musicalId}`);
+    console.log(musicals?.result?.posterUrl);
+
 
     return(
       <Container>
         <MusicalInfo>
           <div className="Title">
-            <h3 className="title-B-600">{musicalEvent[0].title}</h3>
-            <GoChevronRight size={24} color="#919191" />
+            <h3 className="title-B-600">{musicalEvents?.result?.musicalName}</h3>
+            <img src={ChevronRight} className="ChevronRight"/>
           </div>
-          <p className="body-M-600">{musicalEvent[0].theater}</p>
-          <p className="body-M-500">{musicalEvent[0].begin}~{musicalEvent[0].end}</p>
-          <img src={musicalEvent[0].img} />
+          <p className="body-M-600">{musicalEvents?.result?.theatreName}</p>
+          <p className="body-M-500">{musicalEvents?.result?.perFrom}~{musicalEvents?.result?.per}</p>
+          <img src={musicals?.result?.posterUrl} className="Poster"/>
         </MusicalInfo>
         <EventInfo>
-          {musicalEvent[0]?.event.map((musical) => (
+          {musicalEvents?.result.eventResultListDTO?.map((musical) => (
             <EventContent
-              key={musical.order}
-              content={musical.content}
-              startAt={musical.startAt}
-              finishAt={musical.finishAt}
+              key={musical.id}
+              content={musical.name}
+              startAt={musical.evFrom}
+              finishAt={musical.evTo}
             />
           ))}
         </EventInfo>
@@ -270,10 +257,12 @@ const MusicalInfo = styled.div`
         font-weight: 500;
         color: #919191;       
     }
-    img{
+    .Poster{
         margin-top: 12px;
-
         height: 320px;
+    }
+    .ChevronRight{
+      width: 24px;   
     }
 `
 const EventInfo = styled.div`
@@ -281,10 +270,9 @@ const EventInfo = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-
 `
 const CalendarArea = styled.div`
-    width: 100%;
+    width: 70%;
     height: 600px;
 `
 
