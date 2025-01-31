@@ -8,13 +8,12 @@ import Info from "../../../components/detail/Info";
 import { useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 function ItemPost() {
-
   const { postId } = useParams();
   console.log(postId);
-  const { data, error, loading } = useFetch(`http://13.209.69.125:8080/losts/${postId}`);
+  const { data, error, loading } = useFetch(`/losts/${postId}`);
   console.log('데이터', data);
   const { data: comment, error: commentError, loading: commentLoading } = useFetch(
-    `http://13.209.69.125:8080/comments/${postId}?page=0&size=20`
+    `/comments/${postId}?page=0&size=20`
   );
   
   console.log("코멘트 데이터:", comment);
@@ -70,7 +69,7 @@ function ItemPost() {
         <CommentInputArea postId={postId}/>
         <CommentWrapper>
         {comment?.result?.comments?.map((data) => (
-          <Comment key={data.id} data={data} />
+          <Comment key={data.commentId} data={data} />
         ))}
         </CommentWrapper>
                 

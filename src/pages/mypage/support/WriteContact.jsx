@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function WriteAnonymousPost() {
+function WriteContact() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -29,7 +29,7 @@ function WriteAnonymousPost() {
 
     try {
       const response = await axios.post(
-        "/posts/",
+        "http://13.209.69.125:8080/posts/",
         postData,
         {
           headers: {
@@ -39,7 +39,7 @@ function WriteAnonymousPost() {
       );
       alert("게시글이 성공적으로 등록되었습니다!");
       console.log(response.data);
-      navigate("/board/anonymous/all"); // 게시글 등록 후 이동
+      navigate("/mypage/support/contact/write/complete"); // 게시글 등록 후 이동
     } catch (error) {
       alert("게시글 등록 중 오류가 발생했습니다.");
       console.error(error);
@@ -48,20 +48,24 @@ function WriteAnonymousPost() {
 
   return (
     <WritePostContainer>
+      <TopWrapper>
+      <Top>1:1 문의</Top> 
+      <Button
+          disabled={isButtonDisabled}
+          onClick={isButtonDisabled ? undefined : handleSubmit}
+        >
+          문의하기
+        </Button>
+      </TopWrapper>
+     
       <InputWrapper>
         <Input
           placeholder="제목을 입력하세요"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <Button
-          disabled={isButtonDisabled}
-          onClick={isButtonDisabled ? undefined : handleSubmit}
-        >
-          등록
-        </Button>
+        
       </InputWrapper>
-      <Text>익명 게시판</Text>
       <Hr marginTop="20px" marginBottom="36px" />
       <ContentWrapper>
         <TextArea
@@ -74,11 +78,27 @@ function WriteAnonymousPost() {
   );
 }
 
-export default WriteAnonymousPost;
+export default WriteContact;
 const WritePostContainer = styled.div`
   margin: 86px 100px;
 `;
 
+const TopWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 38px;
+`
+const Top = styled.div`
+color: #000;
+
+/* Title-semibo */
+font-family: Pretendard;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+`
 const Hr = styled.hr`
   margin-bottom: ${(props) => props.marginBottom || "0px"};
   margin-top: ${(props) => props.marginTop || "0px"};
@@ -114,8 +134,13 @@ const Input = styled.input`
   border-radius: 4px;
   color: #000;
   font-family: Pretendard;
-  font-size: 24px;
-  font-weight: 700;
+
+/* Body-bold */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
 
   &:focus {
     outline: none;

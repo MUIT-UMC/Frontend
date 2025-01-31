@@ -22,7 +22,7 @@ const MusicalBoard = () => {
   const [size] = useState(20); // 한 페이지당 게시물 수
   console.log("첫", currentPage);
 
-  const url = `http://13.209.69.125:8080/reviews/?postType=REVIEW&page=${currentPage}&size=20`;
+  const url = `/reviews/?postType=REVIEW&page=${currentPage}&size=20`;
 
   const { data, error, loading } = useCustomFetch(url);
 

@@ -13,7 +13,7 @@ const HotBoard = () => {
   const [size] = useState(20);
   const [url, setUrl] = useState("");
 
-   const { data, error, loading } = useFetch(`http://13.209.69.125:8080/losts/?postType=${postType}&page=${page}`);
+   const { data, error, loading } = useFetch(`/losts/?postType=${postType}&page=${page}`);
 
   const posts = [
     {

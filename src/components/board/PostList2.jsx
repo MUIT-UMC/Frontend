@@ -33,7 +33,7 @@ function PostList2({ posts }) {
                     <img src={CommentBubbleOutLine} alt="comments" />
                     <Text color="#919191">{post.comments || 0}</Text>
                   </IconWrapper>
-                  <Text color="#919191">{post.createdAt}</Text>
+                  <Text color="#919191">{post.createdAt?.split("T")[0]}</Text>
                 </IconsWrapper>
               </Left>
               <Right>
@@ -46,13 +46,6 @@ function PostList2({ posts }) {
 
         <></>
       )}
-      <NavWrapper>
-        <PageNavigator
-          currentPage={1} // 현재 페이지
-          totalPages={4} // 전체 페이지 수
-          onPageChange={(page) => console.log(`Move to page: ${page}`)} // 페이지 변경 핸들러
-        />
-      </NavWrapper>
     </PostListWrapper>
   );
 }

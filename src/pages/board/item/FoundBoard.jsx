@@ -13,7 +13,7 @@ const FoundBoard = () => {
   const [size] = useState(20); // 한 페이지당 게시물 수
   console.log("첫", currentPage);
 
-  const url = `http://13.209.69.125:8080/losts/?postType=FOUND&page=${currentPage}`;
+  const url = `/losts/?postType=FOUND&page=${currentPage}`;
 
   const { data, error, loading } = useCustomFetch(url);
 

@@ -14,7 +14,7 @@ import useFetch from "../../hooks/useFetch";
 
 function Detail() {
   
-  const url = `http://13.209.69.125:8080/musicals/2`;
+  const url = `/musicals/2`;
   const { data, error, loading } = useFetch(url);
 
   if (loading) return <div>Loading...</div>;
