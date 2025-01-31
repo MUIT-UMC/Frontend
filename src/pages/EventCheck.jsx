@@ -7,7 +7,6 @@ import MusicalEvent from "../components/eventcheck/MusicalEvent";
 import EventContent from "../components/eventcheck/EventContent";
 
 import useFetch from "../hooks/useFetch";
-import { useQuery } from "@tanstack/react-query";
 
 const COLOR_MUIT_RED = "#A00000";
 
