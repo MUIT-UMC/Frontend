@@ -8,6 +8,7 @@ import Info from "../../../components/detail/Info";
 import ThumbsUp from "../../../assets/icons/ThumbsUp.svg";
 import { useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
+import { useState } from "react";
 function AnonymousPost() {
   const {postId} = useParams();
   console.log(postId);
@@ -17,11 +18,11 @@ function AnonymousPost() {
   console.log(commentTrigger);
 
   // 게시글 데이터 
-  const { data, error, loading } = useFetch(`http://13.209.69.125:8080/posts/${postId}`)
-  
+  const { data, error, loading } = useFetch(`${import.meta.env.VITE_API_URL}/posts/${postId}`)
+  console.log('데이터', data);
   // 🔹 댓글 데이터 (commentTrigger 변경 시 재요청)
   const { data: comment, error: commentError, loading: commentLoading } = useFetch(
-    `http://13.209.69.125:8080/comments/${postId}?page=0&size=20`,
+    `${import.meta.env.VITE_API_URL}/comments/${postId}?page=0&size=20`,
     {},
     [commentTrigger] // 🔹 댓글 트리거 추가 (의존성 배열)
   );
@@ -42,8 +43,8 @@ function AnonymousPost() {
   // 화면 구성에 쓰이는 데이터들 
   const d = data.result;
   const title = d.title;
-  const board = "분실";
-  const user = d.nickname ? d.nickname : null;
+  const board = "익명 게시판";
+  const user = "익명";
   const date = d.createdAt?.split('T')[0];
   const content = d.content;
   const image = d?.imgUrls;
@@ -82,7 +83,7 @@ function AnonymousPost() {
         <CommentInputArea postId={postId} setCommentTrigger={setCommentTrigger} commentTrigger={commentTrigger}/>
         <CommentWrapper>
         {comment?.result?.comments?.map((data) => (
-          <Comment key={data.id} data={data} />
+          <Comment key={data.commentId} data={data} />
         ))}
         </CommentWrapper>
                 
