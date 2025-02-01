@@ -17,7 +17,7 @@ import RegisterCheck from "./pages/RegisterCheck";
 import SmallDetail from "./pages/SmallDetail";
 import BuyTicket from "./pages/BuyTicket";
 import Board from "./pages/board/Board";
-import VisionDetail from "./pages/VisionDetail";
+import VisionDetailLotte from "./pages/VisionDetailLotte";
 import ItemPost from "./pages/board/post/ItemPost";
 import FoundPost from "./pages/board/post/FoundPost";
 import AnonymousPost from "./pages/board/post/AnonymousPost";
@@ -65,7 +65,8 @@ function App() {
         {/* 3) 시야 확인 */}
         <Route path="/vision" element={<Vision />} />
         {/* 3-1) 시야확인 상세 */}
-        <Route path="/vision/1" element={<VisionDetail />} />
+        <Route path="/vision/4" element={<VisionDetailLotte />} />
+
         {/* 4) 소극장 공연 */}
         <Route path="/small-theater" element={<SmallTheater />} />
         {/* 4-1) 뮤지컬 등록 페이지 */}

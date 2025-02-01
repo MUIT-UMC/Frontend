@@ -15,16 +15,17 @@ function Vision() {
 
 const Container = styled.div`
     box-sizing: border-box;
-    height: 864px;
+    height: 1080px;
 
     font-family: Pretendard;
     display: flex;
     align-items: center;
     flex-direction: column;
     padding-top:100px;
-    gap: 140px;
+
     h2{
       font-size: 24px;
+      margin-bottom: 140px;
     }
     .color-txt{
       color: #A00000;
