@@ -64,7 +64,7 @@ function WriteItemPost({category}) {
 
     try {
       const response = await axios.post(
-        `${muit_server}/losts/?postType=${categoryState}`,
+        `${muit_server}/losts?postType=${categoryState}`,
         formData,
         {
           headers: {

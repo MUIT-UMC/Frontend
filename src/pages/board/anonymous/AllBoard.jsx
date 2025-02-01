@@ -12,12 +12,12 @@ const AllBoard = () => {
 
   // 현재 페이지 세팅 
   const [currentPage, setCurrentPage] = useState(0);
-
+  console.log(currentPage);
   useEffect(() => {
     localStorage.setItem("currentPage", currentPage);
   }, [currentPage]);
 
-  const url = `/posts/?${currentPage}&size=20`;
+  const url = `/posts?page=0&size=20`;
 
   const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
@@ -38,7 +38,8 @@ const AllBoard = () => {
 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>에러 발생: {error}</div>;
-  
+
+  console.log(data.result.posts);
 
   return (
     <>
@@ -52,7 +53,7 @@ const AllBoard = () => {
       <>
       <PostList2 posts={data.result.posts} />
       <PageNavigator
-        currentPage={currentPage}
+        currentPage={1}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />

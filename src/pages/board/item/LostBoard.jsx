@@ -16,7 +16,7 @@ const LostBoard = () => {
 
   console.log("첫", currentPage);
 
-  const url = `/losts/?postType=LOST&page=${currentPage}`;
+  const url = `/losts?postType=LOST&page=${currentPage}`;
 
   const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 

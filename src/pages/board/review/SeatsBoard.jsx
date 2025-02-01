@@ -21,7 +21,7 @@ const SeatsBoard = () => {
   const [size] = useState(20); // 한 페이지당 게시물 수
   console.log("첫", currentPage);
 
-  const url = `/reviews/?postType=SIGHT&page=${currentPage}&size=20`;
+  const url = `/reviews?postType=SIGHT&page=${currentPage}&size=20`;
 
   const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 

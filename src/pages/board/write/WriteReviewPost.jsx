@@ -49,7 +49,7 @@ function WriteReviewPost() {
     try {
       console.log(categoryState);
       const response = await axios.post(
-        `${muit_server}/reviews/?postType=${categoryState}`,
+        `${muit_server}/reviews?postType=${categoryState}`,
         formData,
         {
           headers: {
@@ -60,9 +60,10 @@ function WriteReviewPost() {
       ); // API URL 변경 필요
       alert("게시글이 성공적으로 등록되었습니다!");
       console.log("리스폰스 데이터", response.data);
-      if (categoryState == 'MUSICAL')
+      console.log("데이터 아이디", response.data.result.id);
+      if (categoryState === "REVIEW")
         navigate(`/board/review/musical/${response.data.result.id}`);
-      else if (categoryState == 'SIGHT')
+      else if (categoryState === "SIGHT")
         navigate(`/board/review/seats/${response.data.result.id}`);
     } catch (error) {
       alert("게시글 등록 중 오류가 발생했습니다.");
