@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import FormattedDate from "../components/date/FormattedDate";
+import FormattedDate from "../../components/date/FormattedDate";
 import { useNavigate } from "react-router-dom";
 
 //import axios from "axios";
