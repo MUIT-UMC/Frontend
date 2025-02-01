@@ -3,6 +3,8 @@ import styled from "styled-components";
 import axios from "axios";
 import { InteractiveRatingStars } from "../../../components/detail/InteractiveRatingStars";
 import { useNavigate } from "react-router-dom";
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function WriteReviewPost() {
 
@@ -28,6 +30,8 @@ function WriteReviewPost() {
       isAnonymous: true,
       title: title.trim(),
       content: content.trim(),
+      musicalName:  musicalName.trim(),
+      location: location.trim(),
       musicalId: 2, // 뮤지컬 ID (적절한 값으로 대체하세요)
       rating: rating, // 평점이 필요하지 않다면 생략 가능
     };
@@ -45,17 +49,21 @@ function WriteReviewPost() {
     try {
       console.log(categoryState);
       const response = await axios.post(
-        `/reviews/?postType=${categoryState}`,
+        `${muit_server}/reviews/?postType=${categoryState}`,
         formData,
         {
           headers: {
+            "Authorization": token ? `${token}` : "",
             "Content-Type": "multipart/form-data",
           }
         }
       ); // API URL 변경 필요
       alert("게시글이 성공적으로 등록되었습니다!");
-      console.log(response.data);
-      navigate("/board/review/musical");
+      console.log("리스폰스 데이터", response.data);
+      if (categoryState == 'MUSICAL')
+        navigate(`/board/review/musical/${response.data.result.id}`);
+      else if (categoryState == 'SIGHT')
+        navigate(`/board/review/seats/${response.data.result.id}`);
     } catch (error) {
       alert("게시글 등록 중 오류가 발생했습니다.");
       console.error(error);

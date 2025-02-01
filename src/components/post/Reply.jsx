@@ -3,7 +3,41 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CommentBubble from "../../assets/icons/CommentBubbleIcon.svg";
 import ReplyArrow from "../../assets/icons/ReplyArrow.svg";
-function Reply() {
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const muit_server = import.meta.env.VITE_APP_SERVER_URL;
+function Reply({key, data}) {
+  console.log(data);
+  console.log('리플라이 콘텐츠', data.content);
+
+  const deleteHandler = async () => {
+    if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
+  
+    try {
+      const response = await fetch(
+        `${muit_server}/comments/REPLY/${data.replyId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Authorization": token ? `${token}` : "",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert("댓글이 삭제되었습니다.");
+        // 필요하면 상태 업데이트 로직 추가
+      } else {
+        alert(`삭제 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("삭제 오류:", error);
+      alert("삭제 중 오류가 발생했습니다.");
+    }
+  };
+  
   return (
     <ReplyWrapper>
       <div style={{marginTop: '15px'}}>
@@ -13,20 +47,22 @@ function Reply() {
       <CommentWrapper>
         <Top>
           <TopLeft>
-            <UserName color='#A00000'>작성자</UserName>
-            <Text>2025-01-05</Text>
+            <UserName color='#A00000'>{data.nickname}</UserName>
+            <Text>{data.createdAt?.split('T')[0]}</Text>
+            <Text>{data.replyId}</Text>
             <Text style={{display: 'none'}}>신고하기</Text>
           </TopLeft>
           <TopRight>
             <div style={{display:'flex', flexDirection: 'row', gap: '4px'}}>
               <img src={CommentBubble} /><Text>댓글</Text>
             </div>
-            <Text>수정</Text><Text>삭제</Text>
+            <Text>수정</Text>
+            <Text onClick={deleteHandler}>삭제</Text>
           </TopRight>
           
         </Top>
         <Bottom>
-          <CommentText>헉 정말요? 감사합니다ㅜㅜ</CommentText>
+          <CommentText>{data.content}</CommentText>
         </Bottom>
       </CommentWrapper>
     </ReplyWrapper>

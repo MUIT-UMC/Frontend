@@ -6,6 +6,7 @@ function CastsDetail() {
 
   return (
     <>
+
       <CharacterWrapper>
         <h3>리차드</h3>
         <ActorsWrapper>

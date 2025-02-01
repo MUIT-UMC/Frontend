@@ -5,21 +5,37 @@ import CommentInputArea from "../../../components/post/CommentInputArea";
 import Comment from "../../../components/post/Comment";
 import Reply from "../../../components/post/Reply";
 import Info from "../../../components/detail/Info";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
 function FoundPost() {
 
+  const navigate = useNavigate();
   const { postId } = useParams();
   console.log(postId);
-  const { data, error, loading } = useFetch(`/losts/${postId}`);
+
+
+  const url = `/losts/${postId}`;
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
   console.log('데이터', data);
-  const { data: comment, error: commentError, loading: commentLoading } = useFetch(
-    `/comments/${postId}?page=0&size=20`
-  );
   
+  // 🔹 댓글 데이터 (commentTrigger 변경 시 재요청)
+  const { data: comment, error: commentError, loading: commentLoading } = useFetch(
+    `/comments/${postId}?page=0&size=20`,
+    {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
   console.log("코멘트 데이터:", comment);
   console.log("에러:", commentError);
   console.log("로딩:", commentLoading);
+
   // 로딩 상태 체크
   if (loading) return <div>로딩 중...</div>;
 
@@ -52,6 +68,10 @@ function FoundPost() {
   return (
     <>
       <LostItemPostContainer>
+      <Text 
+        style={{textDecoration: 'underline', marginBottom: '20px'}}
+        color='#919191' 
+        onClick={()=>navigate("/board/item/lost")}>게시글 목록으로 돌아가기...</Text>
         <TitleWrapper>
         <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
         </TitleWrapper>
@@ -164,3 +184,14 @@ const CommentWrapper = styled.div`
     border-bottom: 1px solid #E6E6E6; /* 각 댓글 사이에 구분선 추가 */
   }
 `;
+const Text = styled.div`
+  color: ${(props) => props.color ? props.color: '#000'};
+
+  /* Body-me */
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 25px; /* 156.25% */
+
+`

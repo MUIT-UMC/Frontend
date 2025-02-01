@@ -6,10 +6,15 @@ import Comment from "../../../components/post/Comment";
 import Reply from "../../../components/post/Reply";
 import Info from "../../../components/detail/Info";
 import ThumbsUp from "../../../assets/icons/ThumbsUp.svg";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import { useState } from "react";
+const muit_server = import.meta.env.VITE_APP_SERVER_URL;
+import axios from "axios";
+
 function AnonymousPost() {
+
+  const navigate = useNavigate();
   const {postId} = useParams();
   console.log(postId);
 
@@ -18,14 +23,24 @@ function AnonymousPost() {
   console.log(commentTrigger);
 
   // 게시글 데이터 
-  const { data, error, loading } = useFetch(`/posts/${postId}`)
+  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
+  const url = `/posts/${postId}`;
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
   console.log('데이터', data);
+
   // 🔹 댓글 데이터 (commentTrigger 변경 시 재요청)
   const { data: comment, error: commentError, loading: commentLoading } = useFetch(
     `/comments/${postId}?page=0&size=20`,
-    {},
-    [commentTrigger] // 🔹 댓글 트리거 추가 (의존성 배열)
-  );
+    {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
   console.log("코멘트 데이터:", comment);
   console.log("에러:", commentError);
   console.log("로딩:", commentLoading);
@@ -35,6 +50,28 @@ function AnonymousPost() {
     setCommentTrigger((prev) => prev + 1);
   };
   
+  const handleDelete = async () => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      try {
+        const response = await axios.delete(`${muit_server}/posts/${postId}`, {
+          headers: { 
+            Authorization: token 
+          },
+        });
+  
+        if (response.data.isSuccess) {
+          alert("게시글이 삭제되었습니다.");
+          navigate("/board/item/lost"); // 삭제 후 홈으로 이동
+        } else {
+          alert("삭제 실패: " + response.data.message);
+        }
+      } catch (error) {
+        console.error("삭제 오류:", error);
+        alert("삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
   // 로딩, 오류, 데이터가 없을 경우의 처리 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
@@ -53,10 +90,35 @@ function AnonymousPost() {
   return (
     <>
       <AnonymousPostContainer>
-
-        <TitleWrapper>
-          <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
-        </TitleWrapper>
+      <Text 
+        style={{textDecoration: 'underline', marginBottom: '20px'}}
+        color='#919191' 
+        onClick={()=>navigate("/board/item/lost")}>게시글 목록으로 돌아가기...</Text>
+        <TopWrapper>
+          <TitleWrapper>
+            <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
+          </TitleWrapper>
+          <SelectWrapper>
+        {/*이후 3도트 눌러서 수정삭제 드롭박스 생기도록 수정*/}
+        {/*<BsThreeDotsVertical />*/}
+          <select
+            onChange={(e) => {
+              if (e.target.value === "edit") {
+                console.log("editing");
+                // navigate("/edit-page"); // 수정 페이지로 이동
+              } else if (e.target.value === "delete") {
+                console.log("delete");
+                // 삭제 로직 실행
+                handleDelete();
+              }
+            }}
+            >
+            <option value="edit">수정</option>
+            <option value="delete">삭제</option>
+          </select>
+            </SelectWrapper>
+        
+        </TopWrapper>
 
         <SubTitleWrapper>
           <User>{user}</User><PostDate>{date}</PostDate>
@@ -216,4 +278,30 @@ const CommentSectionTop = styled.div`
   align-items:center;
   height: 100%;
   margin-bottom: 20px;
+`
+
+
+const SelectWrapper = styled.div`
+  padding-bottom: 4px;
+
+  select {
+    border: none;
+    color: var(--Gray-maintext, #000);
+
+    /* Body-me */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 25px; /* 156.25% */
+  }
+    select:focus {
+    outline: none;
+    }
+`
+const TopWrapper = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+
 `

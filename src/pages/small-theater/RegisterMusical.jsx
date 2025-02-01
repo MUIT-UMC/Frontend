@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import CameraIcon from '../assets/icons/Camera.svg';
+import CameraIcon from '../../assets/icons/Camera.svg';
+import CastingPictureIcon from '../../assets/icons/CastingPicture.svg';
+import PlusIcon from '../../assets/icons/plus.svg'
 
 const RegisterMusical = () => {
   const [image, setImage] = useState(null);
@@ -25,7 +27,6 @@ const RegisterMusical = () => {
             <Preview>
             <img src={CameraIcon} alt="Camera Icon" />
             </Preview>
-  
           </ImageUpload>
         </LeftSection>
         <RightSection>
@@ -106,40 +107,33 @@ const RegisterMusical = () => {
     <SectionTitle>캐스팅정보</SectionTitle>
     <CastingWrapper>
       <Left>
-        <IconWrapper>
-      
-          <span>사진 추가</span>
-        </IconWrapper>
+        <img src={CastingPictureIcon} alt="Casting Icon" width="140" height="140"/>
+        <CastingInfo type="text" placeholder="이름"/>
+        <CastingInfo type="text" placeholder="역할"/>
       </Left>
       <Right>
         <InputWrapper>
-          <Label>이름</Label>
-          <Input type="text" placeholder="이름을 입력하세요" />
+        <img src={PlusIcon}/>
+         <AddButton>추가하기</AddButton>
         </InputWrapper>
-        <InputWrapper>
-          <Label>역할</Label>
-          <Input type="text" placeholder="역할을 입력하세요" />
-        </InputWrapper>
-        <AddButton>추가하기</AddButton>
       </Right>
     </CastingWrapper>
     <InputWrapper>
       <Label>감독 및 스태프</Label>
-      <TextArea placeholder="감독 및 스태프 정보를 입력하세요" />
     </InputWrapper>
-    <AddButton>추가하기</AddButton>
+
   </Section>
 
   <Section>
     <SectionTitle>결제정보</SectionTitle>
-    <InputWrapper>
+    <InputWrapper2>
       <Label>계좌번호</Label>
-      <Input type="text" placeholder="계좌번호를 입력하세요" />
-    </InputWrapper>
-    <InputWrapper>
+      <Input2 type="text" placeholder="공연에 쓰일 계좌번호를 입력하세요 (입금주명)" />
+    </InputWrapper2>
+    <InputWrapper2>
       <Label>환불문의</Label>
-      <TextArea placeholder="환불문의 정보를 입력하세요" />
-    </InputWrapper>
+      <Input2 type="text" placeholder="환불 문의에 쓰일 SNS 또는 전화번호를 입력하세요" />
+    </InputWrapper2>
   </Section>
 </BottomSection>
 
@@ -343,8 +337,8 @@ flex-direction: column;
 align-items: flex-start;
 gap: 42px;
 flex-shrink: 0;
-
-  
+margin-top: 5px;
+margin-bottom: 28px;
 
   &::placeholder {
   color:#919191;
@@ -369,41 +363,54 @@ const CastingWrapper = styled.div`
 
 const Left = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 150px;
-  height: 150px;
-  border: 1px dashed #ccc;
-  border-radius: 4px;
+  gap: 20px; /* 아이콘, 이름, 역할 간의 간격 */
+    flex-direction: column;
+    margin-bottom:20px;
 `;
 
-const IconWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
+const CastingInfo = styled.input`
 
-  span {
-    margin-top: 8px;
-    font-size: 12px;
-    color: #666;
+border: none;
+  border-bottom: 1px solid #e6e6e6;
+  outline: none;
+  padding: 4px 0;
+  color: rgb(0, 0, 0);
+  width: 140px;
+  text-align: center;
+
+  &::placeholder {
+    color: #919191;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 18px;
+  }
+
+  &:focus {
+    border-bottom: 1px solid #333;
   }
 `;
 
+
 const Right = styled.div`
+align-items: center;
   flex: 1;
 `;
 
 const AddButton = styled.button`
   margin-top: 16px;
   padding: 8px 16px;
-  background-color: #a00000;
-  color: white;
   border: none;
   border-radius: 4px;
+    background-color: transparent; /* 배경 제거 */
   cursor: pointer;
+  color: var(--Gray-sub, #919191);
 
-  &:hover {
-    background-color: #900000;
-  }
+/* Body-tiny-md */
+font-family: Inter;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 128.571% */
 `;
