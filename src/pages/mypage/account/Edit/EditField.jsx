@@ -93,10 +93,10 @@ function EditField() {
             <button
             onClick={handleChangeInfo}
             className='confirm'
-            disabled={!verificationCode.trim()}
+            disabled={!inputValue}
             >수정</button>
       </BtnArea>
-    </Container>
+    </Container> 
   );
 }
 

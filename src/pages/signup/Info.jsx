@@ -2,24 +2,29 @@ import {useForm} from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRef, useState } from "react";
-
+import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import MuitLogo from "../../components/signup/muitLogo";
 import SeePassword from '../../assets/icons/SeePassword.svg';
-import SearchRed from "../../assets/icons/SearchRed.svg"
-import { useNavigate } from 'react-router-dom';
+import SearchRed from "../../assets/icons/SearchRed.svg";
+import ConditionCheck from "../../assets/icons/ConditionCheck.svg";
+import ConditionX from "../../assets/icons/ConditionX.svg";
+
 
 const COLOR_MUIT_RED = "#A00000";
+const COLOR_SUCCESS_BLUE = "#029DF3";
 
 function Info() {
     const schema = yup.object().shape({
         id: yup.string()
+            .matches(/^[a-zA-Z0-9]+$/, "6~20자 영문, 숫자 입력")
             .min(6, "6~20자 영문, 숫자 입력")
             .max(20, "6~20자 영문, 숫자 입력")
             .required("아이디를 입력해주세요."),
         password: yup.string()
             .min(8, "8~20자 이상 입력")
             .max(20, "8~20자 이상 입력")
+            .matches(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/, "영문, 숫자, 특수문자 포함")
             .required("비밀번호를 입력해주세요."),
         confirmPassword: yup.string()
             .oneOf([yup.ref("password"), null], "동일한 비밀번호 입력")
@@ -76,56 +81,41 @@ function Info() {
                 </SideMenu>
 
                 <InfoArea>
-                    
                     <h2 className="Title-B-600">회원가입</h2>
-
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <InputArea>
-                            <p className="body-B-600">이름</p>
-                            <Input>
-                                <input placeholder="이름을 입력하세요" />
-                            </Input>
-                        </InputArea>
 
-                        <InputArea>
-                            <p className="body-B-600">아이디</p>
-                            <div className='inputError'>
-                                <Input>
-                                    <input placeholder="아이디를 입력하세요"
-                                        type={'id'}{...register('id')} />
-                                </Input>
-                                {errors.id && <ErrorMessage>{errors.id?.message}</ErrorMessage>}
-                            </div>
-
-                        </InputArea>
-
-                        <InputArea>
-                            <p className="body-B-600">비밀번호</p>
-                            <div className='inputError'>
-                                <Input>
-                                    <input placeholder="비밀번호를 입력하세요"
-                                        type={isShowPWChecked ? "text" : "password"}
-                                        {...register("password")} />
-                                    <img src={SeePassword} onClick={handleShowPWChecked} />
-                                </Input>
-                                {errors.password &&
-                                <ErrorMessage>{errors.password?.message}</ErrorMessage>}
-                            </div>
-                        </InputArea>
-
-                        <InputArea>
-                            <p className="body-B-600">비밀번호 확인</p>
-                            <div className='inputError'>
-                                <Input>
-                                    <input placeholder="비밀번호를 입력하세요"
-                                        type={isShowPWChecked ? "text" : "password"}
-                                        {...register("confirmPassword")} />
-                                    <img src={SeePassword} onClick={handleShowPWChecked} />
-                                </Input>
-                                {errors.confirmPassword &&
-                                    <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>}
-                            </div>
-                        </InputArea>
+                    {[{ field: 'id', label: '아이디', messages: ["6~20자 영문, 숫자 입력", "이미 사용 중이거나 탈퇴한 아이디입니다."] },
+                          { field: 'password', label: '비밀번호', messages: ["8~20자 이상 입력", "영문, 숫자, 특수문자 포함"] },
+                          { field: 'confirmPassword', label: '비밀번호 확인', messages: ["동일한 비밀번호 입력"] }
+                        ].map(({ field, label, messages }) => (
+                            <InputArea key={field}>
+                                <p className="body-B-600">{label}</p>
+                                <div className='inputError'>
+                                    <Input>
+                                        <input
+                                            placeholder={`${label}를 입력하세요`}
+                                            type={
+                                                field === 'password' || field === 'confirmPassword' ?
+                                                (isShowPWChecked ? "text" : "password") :
+                                                "text"
+                                            }
+                                            {...register(field)}
+                                        />
+                                        {field === 'password' || field === 'confirmPassword' ? <img src={SeePassword} onClick={handleShowPWChecked} /> : null}
+                                    </Input>
+                                    {watch(field) && messages.map((msg, index) => (
+                                        <ValidationMessage key={index} isValid={!errors[field]}>
+                                            <ValidationIcon
+                                                src={!errors[field] ? ConditionCheck : ConditionX} // ✅ 유효성 상태에 따라 이미지 변경
+                                                alt="Validation Icon"
+                                            />
+                                            {msg}
+                                        </ValidationMessage>
+                                    ))}
+                                </div>
+                            </InputArea>
+                        ))}
+                        
 
                         <InputArea>
                             <p className="body-B-600">이메일</p>
@@ -248,7 +238,7 @@ const Form = styled.form`
 `
 const InputArea = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 20px;
   p{margin:0px;}
   .body-B-600{
@@ -332,13 +322,18 @@ const Input = styled.div`
 
   }
 `
-const ErrorMessage = styled.p`
-    color: var(--Red-warning, #FF1E00);
-    /* Body-tiny-md */
+const ValidationMessage = styled.p`
+    color: ${({ isValid }) => (isValid ? COLOR_SUCCESS_BLUE : "#FF1E00")};
     font-size: 14px;
-    font-style: normal;
     font-weight: 500;
-`;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+`
+const ValidationIcon = styled.img`
+    width: 24px;
+    height: 24px;
+`
 const GenderSelectBtn = styled.div`
     display: flex;
     gap: 20px;
