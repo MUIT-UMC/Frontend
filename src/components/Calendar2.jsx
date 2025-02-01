@@ -5,21 +5,19 @@ import PrevMonth from "../assets/icons/PrevMonth.svg";
 import useFetch from "../hooks/useFetch";
 import { useParams } from "react-router-dom";
 
-const Calendar = ({ variant = "default" }) => {
+const Calendar = ({ variant = "default", onDateSelect }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
     const [events, setEvents] = useState([]);
 
     const { musicalId } = useParams();
-    const { data, error, loading } = useFetch(`/events/${musicalId}`);
+    const { data } = useFetch(`/events/${musicalId}`);
 
     useEffect(() => {
         if (data?.isSuccess) {
             setEvents(data?.result?.eventResultListDTO || []);
         }
     }, [data]);
-
-    console.log(events);
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
@@ -37,14 +35,18 @@ const Calendar = ({ variant = "default" }) => {
 
     const handleDateClick = (day) => {
         if (day) {
-            setSelectedDate(new Date(year, month, day));
+            const newSelectedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+            setSelectedDate(newSelectedDate);
+            onDateSelect(newSelectedDate); // 🔥 부모 컴포넌트에 전달
         }
     };
 
     const getEventsForDate = (day) => {
         if (!day) return [];
         const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-        return events.filter(event => event.evFrom <= dateStr && event.evTo >= dateStr);
+        return events.filter(event => 
+            event.evFrom <= dateStr && (!event.evTo || event.evTo >= dateStr)
+        );
     };
 
     const daysArray = [];
@@ -72,13 +74,13 @@ const Calendar = ({ variant = "default" }) => {
             <DaysGrid>
                 {daysArray.map((day, index) => {
                     const dayEvents = getEventsForDate(day);
-                    const isSelected = selectedDate?.getDate() === day;
+                    const isSelected = selectedDate === `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
                     return (
                         <Day key={index} onClick={() => handleDateClick(day)} isSelected={isSelected}>
-                            <DayNumber>{day || ""}</DayNumber>
+                            <DayNumber isSelected={isSelected}>{day || ""}</DayNumber>
                             {dayEvents.map((event, idx) => (
                                 <EventLabel key={idx} isSelected={isSelected}>
-                                    {event.name.length > 5 ? `${event.name.slice(0, 5)}...` : event.name}
+                                    {event.name}
                                 </EventLabel>
                             ))}
                         </Day>
@@ -133,35 +135,47 @@ const Day = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
+  justify-content: start;
+
   cursor: pointer;
   color: #000;
   position: relative;
-  border: ${({ isSelected }) => (isSelected ? "2px solid #A00000" : "none")};
-  
 `;
 
 const DayNumber = styled.div`
-  font-size: 24px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    border: ${({ isSelected }) => (isSelected ? "2px solid #A00000" : "none")};
+
+    color: #000;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 500;
 `;
 
 const EventLabel = styled.div`
     color: #FFF;
-    text-align: center;
     font-family: Pretendard;
     font-size: 14px;
     font-weight: 500;
-
     background: ${({ isSelected }) => (isSelected ? "#A00000" : "#C1C1C1")};
 
     height: 20px;
-    padding: 1px 8px
+    width: 80%;
+    padding: 1px 8px;
     border-radius: 2px;
     margin-top: 4px;
-`;
 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+`;
 export default Calendar;
