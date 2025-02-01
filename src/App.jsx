@@ -1,6 +1,6 @@
 
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "./components/Navbar"; 
 
@@ -46,7 +46,24 @@ import ConctactComplete from "./pages/mypage/support/ContactComplete";
 import AccountDeletion from "./pages/mypage/account-deletion/AccountDeletion";
 import AccountDeletionComplete from "./pages/mypage/account-deletion/AccountDeletionComplete";
 
-
+import AdminLayout from './pages/adminpage/AdminLayout';
+import AdminDashboard from './pages/adminpage/dashboard/AdminDashboard';
+import AdminUser from "./pages/adminpage/user/AdminUser";
+import AdminUserDetail from "./pages/adminpage/user/AdminUserDetail";
+import AdminMusical from "./pages/adminpage/musical/AdminMusical";
+import AdminMusicalDetail from "./pages/adminpage/musical/AdminMusicalDetail";
+import AdminEvent from "./pages/adminpage/event/AdminEvent";
+import AdminEventDetail from "./pages/adminpage/event/AdminEventDetail";
+import AdminVision from "./pages/adminpage/vision/AdminVision";
+import AdminQuery from "./pages/adminpage/query/AdminQuery";
+import AdminMypage from "./pages/adminpage/mypage/AdminMypage";
+import AdminSmallTheater from "./pages/adminpage/small-theater/AdminSmallTheater";
+import AdminSmallTicket from "./pages/adminpage/small-theater/ticket/AdminSmallTicket";
+import AdminSmallTicketDetail from "./pages/adminpage/small-theater/ticket/AdminSmallTicketDetail";
+import AdminSmallReserve from "./pages/adminpage/small-theater/reservation/AdminSmallReserve";
+import AdminSmallReserveDetail from "./pages/adminpage/small-theater/reservation/AdminSmallReserveDetail";
+import AdminSmallRefund from "./pages/adminpage/small-theater/refund/AdminSmallRefund";
+import AdminSmallRefundDetail from "./pages/adminpage/small-theater/refund/AdminSmallRefundDetail";
 
 function App() {
   return (
@@ -126,6 +143,33 @@ function App() {
         <Route path="/ranking" element={<Ranking />} />
 
         <Route path="/test/rank" element={<MusicalRanking/>} />
+
+         {/* 관리자 페이지 */}
+         <Route path="/adminpage">
+          <Route element={<AdminLayout />}>
+            {/* 기본 경로 => dashboard로 이동 */}
+            <Route index element={<Navigate to="/adminpage/dashboard" />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="user" element={<AdminUser />} />
+            <Route path="user/detail/:userId" element={<AdminUserDetail />} />
+            <Route path="musical" element={<AdminMusical />} />
+            <Route path="musical/detail/:musicalName" element={<AdminMusicalDetail />} />
+            <Route path="event" element={<AdminEvent />} />
+            <Route path="event/detail/:musicalName" element={<AdminEventDetail />} />
+            <Route path="vision" element={<AdminVision />} />
+            <Route path="query" element={<AdminQuery />} />
+            <Route path="mypage" element={<AdminMypage />} />
+            <Route path="small-theater">
+              <Route index element={<AdminSmallTheater />} />
+              <Route path="ticket" element={<AdminSmallTicket />} />
+              <Route path="ticket/detail/:smallTitle" element={<AdminSmallTicketDetail />} />
+              <Route path="reserve" element={<AdminSmallReserve />} />
+              <Route path="reserve/detail/:smallName" element={<AdminSmallReserveDetail />} />
+              <Route path="refund" element={<AdminSmallRefund />} />
+              <Route path="refund/detail/:smallId" element={<AdminSmallRefundDetail />} />
+            </Route>
+          </Route>
+        </Route>
 
       </Routes>
       </Router>
