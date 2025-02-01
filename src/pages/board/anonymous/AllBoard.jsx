@@ -6,6 +6,7 @@ import useCustomFetch from "../../../hooks/useCustomFetch";
 import { useEffect } from "react";
 import { useState } from "react";
 import PageNavigator from "../../../components/board/PageNavigator";
+import useFetch from "../../../hooks/useFetch";
 
 const AllBoard = () => {
 
@@ -18,7 +19,13 @@ const AllBoard = () => {
 
   const url = `/posts/?${currentPage}&size=20`;
 
-  const { data, error, loading } = useCustomFetch(url);
+  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
 
   console.log("데이터", data);
   if (!data || data.result.posts.length === 0) {

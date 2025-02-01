@@ -6,21 +6,34 @@ import Comment from "../../../components/post/Comment";
 import Reply from "../../../components/post/Reply";
 import Info from "../../../components/detail/Info";
 import { RatingStars } from "../../../components/detail/RatingStars";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
-function ReviewPost() {
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
+function ReviewPost() {
+  const navigate = useNavigate();
   const { postId } = useParams();
   console.log(postId);
-  const { data, error, loading } = useFetch(`/reviews/${postId}`);
+  const url = `/reviews/${postId}`;
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
   console.log('데이터', data);
-  const { data: comment, error: commentError, loading: commentLoading } = useFetch(
-    `/comments/${postId}?page=0&size=20`
-  );
   
+  // 🔹 댓글 데이터 (commentTrigger 변경 시 재요청)
+  const { data: comment, error: commentError, loading: commentLoading } = useFetch(
+    `/comments/${postId}?page=0&size=20`,
+    {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
   console.log("코멘트 데이터:", comment);
   console.log("에러:", commentError);
   console.log("로딩:", commentLoading);
+
   // 로딩 상태 체크
   if (loading) return <div>로딩 중...</div>;
 
@@ -48,14 +61,62 @@ function ReviewPost() {
     { label: "특징", value: d.content},
   ];
 
+  const handleDelete = async () => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      try {
+        const response = await axios.delete(`${muit_server}/posts/${postId}`, {
+          headers: { 
+            Authorization: token 
+          },
+        });
+  
+        if (response.data.isSuccess) {
+          alert("게시글이 삭제되었습니다.");
+          navigate("/board/item/lost"); // 삭제 후 홈으로 이동
+        } else {
+          alert("삭제 실패: " + response.data.message);
+        }
+      } catch (error) {
+        console.error("삭제 오류:", error);
+        alert("삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+  
   console.log(d.rating);
   return (
     <>
       <ReviewPostContainer>
-
-        <TitleWrapper>
-          <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
-        </TitleWrapper>
+      <Text 
+        style={{textDecoration: 'underline', marginBottom: '20px'}}
+        color='#919191' 
+        onClick={()=>navigate("/board/review/musical")}>게시글 목록으로 돌아가기...</Text>
+        
+        <TopWrapper>
+          <TitleWrapper>
+            <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
+          </TitleWrapper>
+          <SelectWrapper>
+        {/*이후 3도트 눌러서 수정삭제 드롭박스 생기도록 수정*/}
+        {/*<BsThreeDotsVertical />*/}
+          <select
+            onChange={(e) => {
+              if (e.target.value === "edit") {
+                console.log("editing");
+                // navigate("/edit-page"); // 수정 페이지로 이동
+              } else if (e.target.value === "delete") {
+                console.log("delete");
+                // 삭제 로직 실행
+                handleDelete();
+              }
+            }}
+            >
+            <option value="edit">수정</option>
+            <option value="delete">삭제</option>
+          </select>
+            </SelectWrapper>
+        
+        </TopWrapper>
 
         <SubTitleWrapper>
           <User>{user}</User><PostDate>{date}</PostDate>
@@ -181,4 +242,40 @@ line-height: 25px; /* 156.25% */
 }
 `
 const Rating = styled.div`
+`
+
+const Text = styled.div`
+  color: ${(props) => props.color ? props.color: '#000'};
+
+  /* Body-me */
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 25px; /* 156.25% */
+
+`
+
+const SelectWrapper = styled.div`
+  padding-bottom: 4px;
+
+  select {
+    border: none;
+    color: var(--Gray-maintext, #000);
+
+    /* Body-me */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 25px; /* 156.25% */
+  }
+    select:focus {
+    outline: none;
+    }
+`
+const TopWrapper = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
 `

@@ -13,7 +13,13 @@ const HotBoard = () => {
   const [size] = useState(20);
   const [url, setUrl] = useState("");
 
-   const { data, error, loading } = useFetch(`/losts/?postType=${postType}&page=${page}`);
+  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
 
   const posts = [
     {

@@ -5,15 +5,19 @@ import Camera from '../../assets/icons/Camera.svg';
 import Lock from '../../assets/icons/Lock.svg';
 import { useState } from "react";
 import axios from "axios";
+import { GoX } from "react-icons/go";
+const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 {/* 에러 500 서버오류 의심? */}
-function CommentInputArea({ postId, setCommentTrigger, commentTrigger }) {
+function CommentInputArea({ postId, setCommentTrigger, commentTrigger, isReplying, setIsReplying }) {
   // console.log('게시글', postId);
   const [memberId, setMemberId] = useState(1);
   const [comment, setComment] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true); // Default to anonymous
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+ 
 
   const handleCommentChange = (e) => {
     setComment(e.target.value);
@@ -28,11 +32,20 @@ function CommentInputArea({ postId, setCommentTrigger, commentTrigger }) {
     try {
       console.log('content: ', comment, ' memberId: ', memberId, ' isAnonymous: ', isAnonymous);
 
-      const response = await axios.post(`http://13.209.69.125:8080/comments/${postId}`, {
-        content: comment,
-        memberId: memberId,  // Replace with actual memberId if available
-        isAnonymous: isAnonymous,
-      });
+      // Choose the API endpoint based on the isReplying state
+    const apiUrl = isReplying 
+    ? `${muit_server}/replies/${postId}`  // For replying to a comment
+    : `${muit_server}/comments/${postId}`; // For adding a new comment
+
+  const response = await axios.post(apiUrl, {
+    content: comment,
+    memberId: memberId,
+    isAnonymous: isAnonymous,
+  }, {
+    headers: {
+      "Authorization": token ? `${token}` : "",  // 헤더에 토큰 추가
+    }
+  });
 
       console.log(response);
       if (response.data.isSuccess) {
@@ -52,7 +65,12 @@ function CommentInputArea({ postId, setCommentTrigger, commentTrigger }) {
   return (
     <>
       <CommentInputWrapper> 
-        <Text color='#000'>하지희</Text>
+        <TopWrapper>
+          <Text color='#000'>하지희</Text>
+          {isReplying && <GoX  onClick={() => setIsReplying(false)} size={20}/>}
+          
+        </TopWrapper>
+        
         <TextArea 
         id="user-comment" 
         rows="6" cols="22" 
@@ -168,4 +186,9 @@ const ErrorMessage = styled.div`
   font-size: 14px;
   margin-top: 10px;
   font-family: Pretendard;
+`
+const TopWrapper = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
 `

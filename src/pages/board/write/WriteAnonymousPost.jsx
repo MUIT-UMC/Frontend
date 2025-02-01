@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function WriteAnonymousPost() {
   const navigate = useNavigate();
@@ -15,31 +17,32 @@ function WriteAnonymousPost() {
 
   const handleSubmit = async () => {
     const postData = new FormData();
-    const postRequestDTO = {
+
+    // FormData에 JSON 데이터를 추가하기
+    postData.append("postRequestDTO", JSON.stringify({
       memberId: 1, // 실제 회원 ID로 변경
       isAnonymous: true,
       title: title.trim(),
       content: content.trim(),
-    };
-
-    postData.append(
-      "postRequestDTO",
-      new Blob([JSON.stringify(postRequestDTO)], { type: "application/json" })
-    ); 
-
+    }));
+  
+    // 이미지 파일이 있다면 FormData에 추가하기
+    
+  
     try {
       const response = await axios.post(
-        "/posts/",
-        postData,
+        `${muit_server}/posts/`,
+        postData, // FormData 전송
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Authorization": token ? `${token}` : "",
+            "Content-Type": "multipart/form-data", // multipart/form-data로 전송
           },
         }
       );
       alert("게시글이 성공적으로 등록되었습니다!");
       console.log(response.data);
-      navigate("/board/anonymous/all"); // 게시글 등록 후 이동
+      navigate(`/board/anonymous/all/${response.data.result.id}`); // 게시글 등록 후 이동
     } catch (error) {
       alert("게시글 등록 중 오류가 발생했습니다.");
       console.error(error);
