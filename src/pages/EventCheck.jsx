@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import EventSearchBar from "../components/eventcheck/EventSearchBar";
 import MusicalEvent from "../components/eventcheck/MusicalEvent";
 import EventContent from "../components/eventcheck/EventContent";
+import MeList from "../components/Skeleton/ME-list";
 
 import useFetch from "../hooks/useFetch";
 
@@ -46,7 +47,7 @@ function EventCheck() {
         </div>
 
         {isLoading ? (
-          <p>이벤트를 불러오는 중...</p>
+          <MeList />
         ) : (
           <EventListArea>
             {events?.result?.content.map((musical) => (

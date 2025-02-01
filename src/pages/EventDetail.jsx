@@ -32,8 +32,10 @@ function EventDetail() {
           </MusicalInfo>
           
           <EventInfo>
-              {musicalEvents?.result?.eventResultListDTO.map((musical) => {
+              {musicalEvents?.result?.eventResultListDTO.map((musical, index) => {
                   const isSelected = selectedDate && musical.evFrom <= selectedDate && (!musical.evTo || musical.evTo >= selectedDate);
+                  //const isLast = index === musical.length+1;
+                  console.log(musical.length);
                   return (
                       <EventContent
                           key={musical.id}
@@ -41,11 +43,11 @@ function EventDetail() {
                           startAt={musical.evFrom}
                           finishAt={musical.evTo}
                           isSelected={isSelected}
+                          //isLast={isLast}
                       />
                   );
               })}
           </EventInfo>
-
           <CalendarArea>
 
               <Calendar onDateSelect={handleDateSelect} />
