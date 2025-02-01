@@ -23,7 +23,6 @@ function EventCheck() {
   const handleNextPage = () => {
     setPage(page + 1);
   };
-  console.log("isLoading 상태:", loading);
 
   return (
     <Container>

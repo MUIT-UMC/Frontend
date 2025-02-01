@@ -1,20 +1,71 @@
 import styled from "styled-components";
 import SearchIcon from '../../assets/icons/Search2.svg'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import EventSearchResult from "./EventSearchResult";
+import useCustomFetch from "../../hooks/fetchWithAxios";
 
 const EventSearchBar = () => {
-    const [searchEValue, setSearchEValue] = useState("");
+    const [searchValue, setSearchValue] = useState("");
+    const [debouncedValue, setDebouncedValue] = useState("");
     const onChange = (e) => {
-        setSearchEValue(e.target.value);
-    }
+        setSearchValue(e.target.value);
+    };
+
+    const onKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleSearch();
+        }
+    };
+    const handleSearch = () => {
+        setDebouncedValue(searchValue.trim());
+    };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedValue(searchValue.trim());
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [searchValue]);
+
+    const { data, error, loading } = useCustomFetch(
+        debouncedValue ? `/musicals?musicalName=${debouncedValue}` : null
+    );
+
+    const result = data?.isSuccess ? data?.result?.musicalHomeList || [] : [];
+    console.log(result.length);
 
     return (
+      <>
         <Search>
-            <input className="search-txt"
-                value={searchEValue} onChange={onChange}
-                placeholder="원하시는 뮤지컬을 검색하세요." />
-            <img src={SearchIcon} className="search-btn" />
+          <input className="search-txt"
+            value={searchValue} onChange={onChange}
+            placeholder="원하시는 뮤지컬을 검색하세요." />
+          <img src={SearchIcon} className="search-btn" />
         </Search>
+        <Result>
+          {loading && <p>검색 중...</p>}
+          {error && <p>오류 발생!</p>}
+
+          {!loading && !error && result.length === 0 && debouncedValue && (
+            <p>검색 결과가 없습니다.</p>
+          )}
+
+          {result.length> 0 && <p className="result-length">검색 결과 {result.length}건</p>}
+          {result.length > 0 && result.map((musical) => (
+            <EventSearchResult
+              key={musical?.id}
+              id={musical?.id}
+              posterUrl={musical?.posterUrl}
+              name={musical?.name}
+              place={musical?.place}
+              perFrom={musical?.perFrom}
+              perTo={musical.perTo}
+              onClick={() => ToEventDetail(musical.id)}
+            />
+          ))}
+        </Result>
+      </>
     )
 }
 
@@ -47,5 +98,14 @@ const Search = styled.form`
     width: 28px;
   }
 `
+const Result = styled.div`
+  margin-top: 10px;
+  .result-length{
+    margin: 6px 0px;
+    color: var(--Gray-sub, #919191);
+    font-size: 14px;
+    font-weight: 500;
+  }
+`;
 
 export default EventSearchBar;
