@@ -10,188 +10,18 @@ import useFetch from "../hooks/useFetch";
 
 const COLOR_MUIT_RED = "#A00000";
 
-//mockdata
-const mockMusicalEvent = [
-  {
-    id:1,
-    img: 'https://ticketimage.interpark.com/Play/image/large/24/24016374_p.gif',
-    title: '미아 파밀리아',
-    theater: '링크아트센터드림 드림1관',
-    begin: '2024.12.19',
-    end: '2025.03.23',
-    saved: false,
-    event: [
-      {
-        order:1,
-        startAt: '1/5(화)',
-        finishAt: '1/30(토)',
-        content: '티켓오픈'
-      },
-      {
-        order:2,
-        startAt: '1/16(토)',
-        finishAt: '1/17(일)',
-        content: '커튼콜 이벤트'
-      },
-      {
-        order:3,
-        startAt: '1/17(일)',
-        finishAt: '1/19(화)',
-        content: '포토부스 이벤트'
-      },
-    ]
-  },
-  {
-    id:2,
-    img: 'https://ticketimage.interpark.com/Play/image/large/24/24012498_p.gif',
-    title: '알라딘',
-    theater: '링크아트센터드림 드림1관',
-    begin: '2024.12.19',
-    end: '2025.03.23',
-    saved: false,
-    event: [
-      {
-        order:1,
-        startAt: '1/5(화)',
-        finishAt: '1/30(토)',
-        content: '티켓오픈'
-      },
-      {
-        order:2,
-        startAt: '1/16(토)',
-        finishAt: '1/17(일)',
-        content: '커튼콜 이벤트'
-      },
-      {
-        order:3,
-        startAt: '1/17(일)',
-        finishAt: '1/19(화)',
-        content: '포토부스 이벤트'
-      },
-    ]
-  },
-  {
-    id:3,
-    img: 'https://ticketimage.interpark.com/Play/image/large/23/23002291_p.gif',
-    title: '데스노트',
-    theater: '링크아트센터드림 드림1관',
-    begin: '2024.12.19',
-    end: '2025.03.23',
-    saved: false,
-    event: [
-      {
-        order:1,
-        startAt: '1/5(화)',
-        finishAt: '1/30(토)',
-        content: '티켓오픈'
-      },
-      {
-        order:2,
-        startAt: '1/16(토)',
-        finishAt: '1/17(일)',
-        content: '커튼콜 이벤트'
-      },
-      {
-        order:3,
-        startAt: '1/17(일)',
-        finishAt: '1/19(화)',
-        content: '포토부스 이벤트'
-      },
-    ]
-  },
-  {
-    id:4,
-    img: 'https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif',
-    title: '종의 기원',
-    theater: '링크아트센터드림 드림1관',
-    begin: '2024.12.19',
-    end: '2025.03.23',
-    saved: false,
-    event: [
-      {
-        order:1,
-        startAt: '1/5(화)',
-        finishAt: '1/30(토)',
-        content: '티켓오픈'
-      },
-      {
-        order:2,
-        startAt: '1/16(토)',
-        finishAt: '1/17(일)',
-        content: '커튼콜 이벤트'
-      },
-      {
-        order:3,
-        startAt: '1/17(일)',
-        finishAt: '1/19(화)',
-        content: '포토부스 이벤트'
-      },
-    ]
-  },
-  {
-    id:5,
-    img: 'https://ticketimage.interpark.com/Play/image/large/24/24017198_p.gif',
-    title: '베르테르',
-    theater: '링크아트센터드림 드림1관',
-    begin: '2024.12.19',
-    end: '2025.03.23',
-    saved: false,
-    event: [
-      {
-        order:1,
-        startAt: '1/5(화)',
-        finishAt: '1/30(토)',
-        content: '티켓오픈'
-      },
-      {
-        order:2,
-        startAt: '1/16(토)',
-        finishAt: '1/17(일)',
-        content: '커튼콜 이벤트'
-      },
-      {
-        order:3,
-        startAt: '1/17(일)',
-        finishAt: '1/19(화)',
-        content: '포토부스 이벤트'
-      },
-    ]
-  },
-  {
-    id:6,
-    img:'https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif',
-    title: '여신님이 보고 계셔',
-    theater: '링크아트센터드림 드림1관',
-    begin: '2024.12.19',
-    end: '2025.03.23',
-    saved: false,
-    event: [
-      {
-        order:1,
-        startAt: '1/5(화)',
-        finishAt: '1/30(토)',
-        content: '티켓오픈'
-      },
-      {
-        order:2,
-        startAt: '1/16(토)',
-        finishAt: '1/17(일)',
-        content: '커튼콜 이벤트'
-      },
-      {
-        order:3,
-        startAt: '1/17(일)',
-        finishAt: '1/19(화)',
-        content: '포토부스 이벤트'
-      },
-    ]
-  },
-]
-
 function EventCheck() {
-  {/*const {data : events, isLoading, isError} = useCustomFetch(`events/`);*/}
+  const [page, setPage] = useState(0); 
 
-  const {data: events, error, isLoading} = useFetch(`http://13.209.69.125:8080/events/`);
+  const { data: events, error, isLoading } = useFetch(`/events?page=${page}`);
+  console.log("현재 페이지:", page);
+
+  const handlePrevPage = () => {
+    if (page > 0) setPage(page - 1);
+  };
+  const handleNextPage = () => {
+    setPage(page + 1);
+  };
 
   return (
     <Container>
@@ -215,20 +45,32 @@ function EventCheck() {
           </Select>
         </div>
 
-        <EventListArea>
-          {events?.result?.eventResultListDTOList.map((musical) => (
-            <MusicalEvent
-            key={musical.musicalId}
-            id={musical.musicalId}
-            title={musical.musicalName}
-            //img={musical.img}
-            theater={musical.theaterName}
-            begin={musical.perFrom}
-            end={musical.perTo}
-            event={musical.eventResultListDTO}
-            />
-          ))}
-        </EventListArea>
+        {isLoading ? (
+          <p>이벤트를 불러오는 중...</p>
+        ) : (
+          <EventListArea>
+            {events?.result?.content.map((musical) => (
+              <MusicalEvent
+                key={musical.musicalId}
+                id={musical.musicalId}
+                title={musical.musicalName}
+                theater={musical.theatreName}
+                begin={musical.perFrom}
+                end={musical.perTo}
+                event={musical.eventResultListDTO}
+              />
+            ))}
+          </EventListArea>
+        )}
+        <Pagination>
+          <button onClick={handlePrevPage} disabled={page === 0}>
+            이전
+          </button>
+          <span>{page+1}</span>
+          <button onClick={handleNextPage}>
+            다음
+          </button>
+        </Pagination>
       </NowShowing>
     </Container>
   );
@@ -236,7 +78,7 @@ function EventCheck() {
 
 const Container = styled.div`
   font-family: Pretendard;
-  padding: 100px 100px 0px 100px;
+  padding: 100px;
 
   display: flex;
   align-items: center;
@@ -298,4 +140,29 @@ const Select = styled.select`
   font-style: normal;
   font-weight: 500;
 `
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+
+  button {
+    padding: 8px 16px;
+    border-radius: 3px;
+    background: #a00000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+  
+  span {
+    font-size: 16px;
+    font-weight: bold;
+  }
+`;
 export default EventCheck;

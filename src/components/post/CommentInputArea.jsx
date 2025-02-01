@@ -7,7 +7,7 @@ import { useState } from "react";
 import axios from "axios";
 
 {/* 에러 500 서버오류 의심? */}
-function CommentInputArea({ postId }) {
+function CommentInputArea({ postId, setCommentTrigger, commentTrigger }) {
   // console.log('게시글', postId);
   const [memberId, setMemberId] = useState(1);
   const [comment, setComment] = useState("");
@@ -38,6 +38,7 @@ function CommentInputArea({ postId }) {
       if (response.data.isSuccess) {
         alert("댓글이 등록되었습니다.");
         setComment(""); // Clear the comment input after successful submission
+        // setCommentTrigger(commentTrigger+1); // 🔹 댓글 등록 후 트리거 업데이트
       } else {
         setError("댓글 등록에 실패했습니다.");
       }

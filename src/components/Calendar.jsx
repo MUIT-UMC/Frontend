@@ -144,8 +144,9 @@ const Day = styled.div`
   height: ${({ variant }) => (variant === "compact" ? "24px" : "30px")};
   margin-bottom: ${({ variant }) => (variant === "compact" ? "3px" : "32px")};
 
-  background: ${({ isSelected }) => (isSelected ? "#A00000" : "white")};
-  color: ${({ isSelected }) => (isSelected ? "#FFF" : "#000")};
+  //background: ${({ isSelected }) => (isSelected ? "#A00000" : "white")};
+  color:#000;
+  border: ${({ isSelected }) => (isSelected ? "2px solid #A00000" : "#000")};
 
   cursor: pointer;
   font-size: ${({ variant }) => (variant === "compact" ? "14px" : "24px")};

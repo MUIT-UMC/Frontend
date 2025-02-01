@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 import MuitLogo from "../../components/signup/muitLogo";
 import SeePassword from '../../assets/icons/SeePassword.svg';
+import SearchRed from "../../assets/icons/SearchRed.svg"
 import { useNavigate } from 'react-router-dom';
 
 const COLOR_MUIT_RED = "#A00000";
@@ -155,7 +156,7 @@ function Info() {
 
                         <InputArea>
                             <p className="body-B-600">주소</p>
-                            <button className='adress-search'>주소 검색</button>
+                            <div className='address-search'> <img src={SearchRed}/> 주소 검색</div>
                         </InputArea>
 
                         <Check>
@@ -260,7 +261,12 @@ const InputArea = styled.div`
   }
   position: relative;
 
-  .adress-search{
+    .address-search{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
     width: 104px;
     height: 32px;
     border-radius: 3px;

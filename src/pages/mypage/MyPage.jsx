@@ -1,7 +1,7 @@
 import React from "react";
 import BoardMenu from "../../components/board/BoardMenu";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Tickets from "./my/Tickets";
 import MyPosts from "./my/MyPosts";
 import LikedMusical from "./my/LikedMusical";
@@ -10,12 +10,15 @@ import EditField from "./account/Edit/EditField";
 import ChangePassword from "./account/ChangePassword";
 import LinkSettings from "./account/LinkSettings";
 import AddressManagement from "./account/AddressManagement";
+import AddAddress from "./account/Edit/AddAddress";
 import LoginManagement from "./account/LoginManagement";
 import SupportContact from "./support/SupportContact";
 import AllBoard from './../board/anonymous/HotBoard';
+
 function MyPage() {
   const { category, type, field } = useParams();
 
+  const navigate = useNavigate();
   const menus = [
     {
       id: "my",
@@ -33,7 +36,7 @@ function MyPage() {
         { id: 'edit', name: "회원정보 수정", link: "/mypage/account/edit"||"/mypage/account/edit/:field" },
         { id: 'change-password', name: "비밀번호 변경", link: "/mypage/account/change-password" },
         { id: 'link-settings', name: "계정 연결 설정", link: "/mypage/account/link-settings" },
-        { id: 'address', name: "배송지 관리", link: "/mypage/account/address" },
+        { id: 'address', name: "배송지 관리", link: "/mypage/account/address" || "/mypage/account/address/add-address" },
         { id: 'login-management', name: "로그인 관리", link: "/mypage/account/login-management" },
       ],
     },
@@ -74,11 +77,20 @@ function MyPage() {
         </div>
         <AsideBottom>
           <TextButton>로그아웃</TextButton>
-          <TextButton color="#FF1E00">회원탈퇴</TextButton>
+          <TextButton color="#FF1E00"
+          onClick={()=>navigate('/mypage/account-deletion')}>회원탈퇴</TextButton>
         </AsideBottom>
       </Aside>
       <Main>
+        <TopWrapper>
         <PageTitle>{titles[type]}</PageTitle>
+        {titles[type] == '1:1 문의' ? 
+          <Button onClick={() => navigate("/mypage/support/contact/write")}>
+            문의하기
+          </Button> : null
+        }
+        </TopWrapper>
+        
         <Content>
           {type === "tickets" && <Tickets />}
           {type === "posts" && <MyPosts />}
@@ -86,7 +98,7 @@ function MyPage() {
           {type === "edit" && (field ? <EditField field={field} /> : <EditAccount />)}
           {type === "change-password" && <ChangePassword />}
           {type === "link-settings" && <LinkSettings />}
-          {type === "address" && <AddressManagement />}
+          {type === "address" && (field === 'add-address' ? <AddAddress/> :<AddressManagement />) }
           {type === "login-management" && <LoginManagement />}
           {type === "contact" && <SupportContact />}
         </Content>
@@ -175,3 +187,34 @@ const AsideBottom = styled.div`
   gap: 12px;
 `
 
+const Button = styled.button`
+ display: flex;
+    width: 80px;
+    height: 28px;
+    padding: 5px 14px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 3px;
+    background: ${(props) => props.background ? props.background :'#A00000'};
+    border: 1px solid var(--Muit-Red-main, #A00000);
+    margin: 0px;
+    margin-bottom: ${(props) => props.marginBottom? props.marginBottom : '0px' };
+
+    color: ${(props) => props.color ? props.color : '#FFF' };
+
+/* Body-tiny-md */
+font-family: Pretendard;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+
+`
+
+const TopWrapper = styled.div`
+  display: flex;
+  flex-direcion: row;
+  justify-content: space-between;
+`

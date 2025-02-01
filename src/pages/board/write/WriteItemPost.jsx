@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Camera from "../../../assets/icons/Camera.svg";
 import axios from "axios"; // axios 추가
+import { useNavigate } from "react-router-dom";
 
 function WriteItemPost({category}) {
+
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [musicalName, setMusicalName] = useState("");
@@ -11,7 +15,7 @@ function WriteItemPost({category}) {
   const [lostItem, setLostItem] = useState("");
   const [lostDate, setLostDate] = useState("");
   const [imgFile, setImgFile] = useState(null); // 이미지 파일 상태 추가
-  const [categoryState, setCategoryState] = useState(category || "LOST"); // category 상태 추가
+  const [categoryState, setCategoryState] = useState("LOST"); // category 상태 추가
 
   const [isButtonDisabled, setButtonDisabled] = useState(true);
 
@@ -56,7 +60,7 @@ function WriteItemPost({category}) {
     console.log("formData", formData);    
     try {
       const response = await axios.post(
-        `http://13.209.69.125:8080/losts/?postType=${categoryState}`,
+        `/losts/?postType=${categoryState}`,
         formData,
         {
           headers: {
@@ -66,6 +70,7 @@ function WriteItemPost({category}) {
       );
       alert("게시글이 성공적으로 등록되었습니다!");
       console.log(response.data);
+      navigate("/board/item/lost");
     } catch (error) {
       alert("게시글 등록 중 오류가 발생했습니다.");
       console.error(error);

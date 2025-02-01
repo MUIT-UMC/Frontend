@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import formatDateWithDay from "../../utils/formatDateWithDay";
 
 
 const EventContent = (props) => {
@@ -7,7 +8,7 @@ const EventContent = (props) => {
         <Container>
             <div className="circle" />
             <EventCard>
-                <p className="body-M-600">{props.startAt} ~ {props.finishAt}</p>
+                <p className="body-M-600">{formatDateWithDay(props.startAt)} ~ {formatDateWithDay(props.finishAt)}</p>
                 <p className="S-body-M-600">{props.content}</p>
             </EventCard>
         </Container>
