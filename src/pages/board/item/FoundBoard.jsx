@@ -15,8 +15,14 @@ const FoundBoard = () => {
 
   const url = `/losts/?postType=FOUND&page=${currentPage}`;
 
-  const { data, error, loading } = useCustomFetch(url);
+  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
+  
   console.log('데이터', data);
   const fieldsForFour = [
     { label: "습득일", placeholder: "" },

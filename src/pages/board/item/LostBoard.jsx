@@ -12,13 +12,22 @@ const LostBoard = () => {
   const [postType] = useState("LOST");
   const [currentPage, setCurrentPage] = useState(0);
   const [size] = useState(20); // 한 페이지당 게시물 수
+
+
   console.log("첫", currentPage);
 
   const url = `/losts/?postType=LOST&page=${currentPage}`;
 
-  const { data, error, loading } = useCustomFetch(url);
+  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
-  console.log('데이터', data);
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
+
+   console.log('데이터', data);
+   console.log(error);
   const fieldsForFour = [
     { label: "분실일", placeholder: "" },
     { label: "분실장소", placeholder: "" },
@@ -29,7 +38,7 @@ const LostBoard = () => {
 
 
   // API에서 받은 데이터와 상태 처리
-  const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
+   const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
   console.log(totalPages);
 
   useEffect(() => {

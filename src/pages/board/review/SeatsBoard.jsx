@@ -6,6 +6,7 @@ import PageNavigator from "../../../components/board/PageNavigator";
 import useCustomFetch from "../../../hooks/useCustomFetch";
 import { useEffect } from "react";
 import { useState } from "react";
+import useFetch from "../../../hooks/useFetch";
 const SeatsBoard = () => {
   const fieldsForTwo = [
     { label: "뮤지컬명", placeholder: "" },
@@ -22,8 +23,13 @@ const SeatsBoard = () => {
 
   const url = `/reviews/?postType=SIGHT&page=${currentPage}&size=20`;
 
-  const { data, error, loading } = useCustomFetch(url);
+  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `${token}` : "",
+    },
+  });
   console.log('데이터', data);
 
   
