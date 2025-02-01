@@ -22,9 +22,10 @@ const Container = styled.div`
     align-items: center;
     flex-direction: column;
     padding-top:100px;
-    gap: 140px;
+
     h2{
       font-size: 24px;
+      margin-bottom: 140px;
     }
     .color-txt{
       color: #A00000;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useParams } from 'react-router-dom';
 import EventContent from "../components/eventcheck/EventContent";
-import Calendar from "../components/Calendar";
+import Calendar from "../components/Calendar2";
 import ChevronRight from '../assets/icons/ChevronRight.svg'
 
 import useFetch from "../hooks/useFetch";
