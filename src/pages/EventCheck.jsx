@@ -49,7 +49,7 @@ function EventCheck() {
 
         
         <EventListArea>
-          {!loading ? (
+          {loading ? (
             <MeList />
           ) : (
             <>
