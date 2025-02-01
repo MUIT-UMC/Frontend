@@ -15,7 +15,7 @@ function Vision() {
 
 const Container = styled.div`
     box-sizing: border-box;
-    height: 864px;
+    height: 1080px;
 
     font-family: Pretendard;
     display: flex;
