@@ -45,7 +45,7 @@ const Calendar = ({ variant = "default", onDateSelect }) => {
         if (!day) return [];
         const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         return events.filter(event => 
-            event.evFrom <= dateStr && (!event.evTo || event.evTo >= dateStr)
+            (event.evFrom <= dateStr && (!event.evTo || event.evTo >= dateStr)) && (event.evTo !== null || event.evFrom === dateStr)
         );
     };
 
