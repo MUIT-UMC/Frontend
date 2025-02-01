@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Camera from "../../../assets/icons/Camera.svg";
 import axios from "axios"; // axios 추가
 import { useNavigate } from "react-router-dom";
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function WriteItemPost({category}) {
 
@@ -58,19 +60,22 @@ function WriteItemPost({category}) {
     console.log("lostRequest", lostRequestDTO);
 
     console.log("formData", formData);    
+
+
     try {
       const response = await axios.post(
-        `/losts/?postType=${categoryState}`,
+        `${muit_server}/losts/?postType=${categoryState}`,
         formData,
         {
           headers: {
+            "Authorization": token ? `${token}` : "",
             "Content-Type": "multipart/form-data",
           },
         }
       );
       alert("게시글이 성공적으로 등록되었습니다!");
       console.log(response.data);
-      navigate("/board/item/lost");
+      navigate(`/board/item/lost/${response.data.result.id}`);
     } catch (error) {
       alert("게시글 등록 중 오류가 발생했습니다.");
       console.error(error);
@@ -152,9 +157,9 @@ function WriteItemPost({category}) {
           />
         </div>
         <div>
-          <label>일시</label>
+          <label>날짜</label>
           <input
-            type="datetime-local"
+            type="date"
             value={lostDate}
             onChange={(e) => {
               setLostDate(e.target.value);
