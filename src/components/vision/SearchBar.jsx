@@ -31,7 +31,6 @@ const SearchBar = () => {
         return () => clearTimeout(timer);
     }, [searchValue]);
 
-    // API 요청 (빈 값이면 요청 안 보냄)
     const { data, error, loading } = useCustomFetch(
         debouncedValue ? `/theatres?theatreName=${debouncedValue}` : null
     );

@@ -1,51 +1,58 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { useParams } from 'react-router-dom';
 import EventContent from "../components/eventcheck/EventContent";
 import Calendar from "../components/Calendar2";
-import ChevronRight from '../assets/icons/ChevronRight.svg'
-
+import ChevronRight from '../assets/icons/ChevronRight.svg';
 import useFetch from "../hooks/useFetch";
 import formatDate from "../utils/formatDate";
 
 function EventDetail() {
-    const { musicalId } = useParams();
+  const { musicalId } = useParams();
+  const [selectedDate, setSelectedDate] = useState(null);
 
-    const {data: musicalEvents, error, loading} = useFetch(`/events/${musicalId}`);
+  const { data: musicalEvents } = useFetch(`/events/${musicalId}`);
+  const { data: musicals } = useFetch(`/musicals/${musicalId}`);
 
-    const {data: musicals, error2, loading2} = useFetch(`/musicals/${musicalId}`);
+  const handleDateSelect = (date) => {
+      console.log("선택된 날짜:", date);
+      setSelectedDate(date);
+  };
 
-
-
-    return(
+  return (
       <Container>
-        <MusicalInfo>
-          <div className="Title">
-            <h3 className="title-B-600">{musicalEvents?.result?.musicalName}</h3>
-            <img src={ChevronRight} className="ChevronRight"/>
-          </div>
-          <p className="body-M-600">{musicalEvents?.result?.theatreName}</p>
-          <p className="body-M-500">{formatDate(musicalEvents?.result?.perFrom)}~{formatDate(musicalEvents?.result?.perTo)}</p>
-          <img src={musicals?.result?.posterUrl} className="Poster"/>
-        </MusicalInfo>
-        <EventInfo>
-          {musicalEvents?.result?.eventResultListDTO.map((musical) => (
-            <EventContent
-              key={musical.id}
-              content={musical.name}
-              startAt={musical.evFrom}
-              finishAt={musical.evTo}
-            />
-          ))}
-        </EventInfo>
-        <CalendarArea>
-          <Calendar />
-        </CalendarArea>
+          <MusicalInfo>
+              <div className="Title">
+                  <h3 className="title-B-600">{musicalEvents?.result?.musicalName}</h3>
+                  <img src={ChevronRight} className="ChevronRight" />
+              </div>
+              <p className="body-M-600">{musicalEvents?.result?.theatreName}</p>
+              <p className="body-M-500">{formatDate(musicalEvents?.result?.perFrom)} ~ {formatDate(musicalEvents?.result?.perTo)}</p>
+              <img src={musicals?.result?.posterUrl} className="Poster" />
+          </MusicalInfo>
+          
+          <EventInfo>
+              {musicalEvents?.result?.eventResultListDTO.map((musical) => {
+                  const isSelected = selectedDate && musical.evFrom <= selectedDate && (!musical.evTo || musical.evTo >= selectedDate);
+                  return (
+                      <EventContent
+                          key={musical.id}
+                          content={musical.name}
+                          startAt={musical.evFrom}
+                          finishAt={musical.evTo}
+                          isSelected={isSelected}
+                      />
+                  );
+              })}
+          </EventInfo>
 
+          <CalendarArea>
 
+              <Calendar onDateSelect={handleDateSelect} />
+          </CalendarArea>
       </Container>
-    )
+  );
 }
-
 const Container = styled.div`
     font-family: Pretendard;
     padding: 80px 100px 0 100px;
