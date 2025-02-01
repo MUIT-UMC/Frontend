@@ -11,7 +11,6 @@ const SearchBar = () => {
         setSearchValue(e.target.value);
     };
 
-    // Enter 키 입력 시 즉시 검색 실행
     const onKeyDown = (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -19,7 +18,6 @@ const SearchBar = () => {
         }
     };
 
-    // API 요청 즉시 실행 함수
     const handleSearch = () => {
         setDebouncedValue(searchValue.trim());
     };

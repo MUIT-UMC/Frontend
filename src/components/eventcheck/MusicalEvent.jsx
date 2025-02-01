@@ -5,7 +5,6 @@ import useFetch from "../../hooks/useFetch";
 
 import EventContent from "./EventContent";
 
-
 import Heart from "../../assets/icons/heart-line.svg";
 
 import formatDate from "../../utils/formatDate";
