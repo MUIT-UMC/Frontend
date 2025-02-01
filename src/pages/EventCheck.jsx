@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import EventSearchBar from "../components/eventcheck/EventSearchBar";
 import MusicalEvent from "../components/eventcheck/MusicalEvent";
 import EventContent from "../components/eventcheck/EventContent";
+import MeList from "../components/Skeleton/ME-list";
 
 import useFetch from "../hooks/useFetch";
 
@@ -13,7 +14,7 @@ const COLOR_MUIT_RED = "#A00000";
 function EventCheck() {
   const [page, setPage] = useState(0); 
 
-  const { data: events, error, isLoading } = useFetch(`/events?page=${page}`);
+  const { data: events, error, loading } = useFetch(`/events?page=${page}`);
   console.log("현재 페이지:", page);
 
   const handlePrevPage = () => {
@@ -22,6 +23,7 @@ function EventCheck() {
   const handleNextPage = () => {
     setPage(page + 1);
   };
+  console.log("isLoading 상태:", loading);
 
   return (
     <Container>
@@ -45,23 +47,28 @@ function EventCheck() {
           </Select>
         </div>
 
-        {isLoading ? (
-          <p>이벤트를 불러오는 중...</p>
-        ) : (
-          <EventListArea>
-            {events?.result?.content.map((musical) => (
-              <MusicalEvent
-                key={musical.musicalId}
-                id={musical.musicalId}
-                title={musical.musicalName}
-                theater={musical.theatreName}
-                begin={musical.perFrom}
-                end={musical.perTo}
-                event={musical.eventResultListDTO}
-              />
-            ))}
-          </EventListArea>
-        )}
+        
+        <EventListArea>
+          {!loading ? (
+            <MeList />
+          ) : (
+            <>
+              {events?.result?.content.map((musical) => (
+                <MusicalEvent
+                  key={musical.musicalId}
+                  id={musical.musicalId}
+                  title={musical.musicalName}
+                  theater={musical.theatreName}
+                  begin={musical.perFrom}
+                  end={musical.perTo}
+                  event={musical.eventResultListDTO}
+                />
+              ))}
+            </>
+
+          )}
+        </EventListArea>
+
         <Pagination>
           <button onClick={handlePrevPage} disabled={page === 0}>
             이전

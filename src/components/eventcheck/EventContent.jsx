@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import formatDateWithDay from "../../utils/formatDateWithDay";
 
-const EventContent = ({ content, startAt, finishAt, isSelected }) => {
+const EventContent = ({ content, startAt, finishAt, isSelected, isLast }) => {
     return (
-        <Container isSelected={isSelected}>
+        <Container isSelected={isSelected} isLast={isLast}>
             <div className="circle" />
             <EventCard isSelected={isSelected}>
                 <p className="body-M-600">{formatDateWithDay(startAt)} ~ {formatDateWithDay(finishAt)}</p>
@@ -34,7 +34,8 @@ const EventCard = styled.div`
     display: flex;
     flex-direction: column;
     gap: 8px;
-    border-bottom: 1px solid #E6E6E6;
+    width: 80%;
+    border-bottom: ${({ isLast }) => (isLast ? "none" : "1px solid #E6E6E6")}; 
     padding: 0 0 12px 0;
 
     p { margin: 0px; }
