@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import CameraIcon from '../assets/icons/Camera.svg';
-import CastingPictureIcon from '../assets/icons/CastingPicture.svg';
-import PlusIcon from '../assets/icons/plus.svg'
+import CameraIcon from '../../assets/icons/Camera.svg';
+import CastingPictureIcon from '../../assets/icons/CastingPicture.svg';
+import PlusIcon from '../../assets/icons/plus.svg'
 
 const RegisterMusical = () => {
   const [image, setImage] = useState(null);

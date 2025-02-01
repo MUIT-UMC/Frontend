@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Step1 from '../components/buy/Step1';
-import Step2 from '../components/buy/Step2';
-import Step3 from '../components/buy/Step3';
-import Step4 from '../components/buy/Step4';
-import Step5 from '../components/buy/Step5';
+import Step1 from '../../components/buy/Step1';
+import Step2 from '../../components/buy/Step2';
+import Step3 from '../../components/buy/Step3';
+import Step4 from '../../components/buy/Step4';
+import Step5 from '../../components/buy/Step5';
 
 const BuyTicket = () => {
     return (

@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import posterImg from "../assets/images/lost-pic.png";
-import Info from "../components/detail/Info";
-import pic from "../assets/images/lost-pic.png";
-import ChevronDown from '../assets/icons/ChevronDown.svg';
-import DetailImg from "../assets/images/lost-detail.png";
-import CastList from "../components/small-theater/CastList";
-import CreditInfo from "../components/small-theater/CreditInfo";
+import posterImg from "../../assets/images/lost-pic.png";
+import Info from "../../components/detail/Info";
+import pic from "../../assets/images/lost-pic.png";
+import ChevronDown from '../../assets/icons/ChevronDown.svg';
+import DetailImg from "../../assets/images/lost-detail.png";
+import CastList from "../../components/small-theater/CastList";
+import CreditInfo from "../../components/small-theater/CreditInfo";
 
 function SmallDetail() {
   
