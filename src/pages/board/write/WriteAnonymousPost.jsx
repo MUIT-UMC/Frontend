@@ -31,7 +31,7 @@ function WriteAnonymousPost() {
   
     try {
       const response = await axios.post(
-        `${muit_server}/posts/`,
+        `${muit_server}/posts`,
         postData, // FormData 전송
         {
           headers: {

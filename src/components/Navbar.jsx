@@ -64,8 +64,6 @@ export default function Navbar() {
       :location.pathname.startsWith("/small-detail")
 ) && <NavbarDetail />}
 
-      {/* 관리자페이지 상단바 -> 추후 추가
-      {location.pathname.startsWith("/adminpage") && <NavbarAdmin/>} */}
     </NavBox>
   )
   
@@ -90,9 +88,6 @@ function NavbarDefault() {
         <MenuLink to="/" $active={location.pathname === "/"}>
           뮤지컬 전체 보기
         </MenuLink>
-        {/* <MenuLink to="/upcoming" $active={location.pathname === "/upcoming"}>
-          오픈예정
-        </MenuLink> */}
         <MenuLink to="/vision" $active={location.pathname === "/vision"}>
           시야확인
         </MenuLink>
@@ -115,7 +110,7 @@ function NavbarSidebar() {
 
   // 사이드바 열림/닫힘 상태 관리
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-   // 사이드바 토글글
+   // 사이드바 토글
    const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
@@ -247,8 +242,6 @@ function Sidebar({onClose}) {
     </SidebarOverlay>
   )
 }
-
-// function NavbarAdmin() {}
 
 
 /* ---------------- Styled Components ---------------- */
