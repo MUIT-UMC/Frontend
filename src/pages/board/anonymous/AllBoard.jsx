@@ -17,7 +17,7 @@ const AllBoard = () => {
     localStorage.setItem("currentPage", currentPage);
   }, [currentPage]);
 
-  const url = `/posts?page=0&size=20`;
+  const url = `/posts?postType=BLIND&page=0&size=20`;
 
   const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
