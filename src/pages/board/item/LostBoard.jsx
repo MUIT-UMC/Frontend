@@ -12,31 +12,51 @@ const LostBoard = () => {
   const [postType] = useState("LOST");
   const [currentPage, setCurrentPage] = useState(0);
   const [size] = useState(20); // 한 페이지당 게시물 수
+const [searchParams, setSearchParams] = useState({
+    musicalName: "",
+    lostDate: "",
+    location: "",
+    lostItem: "",
+  });
 
 
   console.log("첫", currentPage);
+  const queryString = new URLSearchParams({
+    postType,
+    page: currentPage,
+    size,
+    musicalName: searchParams.musicalName,
+    lostDate: searchParams.lostDate,
+    location: searchParams.location,
+    lostItem: searchParams.lostItem,
+  }).toString();
 
-  const url = `/losts?postType=LOST&page=${currentPage}`;
+  const url = `/losts?${queryString}`;
 
   const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
-  const { data, error, loading } = useFetch(url, {
+  const { data, error, loading } = useCustomFetch(url, {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
 
    console.log('데이터', data);
    console.log(error);
   const fieldsForFour = [
-    { label: "분실일", placeholder: "" },
-    { label: "분실장소", placeholder: "" },
-    { label: "분실물명", placeholder: "" },
-    { label: "뮤지컬명", placeholder: "" },
+    { labelkor: '분실일', label: "lostDate", placeholder: "" },
+    { labelkor: '분실장소', label: "location", placeholder: "" },
+    { labelkor: '분실물명', label: "lostItem", placeholder: "" },
+    { labelkor: '뮤지컬명', label: "musicalName", placeholder: "" },
   ];
   const tableHeaders = ["분실물명", "뮤지컬명", "분실장소", "분실일"];
 
-
+  const handleSearchChange = (label, value) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      [label]: value, // 필드 값 업데이트
+    }));
+  };
   // API에서 받은 데이터와 상태 처리
    const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
   console.log(totalPages);
@@ -56,7 +76,7 @@ const LostBoard = () => {
           검색
         </Button>
       </ButtonWrapper>
-      <SearchContainer fields={fieldsForFour} />
+      <SearchContainer fields={fieldsForFour} onSearchChange={handleSearchChange} />
       {loading && <div>로딩 중...</div>}
       {error && <div>에러 발생: {error}</div>}
       {!loading && !error && (

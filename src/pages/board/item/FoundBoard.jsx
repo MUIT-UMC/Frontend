@@ -1,59 +1,86 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import PostList from "../../../components/board/PostList";
-import SearchContainer from '../../../components/board/SearchContainer';
-import { useState, useEffect } from "react";
+import SearchContainer from "../../../components/board/SearchContainer";
 import useFetch from "../../../hooks/useFetch";
-import useCustomFetch from "../../../hooks/useCustomFetch";
 import PageNavigator from "../../../components/board/PageNavigator";
-const FoundBoard = () => {
+import useCustomFetch from "../../../hooks/useCustomFetch";
+import { use } from "react";
 
-  const [postType] = useState("LOST");
+const FoundBoard = () => {
+  const [postType] = useState("FOUND");
   const [currentPage, setCurrentPage] = useState(0);
   const [size] = useState(20); // 한 페이지당 게시물 수
-  console.log("첫", currentPage);
+  const [searchParams, setSearchParams] = useState({
+    musicalName: "",
+    lostDate: "",
+    location: "",
+    lostItem: "",
+  });
 
-  const url = `/losts?postType=FOUND&page=${currentPage}`;
+  const [doSearch, setDoSearch] = useState(false);
+  const queryString = new URLSearchParams({
+    postType,
+    page: currentPage,
+    size,
+    musicalName: searchParams.musicalName,
+    lostDate: searchParams.lostDate,
+    location: searchParams.location,
+    lostItem: searchParams.lostItem,
+  }).toString();
+
+  const url = `/losts?${queryString}`;
 
   const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
-  const { data, error, loading } = useFetch(url, {
+  const { data, error, loading } = useCustomFetch(url, {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
-  });
-  
-  console.log('데이터', data);
-  const fieldsForFour = [
-    { label: "습득일", placeholder: "" },
-    { label: "습득장소", placeholder: "" },
-    { label: "습득물명", placeholder: "" },
-    { label: "뮤지컬명", placeholder: "" },
-  ];
-  const tableHeaders = [
-    "습득물명", "뮤지컬명", "습득장소", "습득일"
-  ]
-  // API에서 받은 데이터와 상태 처리
-    const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
-    console.log(totalPages);
-  
-    useEffect(() => {
-      localStorage.setItem("currentPage", currentPage);
-    }, [currentPage]);
-  
-  
-    if (loading) return <div>로딩 중...</div>;
-    if (error) return <div>에러 발생: {error}</div>;
-  
+  },);
 
+  const handleSearchChange = (label, value) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      [label]: value, // 필드 값 업데이트
+    }));
+  };
+
+  const fieldsForFour = [
+    { label: "musicalName", placeholder: "뮤지컬명 입력" },
+    { label: "lostDate", placeholder: "YYYY-MM-DD" },
+    { label: "location", placeholder: "습득 장소 입력" },
+    { label: "lostItem", placeholder: "습득 물품 입력" },
+  ];
+
+  const tableHeaders = ["습득물명", "뮤지컬명", "습득장소", "습득일"];
+
+  const totalPages = data?.result?.totalPage || 1;
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", currentPage);
+  }, [currentPage]);
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>에러 발생: {error}</div>;
+
+    
   return (
     <>
       <ButtonWrapper>
-        <Button background="none" color="#A00000" marginBottom="8px">
+      <Button
+    background="none"
+    color="#A00000"
+    marginBottom="8px"
+    onClick={() => {
+      setCurrentPage(0);
+    }} // 검색 시 첫 페이지부터
+  >
           검색
         </Button>
       </ButtonWrapper>
-      <SearchContainer fields={fieldsForFour} />
+      <SearchContainer fields={fieldsForFour} onSearchChange={handleSearchChange} />
+
       {loading && <div>로딩 중...</div>}
       {error && <div>에러 발생: {error}</div>}
       {!loading && !error && (
