@@ -7,9 +7,10 @@ import ChevronDown from '../../assets/icons/ChevronDown.svg';
 import DetailImg from "../../assets/images/lost-detail.png";
 import CastList from "../../components/small-theater/CastList";
 import CreditInfo from "../../components/small-theater/CreditInfo";
+import { useNavigate } from "react-router-dom"; 
 
 function SmallDetail() {
-  
+  const navigate = useNavigate();
   const poster = posterImg;
   const detailImg=DetailImg;
   const details = [
@@ -68,7 +69,9 @@ function SmallDetail() {
         </LeftSection>
 
         <RightSection>
-          <PurchaseButton>예매하러 가기</PurchaseButton>
+        <PurchaseButton onClick={() => navigate("/small-detail/buy")}>
+              예매하러 가기
+            </PurchaseButton>
         </RightSection>
         </div>
       </MainContent>
@@ -265,6 +268,7 @@ const PurchaseButton = styled.button`
   border: 1px solid var(--Muit-Red-main, #A00000);
   background: var(--Muit-Red-main, #A00000);
   color: #FFF;
+  cursor:pointer;
 
   /* Body-bold */
   font-family: Pretendard;
