@@ -19,7 +19,7 @@ function FoundPost() {
   const url = `/losts/${postId}`;
   const { data, error, loading } = useFetch(url, {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log('데이터', data);
@@ -29,7 +29,7 @@ function FoundPost() {
     `/comments/${postId}?page=0&size=20`,
     {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log("코멘트 데이터:", comment);
@@ -64,6 +64,27 @@ function FoundPost() {
       { label: "특징", value: d.content },
     ];
 
+    const handleDelete = async () => {
+      if (window.confirm("정말 삭제하시겠습니까?")) {
+        try {
+          const response = await axios.delete(`${muit_server}/dekete/${postId}`, {
+            headers: { 
+              Authorization: token ? `Bearer ${token}` : "",
+            },
+          });
+    
+          if (response.data.isSuccess) {
+            alert("게시글이 삭제되었습니다.");
+            navigate("/board/item/lost"); // 삭제 후 홈으로 이동
+          } else {
+            alert("삭제 실패: " + response.data.message);
+          }
+        } catch (error) {
+          console.error("삭제 오류:", error);
+          alert("삭제 중 오류가 발생했습니다.");
+        }
+      }
+    };
     
   return (
     <>
@@ -71,10 +92,33 @@ function FoundPost() {
       <Text 
         style={{textDecoration: 'underline', marginBottom: '20px'}}
         color='#919191' 
-        onClick={()=>navigate("/board/item/lost")}>게시글 목록으로 돌아가기...</Text>
-        <TitleWrapper>
-        <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
-        </TitleWrapper>
+        onClick={()=>navigate("/board/review/musical")}>게시글 목록으로 돌아가기...</Text>
+        
+        <TopWrapper>
+          <TitleWrapper>
+            <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
+          </TitleWrapper>
+          <SelectWrapper>
+        {/*이후 3도트 눌러서 수정삭제 드롭박스 생기도록 수정*/}
+        {/*<BsThreeDotsVertical />*/}
+          <select
+            onChange={(e) => {
+              if (e.target.value === "edit") {
+                console.log("editing");
+                // navigate("/edit-page"); // 수정 페이지로 이동
+              } else if (e.target.value === "delete") {
+                console.log("delete");
+                // 삭제 로직 실행
+                handleDelete();
+              }
+            }}
+            >
+            <option value="edit">수정</option>
+            <option value="delete">삭제</option>
+          </select>
+            </SelectWrapper>
+        
+        </TopWrapper>
         <SubTitleWrapper>
           <User>{user}</User><PostDate>{date}</PostDate>
         </SubTitleWrapper>
@@ -194,4 +238,29 @@ const Text = styled.div`
   font-weight: 500;
   line-height: 25px; /* 156.25% */
 
+`
+
+const TopWrapper = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+`
+
+const SelectWrapper = styled.div`
+  padding-bottom: 4px;
+
+  select {
+    border: none;
+    color: var(--Gray-maintext, #000);
+
+    /* Body-me */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 25px; /* 156.25% */
+  }
+    select:focus {
+    outline: none;
+    }
 `

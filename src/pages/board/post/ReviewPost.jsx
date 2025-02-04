@@ -17,7 +17,7 @@ function ReviewPost() {
   const url = `/reviews/${postId}`;
   const { data, error, loading } = useFetch(url, {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log('데이터', data);
@@ -27,7 +27,7 @@ function ReviewPost() {
     `/comments/${postId}?page=0&size=20`,
     {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log("코멘트 데이터:", comment);
@@ -66,7 +66,7 @@ function ReviewPost() {
       try {
         const response = await axios.delete(`${muit_server}/posts/${postId}`, {
           headers: { 
-            Authorization: token 
+            Authorization: token ? `Bearer ${token}` : "",
           },
         });
   

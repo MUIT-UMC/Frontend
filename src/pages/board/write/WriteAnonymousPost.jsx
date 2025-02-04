@@ -35,7 +35,7 @@ function WriteAnonymousPost() {
         postData, // FormData 전송
         {
           headers: {
-            "Authorization": token ? `${token}` : "",
+            "Authorization": token ? `Bearer ${token}` : "",
             "Content-Type": "multipart/form-data", // multipart/form-data로 전송
           },
         }

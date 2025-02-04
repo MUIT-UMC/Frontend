@@ -27,7 +27,7 @@ const SeatsBoard = () => {
 
   const { data, error, loading } = useFetch(url, {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log('데이터', data);

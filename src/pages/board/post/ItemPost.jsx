@@ -27,7 +27,7 @@ function ItemPost() {
   const url = `/losts/${postId}`;
   const { data, error, loading } = useFetch(url, {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log('데이터', data);
@@ -37,7 +37,7 @@ function ItemPost() {
     `/comments/${postId}?page=0&size=20`,
     {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log("코멘트 데이터:", comment);
@@ -54,6 +54,7 @@ function ItemPost() {
   if (!data || !data.result) return <div>데이터가 없습니다.</div>;
   // console.log('데이터', data);
 
+  
   const d = data.result;
   const title = d.title;
   const board = "분실";
@@ -74,9 +75,9 @@ function ItemPost() {
     const handleDelete = async () => {
       if (window.confirm("정말 삭제하시겠습니까?")) {
         try {
-          const response = await axios.delete(`${muit_server}/posts/${postId}`, {
+          const response = await axios.delete(`${muit_server}/delete/${postId}`, {
             headers: { 
-              Authorization: token 
+              Authorization: token ? `Bearer ${token}` : "",
             },
           });
     

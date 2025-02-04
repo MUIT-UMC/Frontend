@@ -29,7 +29,7 @@ const MusicalBoard = () => {
 
   const { data, error, loading } = useFetch(url, {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
 

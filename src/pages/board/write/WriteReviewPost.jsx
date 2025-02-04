@@ -53,7 +53,7 @@ function WriteReviewPost() {
         formData,
         {
           headers: {
-            "Authorization": token ? `${token}` : "",
+            "Authorization": token ? `Bearer ${token}` : "",
             "Content-Type": "multipart/form-data",
           }
         }
