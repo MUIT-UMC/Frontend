@@ -17,7 +17,7 @@ function ItemPostEdit() {
   const [lostDate, setLostDate] = useState("");
   const [content, setContent] = useState("");
   const [categoryState, setCategoryState] = useState("LOST");
-  const [imgFile, setImgFile] = useState(null);
+  const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
 
   // 기존 데이터 불러오기
   useEffect(() => {
@@ -46,10 +46,8 @@ function ItemPostEdit() {
 
   // 이미지 파일 변경 핸들러
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImgFile(file);
-    }
+    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
+    console.log('이미지파일스 미리보기', imgFiles[0]);
   };
 
   // 게시글 수정 API 요청
@@ -73,12 +71,17 @@ function ItemPostEdit() {
       "lostRequestDTO",
       new Blob([JSON.stringify(updateData)], { type: "application/json" })
     );
+    // console.log('수정된 데이터', updateData);
+
+    // 여러 개의 이미지 파일을 imageFiles 배열로 추가
+    for (let i = 0; i < imgFiles.length; i++) { 
+        formData.append("imageFiles", imgFiles[i]);
+      }
     
-    // 빈 배열로 이미지 파일 추가
-    formData.append("imageFiles", []);
-    
-    console.log('수정된 데이터', updateData);
-    
+      // formData 확인용 콘솔로그 
+   formData.forEach((value, key) => {
+    console.log(key, value);
+  });
     try {
       const response = await axios.patch(`${serverUrl}/losts/${postId}`, formData, {
         headers: {
@@ -117,18 +120,18 @@ function ItemPostEdit() {
         <Input value={lostItem} onChange={(e) => setLostItem(e.target.value)} />
 
         <Label>날짜</Label>
-        <Input type="date" value={lostDate} onChange={(e) => setLostDate(e.target.value)} />
+        <Input type="datetime-local" value={lostDate} onChange={(e) => setLostDate(e.target.value)} />
 
         <Label>특징</Label>
         <Textarea value={content} onChange={(e) => setContent(e.target.value)} />
 
-      {/*
+      
 <Label>이미지</Label>
         <ImageUpload>
           <input type="file" accept="image/*" onChange={handleImageChange} />
-          {imgFile ? <img src={URL.createObjectURL(imgFile)} alt="첨부된 이미지" /> : <p>이미지 선택</p>}
+          {imgFiles ? <img alt="첨부된 이미지" /> : <p>이미지 선택</p>}
         </ImageUpload>
-       */}
+    
         
       </Form>
     </EditContainer>

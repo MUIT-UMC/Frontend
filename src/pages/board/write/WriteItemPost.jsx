@@ -18,7 +18,6 @@ function WriteItemPost({category}) {
   const [lostItem, setLostItem] = useState("");
   const [lostDate, setLostDate] = useState("");
 
-  const [imgFile, setImgFile] = useState(null); // 이미지파일 하나 
   const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
 
   const [categoryState, setCategoryState] = useState("LOST"); // category 상태 추가
@@ -43,8 +42,6 @@ function WriteItemPost({category}) {
   // 글 업로드하기 
   const handleSubmit = async () => {
 
-    console.log('이미지파일스', imgFiles);
-    console.log('이미지파일', imgFile);
     const formData = new FormData();
 
     const lostRequestDTO = {
@@ -63,17 +60,14 @@ function WriteItemPost({category}) {
       new Blob([JSON.stringify(lostRequestDTO)], { type: "application/json" })
     );   
 
-    console.log(lostRequestDTO);
     // 여러 개의 이미지 파일을 imageFiles 배열로 추가
-    // console.log('이미지파일스2', imgFiles.length);
-
     for (let i = 0; i < imgFiles.length; i++) { 
         formData.append("imageFiles", imgFiles[i]);
       }
-
-      formData.forEach((value, key) => {
-        console.log(key, value);
-      });
+   // formData 확인용 콘솔로그 
+   formData.forEach((value, key) => {
+    console.log(key, value);
+  });
 
       
     try {
@@ -127,9 +121,9 @@ function WriteItemPost({category}) {
           />
           <label htmlFor="fileInput">
             {console.log("이미지파일스 미리보기", imgFiles[0])}
-            {imgFile ? (
+            {imgFiles ? (
               <img
-                src={URL.createObjectURL(imgFiles[0])}
+                //src={URL.createObjectURL(imgFiles[0])}
                 alt="첨부된 이미지"
                 style={{ maxWidth: "100%",
                   maxHeight: "100%",
