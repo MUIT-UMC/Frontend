@@ -13,10 +13,12 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 function ItemPost() {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { postId } = useParams();
   const [categoryState, setCategoryState] = useState("REVIEW"); // category 상태 추가
@@ -60,7 +62,7 @@ function ItemPost() {
   const board = "분실";
   const nickname = d.nickname;
   const date = d.createdAt.split('T')[0];
-  const image = d?.imgUrls;
+  const image = d?.imgUrls[0];
 
   const listSize = comment?.result?.listSize;
   // console.log('image', image);
@@ -113,14 +115,15 @@ function ItemPost() {
             onChange={(e) => {
               if (e.target.value === "edit") {
                 console.log("editing");
-                // navigate("/edit-page"); // 수정 페이지로 이동
-              } else if (e.target.value === "delete") {
+                navigate(`${location.pathname}/edit`); // 수정 페이지로 이동
+              } else if (e.target.value === "delete") { 
                 console.log("delete");
                 // 삭제 로직 실행
                 handleDelete();
               }
             }}
             >
+            <option value="menu">메뉴</option>
             <option value="edit">수정</option>
             <option value="delete">삭제</option>
           </select>

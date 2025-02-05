@@ -10,17 +10,22 @@ function WriteItemPost({category}) {
 
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const isAnonymous = true;
   const [musicalName, setMusicalName] = useState("");
+  // const [title, setTitle] = useState(""); // ItemPost는 title이 lostItem
+  const [content, setContent] = useState("");
   const [location, setLocation] = useState("");
   const [lostItem, setLostItem] = useState("");
   const [lostDate, setLostDate] = useState("");
-  const [imgFile, setImgFile] = useState(null); // 이미지 파일 상태 추가
+
+  const [imgFile, setImgFile] = useState(null); // 이미지파일 하나 
+  const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
+
   const [categoryState, setCategoryState] = useState("LOST"); // category 상태 추가
 
+  // 필드 전부 입력 해야 버튼 활성화화
   const [isButtonDisabled, setButtonDisabled] = useState(true);
-
+  
   useEffect(() => {
     setButtonDisabled(
       !(content.trim() && musicalName && location && lostItem && lostDate)
@@ -28,22 +33,22 @@ function WriteItemPost({category}) {
     console.log(isButtonDisabled);
   }, [content, musicalName, location, lostItem, lostDate]);
 
+  // 업로드할 사진 미리보기 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; // 선택된 파일 가져오기
-    if (file) {
-      setImgFile(file); // 상태에 파일 저장
-    }
+    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
+    console.log('이미지파일스 미리보기', imgFiles[0]);
   };
-
+  
+  
+  // 글 업로드하기 
   const handleSubmit = async () => {
-    console.log("뮤지컬명:", musicalName);
-    console.log("분실일:", lostDate);
 
+    console.log('이미지파일스', imgFiles);
+    console.log('이미지파일', imgFile);
     const formData = new FormData();
 
     const lostRequestDTO = {
-      memberId: 1, // 실제 회원 ID로 변경
-      isAnonymous: true,
+      isAnonymous: isAnonymous,
       musicalName: musicalName.trim(),
       title: lostItem.trim(),
       content: content.trim(),
@@ -51,17 +56,26 @@ function WriteItemPost({category}) {
       lostItem: lostItem.trim(),
       lostDate: lostDate.trim(),
     };
-
+    
+    // 제출할 데이터를 formData에 추가한다. 
     formData.append(
       "lostRequestDTO",
       new Blob([JSON.stringify(lostRequestDTO)], { type: "application/json" })
-    ); 
-    
-    console.log("lostRequest", lostRequestDTO);
+    );   
 
-    console.log("formData", formData);    
+    console.log(lostRequestDTO);
+    // 여러 개의 이미지 파일을 imageFiles 배열로 추가
+    // console.log('이미지파일스2', imgFiles.length);
 
+    for (let i = 0; i < imgFiles.length; i++) { 
+        formData.append("imageFiles", imgFiles[i]);
+      }
 
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
+
+      
     try {
       const response = await axios.post(
         `${muit_server}/losts?postType=${categoryState}`,
@@ -108,12 +122,14 @@ function WriteItemPost({category}) {
             accept="image/*"
             style={{ display: "none" }} // 기본 input 스타일 숨기기
             id="fileInput"
+            multiple 
             onChange={handleImageChange}
           />
           <label htmlFor="fileInput">
+            {console.log("이미지파일스 미리보기", imgFiles[0])}
             {imgFile ? (
               <img
-                src={URL.createObjectURL(imgFile)}
+                src={URL.createObjectURL(imgFiles[0])}
                 alt="첨부된 이미지"
                 style={{ maxWidth: "100%",
                   maxHeight: "100%",
@@ -159,7 +175,7 @@ function WriteItemPost({category}) {
         <div>
           <label>날짜</label>
           <input
-            type="date"
+            type="datetime-local"
             value={lostDate}
             onChange={(e) => {
               setLostDate(e.target.value);
