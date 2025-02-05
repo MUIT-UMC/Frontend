@@ -69,7 +69,7 @@ function ItemPost() {
     const details = [
       { label: "뮤지컬명", value: d.musicalName},
       { label: "장소", value: d.location },
-      { label: "일시", value: d?.lostDate?.split('T')[0] },
+      { label: "분실일", value: d?.lostDate?.split('T')[0] },
       { label: "물품명", value: d.lostItem },
       { label: "특징", value: d.content },
     ];

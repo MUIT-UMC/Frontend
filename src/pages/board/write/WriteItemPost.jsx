@@ -10,6 +10,7 @@ function WriteItemPost({category}) {
 
   const navigate = useNavigate();
 
+  // useState 
   const isAnonymous = true;
   const [musicalName, setMusicalName] = useState("");
   // const [title, setTitle] = useState(""); // ItemPost는 title이 lostItem
@@ -22,7 +23,7 @@ function WriteItemPost({category}) {
 
   const [categoryState, setCategoryState] = useState("LOST"); // category 상태 추가
 
-  // 필드 전부 입력 해야 버튼 활성화화
+  // 업로드 버튼 비활성화 처리 
   const [isButtonDisabled, setButtonDisabled] = useState(true);
   
   useEffect(() => {
@@ -32,9 +33,9 @@ function WriteItemPost({category}) {
     console.log(isButtonDisabled);
   }, [content, musicalName, location, lostItem, lostDate]);
 
-  // 업로드할 사진 미리보기 
+  // 업로드할 사진 선택 & 미리보기 
   const handleImageChange = (e) => {
-    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
+    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능... 하나 보이는 건 첫 사진만
     console.log('이미지파일스 미리보기', imgFiles[0]);
   };
   const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
@@ -167,7 +168,7 @@ function WriteItemPost({category}) {
           />
         </div>
         <div>
-          <label>날짜</label>
+          <label>분실일</label>
           <input
             type="datetime-local"
             value={lostDate}

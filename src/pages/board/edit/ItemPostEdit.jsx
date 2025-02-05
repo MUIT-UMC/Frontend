@@ -11,6 +11,7 @@ function ItemPostEdit() {
   const { postId } = useParams(); // URL에서 postId 가져오기
 
   // 게시글 데이터 상태 관리
+  const [title, setTitle] = useState("");
   const [musicalName, setMusicalName] = useState("");
   const [location, setLocation] = useState("");
   const [lostItem, setLostItem] = useState("");
@@ -30,6 +31,7 @@ function ItemPostEdit() {
         const data = response.data.result;
         console.log("불러온 데이터:", data);
 
+        setTitle(data.title);
         setMusicalName(data.musicalName);
         setLocation(data.location);
         setLostItem(data.lostItem);
@@ -61,6 +63,7 @@ function ItemPostEdit() {
 
     const formData = new FormData();
     const updateData = {
+      title,
       musicalName,
       location,
       lostItem,
@@ -117,7 +120,10 @@ function ItemPostEdit() {
           placeholder="물품명을 입력해주세요."
           type="text"
           value={lostItem}
-          onChange={(e) => setLostItem(e.target.value)}
+          onChange={(e) => {
+            setLostItem(e.target.value);
+            setTitle(e.target.value);
+          }}
         />
         <Button onClick={handleUpdate} disabled={isButtonDisabled}>
           등록
@@ -189,7 +195,7 @@ function ItemPostEdit() {
           />
         </div>
         <div>
-          <label>날짜</label>
+          <label>분실일</label>
           <input
             type="datetime-local"
             value={lostDate}
@@ -204,7 +210,10 @@ function ItemPostEdit() {
           <input
             type="text"
             value={lostItem}
-            onChange={(e) => setLostItem(e.target.value)}
+            onChange={(e) => {
+              setLostItem(e.target.value);
+              setTitle(e.target.value);
+            }}
           />
         </div>
         <div>
