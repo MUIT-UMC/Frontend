@@ -99,117 +99,273 @@ function ItemPostEdit() {
     }
   };
 
-
+// 필드 전부 입력 해야 버튼 활성화화
+  const [isButtonDisabled, setButtonDisabled] = useState(true);
+  
+  useEffect(() => {
+    setButtonDisabled(
+      !(content.trim() && musicalName && location && lostItem && lostDate)
+    );
+    console.log(isButtonDisabled);
+  }, [content, musicalName, location, lostItem, lostDate]);
   return (
-    <EditContainer>
-      <Header>
-        <Title>게시글 수정</Title>
-        <ButtonWrapper>
-          <Button onClick={handleUpdate}>저장</Button>
-        </ButtonWrapper>
-      </Header>
+<WritePostContainer>
+      <InputWrapper>
+        <Input
+          placeholder="물품명을 입력해주세요."
+          type="text"
+          value={lostItem}
+          onChange={(e) => setLostItem(e.target.value)}
+        />
+        <Button onClick={handleUpdate} disabled={isButtonDisabled}>
+          등록
+        </Button>
+      </InputWrapper>
 
+      <Text>분실물 게시판</Text>
+      <Hr marginTop="20px" marginBottom="36px" />
+
+      <Content>
+      {/*이미지 첨부 기능*/}
+      <ImgWrapper>
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }} // 기본 input 스타일 숨기기
+            id="fileInput"
+            multiple 
+            onChange={handleImageChange}
+          />
+          <label htmlFor="fileInput">
+            {console.log("이미지파일스 미리보기", imgFiles[0])}
+            {imgFiles ? (
+              <img
+                //src={URL.createObjectURL(imgFiles[0])}
+                alt="첨부된 이미지"
+                style={{ maxWidth: "100%",
+                  maxHeight: "100%",
+                  objectFit: "contain", }}
+              />
+            ) : (
+              <img src={Camera} alt="카메라 아이콘" />
+            )}
+          </label>
+        </ImgWrapper>
       <Form>
-        <Label>뮤지컬명</Label>
-        <Input value={musicalName} onChange={(e) => setMusicalName(e.target.value)} />
-
-        <Label>장소</Label>
-        <Input value={location} onChange={(e) => setLocation(e.target.value)} />
-
-        <Label>물품명</Label>
-        <Input value={lostItem} onChange={(e) => setLostItem(e.target.value)} />
-
-        <Label>날짜</Label>
-        <Input type="datetime-local" value={lostDate} onChange={(e) => setLostDate(e.target.value)} />
-
-        <Label>특징</Label>
-        <Textarea value={content} onChange={(e) => setContent(e.target.value)} />
-
-      
-<Label>이미지</Label>
-        <ImageUpload>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-          {imgFiles ? <img alt="첨부된 이미지" /> : <p>이미지 선택</p>}
-        </ImageUpload>
-    
-        
+      <div>
+            <label>분류</label>
+            <SelectWrapper>
+              <select
+                value={categoryState}
+                onChange={(e) => setCategoryState(e.target.value)}
+              >
+                <option value="LOST">분실</option>
+                <option value="FOUND">습득</option>
+              </select>
+            </SelectWrapper>
+          </div>
+        <div>
+          <label>뮤지컬명</label>
+          <input
+            type="text"
+            value={musicalName}
+            onChange={(e) => {
+              setMusicalName(e.target.value);
+              console.log(musicalName);
+            }}
+          />
+        </div>
+        <div>
+          <label>장소</label>
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>날짜</label>
+          <input
+            type="datetime-local"
+            value={lostDate}
+            onChange={(e) => {
+              setLostDate(e.target.value);
+              console.log(lostDate);
+            }}
+          />
+        </div>
+        <div>
+          <label>물품명</label>
+          <input
+            type="text"
+            value={lostItem}
+            onChange={(e) => setLostItem(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>특징</label>
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+        </div>
       </Form>
-    </EditContainer>
+      </Content>
+    </WritePostContainer>
   );
 }
 
 export default ItemPostEdit;
 
-// ✅ Styled Components
-const EditContainer = styled.div`
-  margin: 50px auto;
-  max-width: 600px;
-  padding: 20px;
+const WritePostContainer = styled.div`
+  margin: 86px 100px;
 `;
 
-const Header = styled.div`
+const Hr = styled.hr`
+  margin-bottom: ${(props) => props.marginBottom || "0px"};
+  margin-top: ${(props) => props.marginTop || "0px"};
+  border: 0;
+  border-top: 1px solid var(--Gray-outline, #E6E6E6);
+`;
+
+const InputWrapper = styled.div`
+  margin-bottom: 24px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Title = styled.h2`
-  font-size: 24px;
-  color: #000;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
+  flex-direction: row;
   gap: 10px;
+
+ 
 `;
 
-const Button = styled.button`
-  background: #a00000;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-`;
-
-const DeleteButton = styled(Button)`
-  background: #919191;
-`;
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 20px;
-`;
-
-const Label = styled.label`
-  font-size: 16px;
-  font-weight: bold;
-`;
-
+const Button = styled.div`
+    display: flex;
+    width: 80px;
+    height: 28px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    background: ${({ disabled }) => disabled ? "#919191" : "#A00000"};
+    border: none;
+    color: ${({ disabled }) => (disabled ? "#FFF" : "#FFF")};
+    cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+    transition: all 0.3s ease;
+`
 const Input = styled.input`
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 24px;
+  font-weight: 700;
 
-const Textarea = styled.textarea`
-  padding: 10px;
-  height: 100px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-const ImageUpload = styled.div`
-  border: 1px dashed #ccc;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-
-  img {
-    max-width: 100%;
-    height: auto;
-    margin-top: 10px;
+  &:focus {
+    outline: none;
   }
 `;
+
+const Text = styled.div`
+  color: var(--Gray-sub, #919191);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 25px;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* 라벨을 상단 정렬 */
+    gap: 10px; /* 라벨과 textarea 간 간격 */
+  }
+
+  div > input {
+    width: 610px;
+    border: none;
+    border-bottom: 1px solid #E6E6E6;
+    color: var(--Gray-maintext, #000);
+
+    /* Body-me */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 25px; /* 156.25% */
+  }
+  div > input:focus {
+     outline: none;
+  }
+
+  div > label {
+    width: 100px;
+    color: #000;
+
+    /* Body-bold */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  div > textarea {
+    border: 1px solid #E6E6E6;
+    width: 610px;
+    color: #000;
+    height: 100px;
+
+    /* Body-me */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 25px; /* 156.25% */
+    padding: 4px 12px;
+  }
+
+  div > textarea:focus {
+    outline: none;
+  }
+`;
+
+const ImgWrapper = styled.div`
+  height: 320px;
+  width: 320px;
+  background:#F5F5F5;
+   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const Content = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
+`
+
+
+const SelectWrapper = styled.div`
+  border-bottom: solid 1px #E6E6E6;
+  width: 610px;
+  padding-bottom: 4px;
+
+  select {
+    border: none;
+    color: var(--Gray-maintext, #000);
+
+    /* Body-me */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 25px; /* 156.25% */
+  }
+    select:focus {
+    outline: none;
+    }
+`
