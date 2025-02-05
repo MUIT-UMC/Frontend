@@ -16,7 +16,7 @@ function ItemPostEdit() {
   const [lostItem, setLostItem] = useState("");
   const [lostDate, setLostDate] = useState("");
   const [content, setContent] = useState("");
-  const [categoryState, setCategoryState] = useState("LOST");
+  // const [categoryState, setCategoryState] = useState("LOST");
   const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
 
   // 기존 데이터 불러오기
@@ -35,7 +35,8 @@ function ItemPostEdit() {
         setLostItem(data.lostItem);
         setLostDate(data.lostDate.split("T")[0]); // 날짜 형식 변환
         setContent(data.content);
-        setCategoryState(data.postType);
+        // setCategoryState(data.postType);
+        // setImgFiles(data.imgUrls);
       } catch (error) {
         console.error("게시글 불러오기 오류:", error);
       }
@@ -49,6 +50,7 @@ function ItemPostEdit() {
     setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
     console.log('이미지파일스 미리보기', imgFiles[0]);
   };
+  const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
 
   // 게시글 수정 API 요청
   const handleUpdate = async () => {
@@ -140,7 +142,7 @@ function ItemPostEdit() {
             {console.log("이미지파일스 미리보기", imgFiles[0])}
             {imgFiles ? (
               <img
-                //src={URL.createObjectURL(imgFiles[0])}
+                src={previewImage}
                 alt="첨부된 이미지"
                 style={{ maxWidth: "100%",
                   maxHeight: "100%",
@@ -152,7 +154,8 @@ function ItemPostEdit() {
           </label>
         </ImgWrapper>
       <Form>
-      <div>
+        {/*
+        <div>
             <label>분류</label>
             <SelectWrapper>
               <select
@@ -164,7 +167,9 @@ function ItemPostEdit() {
               </select>
             </SelectWrapper>
           </div>
-        <div>
+        
+         */}
+      <div>
           <label>뮤지컬명</label>
           <input
             type="text"

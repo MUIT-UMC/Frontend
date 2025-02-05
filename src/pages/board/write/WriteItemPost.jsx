@@ -37,7 +37,7 @@ function WriteItemPost({category}) {
     setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
     console.log('이미지파일스 미리보기', imgFiles[0]);
   };
-  
+  const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
   
   // 글 업로드하기 
   const handleSubmit = async () => {
@@ -121,9 +121,9 @@ function WriteItemPost({category}) {
           />
           <label htmlFor="fileInput">
             {console.log("이미지파일스 미리보기", imgFiles[0])}
-            {imgFiles ? (
+            {imgFiles.length > 0 ? (
               <img
-                //src={URL.createObjectURL(imgFiles[0])}
+                src={previewImage}
                 alt="첨부된 이미지"
                 style={{ maxWidth: "100%",
                   maxHeight: "100%",
