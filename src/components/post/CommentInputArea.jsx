@@ -43,7 +43,7 @@ function CommentInputArea({ postId, setCommentTrigger, commentTrigger, isReplyin
     isAnonymous: isAnonymous,
   }, {
     headers: {
-      "Authorization": token ? `${token}` : "",  // 헤더에 토큰 추가
+      "Authorization": token ? `Bearer ${token}` : "",  // 헤더에 토큰 추가
     }
   });
 

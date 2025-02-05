@@ -18,7 +18,7 @@ function Reply({key, data}) {
         {
           method: "DELETE",
           headers: {
-            "Authorization": token ? `${token}` : "",
+            "Authorization": token ? `Bearer ${token}` : "",
             "Content-Type": "application/json",
           },
         }

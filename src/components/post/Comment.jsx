@@ -25,7 +25,7 @@ function Comment({data, noneCommentIcon}) {
         {
           method: "DELETE",
           headers: {
-            "Authorization": token ? `${token}` : "",
+            "Authorization": token ? `Bearer ${token}` : "",
             "Content-Type": "application/json",
           },
         }
