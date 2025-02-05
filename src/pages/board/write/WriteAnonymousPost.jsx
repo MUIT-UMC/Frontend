@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Camera from "../../../assets/icons/Camera.svg";
+
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
@@ -82,22 +84,34 @@ function WriteAnonymousPost() {
         </Button>
       </InputWrapper>
       <Text>익명 게시판</Text>
-      <Hr marginTop="20px" marginBottom="36px" />
-      <input
-            type="file"
-            accept="image/*"
-            // style={{ display: "none" }} // 기본 input 스타일 숨기기
-            id="fileInput"
-            multiple 
-            onChange={handleImageChange}
-          />
-      <ContentWrapper>
+      <Hr marginTop="20px" marginBottom="16px" />
+
+      
+      
+      <ContentWrapper style={{marginTop: '8px'}}>
         <TextArea
           placeholder="내용을 입력해주세요"
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
       </ContentWrapper>
+      <ImageInsertButtonWrapper>
+        {/* 
+        <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
+          <img src={Camera} alt="camera icon" />
+          <Text>사진</Text>
+        </label>
+        */}
+        
+        <input
+          type="file"
+          accept="image/*"
+          id="fileInput"
+          multiple
+          onChange={handleImageChange}
+          // style={{ display: 'none' }} // 기본 input 스타일 숨기기
+        />
+    </ImageInsertButtonWrapper>
     </WritePostContainer>
   );
 }
@@ -182,3 +196,30 @@ const Text = styled.div`
 const FileInputWrapper = styled.div`
   margin-top: 16px;
 `;
+
+const ImageInsertButtonWrapper = styled.div`
+width: 100%;
+display: flex;
+// justify-content: flex-end;
+label {
+display: flex;
+flex-direction: row;
+gap: 8px;
+}
+input {
+// width: 190px;
+}
+input[type=file]::file-selector-button {
+  color: #919191;
+  width: 80px;
+  height: 30px;
+  background: #fff;
+  border: 1px solid #E6E6E6;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+* {
+color: #919191;
+}
+`
