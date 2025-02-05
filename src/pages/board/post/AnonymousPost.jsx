@@ -9,12 +9,15 @@ import ThumbsUp from "../../../assets/icons/ThumbsUp.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 import axios from "axios";
 
 function AnonymousPost() {
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   const {postId} = useParams();
   console.log(postId);
 
@@ -105,6 +108,7 @@ function AnonymousPost() {
             onChange={(e) => {
               if (e.target.value === "edit") {
                 console.log("editing");
+                navigate(`${location.pathname}/edit`);
                 // navigate("/edit-page"); // 수정 페이지로 이동
               } else if (e.target.value === "delete") {
                 console.log("delete");
@@ -113,6 +117,7 @@ function AnonymousPost() {
               }
             }}
             >
+              <option value="menu">메뉴</option>
             <option value="edit">수정</option>
             <option value="delete">삭제</option>
           </select>
