@@ -1,6 +1,7 @@
-// Ranking.jsx
+
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 // 색상
 const COLOR_WHITE = "#FFFFFF";
@@ -11,168 +12,56 @@ const COLOR_GRAY_SUB = "#919191";
 
 const MAX_WIDTH = 1440;
 
-// 1~20등 목업 데이터
-const RankingData = [
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24012498_p.gif",
-    title: "알라딘",
-    locate: "샤롯데씨어터",
-    date: "2024.11.22 ~ 2025.06.22",
-    ranking: "1",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014885_p.gif",
-    title: "시라노",
-    locate: "예술의 전당",
-    date: "2024.12.06 ~ 2025.02.23",
-    ranking: "2",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24013928_p.gif",
-    title: "지킬앤하이드",
-    locate: "블루스퀘어 신한카드홀",
-    date: "2024.11.29 ~ 2025.05.18",
-    ranking: "3",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24016737_p.gif",
-    title: "웃는남자",
-    locate: "예술의전당 오페라극장",
-    date: "2025.01.09 ~ 2025.03.09",
-    ranking: "4",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/L0/L0000106_p.gif",
-    title: "마타하리",
-    locate: "LG아트센터 서울 LG SIGNATURE 홀",
-    date: "2024.12.05 ~ 2025.03.02",
-    ranking: "5",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24016374_p.gif",
-    title: "미아 파밀리아",
-    locate: "링크아트센터드림 드림1관",
-    date: "2024.12.19 ~ 2025.03.23",
-    ranking: "6",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24015073_p.gif",
-    title: "테일러",
-    locate: "대학로 TOM 1관",
-    date: "2024.11.19 ~ 2025.02.09",
-    ranking: "7",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014511_p.gif",
-    title: "이프덴",
-    locate: "홍익대 대학로 아트센터",
-    date: "2024.12.03 ~ 2025.03.02",
-    ranking: "8",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014865_p.gif",
-    title: "글루미 선데이",
-    locate: "링크아트센터 페이코홀",
-    date: "2024.11.05 ~ 2025.01.26",
-    ranking: "9",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24017198_p.gif",
-    title: "베르테르",
-    locate: "디큐브 링크아트센터",
-    date: "2025.01.17 ~ 2025.03.16",
-    ranking: "10",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018180_p.gif",
-    title: "라파치니의 정원",
-    locate: "플러스씨어터",
-    date: "2025.01.30 ~ 2025.04.20",
-    ranking: "11",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/25/25000113_p.gif",
-    title: "무명호걸",
-    locate: "CKL스테이지",
-    date: "2025.02.04 ~ 2025.02.19",
-    ranking: "12",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018133_p.gif",
-    title: "시카고",
-    locate: "계명아트센터",
-    date: "2025.02.07 ~ 2025.02.09",
-    ranking: "13",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018006_p.gif",
-    title: "원스",
-    locate: "코엑스 신한카드 아티움",
-    date: "2025.02.19 ~ 2025.05.31",
-    ranking: "14",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014865_p.gif",
-    title: "글루미 선데이",
-    locate: "링크아트센터 페이코홀",
-    date: "2024.11.05 ~ 2025.01.26",
-    ranking: "15",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24017198_p.gif",
-    title: "베르테르",
-    locate: "디큐브 링크아트센터",
-    date: "2025.01.17 ~ 2025.03.16",
-    ranking: "16",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018180_p.gif",
-    title: "라파치니의 정원",
-    locate: "플러스씨어터",
-    date: "2025.01.30 ~ 2025.04.20",
-    ranking: "17",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/25/25000113_p.gif",
-    title: "무명호걸",
-    locate: "CKL스테이지",
-    date: "2025.02.04 ~ 2025.02.19",
-    ranking: "18",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018133_p.gif",
-    title: "시카고",
-    locate: "계명아트센터",
-    date: "2025.02.07 ~ 2025.02.09",
-    ranking: "19",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018006_p.gif",
-    title: "원스",
-    locate: "코엑스 신한카드 아티움",
-    date: "2025.02.19 ~ 2025.05.31",
-    ranking: "20",
-  },
-];
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 const Ranking = () => {
+
+  const [rankingData, setRankingData] = useState([]);
+  useEffect(() => {
+    fetchRankingData();
+  }, []);
+  // 랭킹 API연결
+  const fetchRankingData = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/musicals/rank/all?page=1`);
+      const list = response.data.result.content || [];
+      const refined = list.map((item, idx) => ({
+        poster: item.posterUrl,
+        title: item.name,
+        locate: item.place,
+        date: item.duration,
+        ranking: (idx + 1).toString() // 1부터 순번 부여
+      }));
+
+      setRankingData(refined);
+    } catch (error) {
+      console.error("Ranking API Error:", error);
+      setRankingData([]); 
+    }
+  };
   
-  //정렬
-  const sortedData = [...RankingData].sort(
-    (a, b) => parseInt(a.ranking, 10) - parseInt(b.ranking, 10)
-  );
+  // 정렬 - 필요하다면? => 쓴면 rankingData 대신 sortedData 사용
+  // const sortedData = [...rankingData].sort(
+  //   (a, b) => parseInt(a.ranking, 10) - parseInt(b.ranking, 10)
+  // );
 
-  // 상단 5개
-  const initialTop5 = sortedData.slice(0, 5);
-  // 나머지 6~20
-  const initialOthers = sortedData.slice(5, 20);
-
+  // TOP 5개 + 나머지
+  const initialTop5 = rankingData.slice(0, 5);
+  const initialOthers = rankingData.slice(5, 20);
   // 2) 상태
   const [topFive, setTopFive] = useState(initialTop5);
-  const [others] = useState(initialOthers);
-
-  // 현재 선택된 카드 (기본: 1등)
+  const [others, setOthers] = useState(initialOthers);
+  // 현재 선택된 카드 (디폴트 : 1등)
   const [selectedRank, setSelectedRank] = useState("1");
+
+  // rankingData가 갱신시 topFive, others도 새롭게 업데이트
+  useEffect(() => {
+    const updatedTop5 = rankingData.slice(0, 5);
+    const updatedOthers = rankingData.slice(5, 20);
+    setTopFive(updatedTop5);
+    setOthers(updatedOthers)
+  }, [rankingData]);
 
   return (
     <Container>
@@ -365,6 +254,7 @@ const BottomTitle = styled.div`
 
 const BottomSection = styled.div`
   margin-left: 145px;
+  margin-right: 145px;
   margin-bottom: 100px;
 `;
 
