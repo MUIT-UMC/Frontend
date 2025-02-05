@@ -6,16 +6,31 @@ const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function WriteAnonymousPost() {
+
   const navigate = useNavigate();
+
+  // useState
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
+
+  // 업로드 버튼 비활성화 처리 
   const [isButtonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
     setButtonDisabled(!(title.trim() && content.trim()));
   }, [title, content]);
 
+  // 업로드할 사진 선택 & 미리보기 
+  const handleImageChange = (e) => {
+    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
+    console.log('이미지파일스 미리보기', imgFiles[0]);
+  };
+  const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
+
+  // 글 업로드하기 
   const handleSubmit = async () => {
+    
     const postData = new FormData();
 
     // FormData에 JSON 데이터를 추가하기
@@ -27,7 +42,9 @@ function WriteAnonymousPost() {
     }));
   
     // 이미지 파일이 있다면 FormData에 추가하기
-    
+    for (let i = 0; i < imgFiles.length; i++) { 
+        postData.append("imageFiles", imgFiles[i]);
+      }
   
     try {
       const response = await axios.post(
@@ -66,6 +83,14 @@ function WriteAnonymousPost() {
       </InputWrapper>
       <Text>익명 게시판</Text>
       <Hr marginTop="20px" marginBottom="36px" />
+      <input
+            type="file"
+            accept="image/*"
+            // style={{ display: "none" }} // 기본 input 스타일 숨기기
+            id="fileInput"
+            multiple 
+            onChange={handleImageChange}
+          />
       <ContentWrapper>
         <TextArea
           placeholder="내용을 입력해주세요"

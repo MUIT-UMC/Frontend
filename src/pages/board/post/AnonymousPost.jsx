@@ -87,7 +87,7 @@ function AnonymousPost() {
   const user = "익명";
   const date = d.createdAt?.split('T')[0];
   const content = d.content;
-  const image = d?.imgUrls;
+  const images = d?.imgUrls;
   const listSize = comment?.result?.listSize;
 
   return (
@@ -133,6 +133,15 @@ function AnonymousPost() {
 
         <ContentArea>
           <p>{content}</p>
+          <ImagesArea>
+          {images.map((url) => (
+            <ImageWrapper>
+              <img src={url} />
+            </ImageWrapper>
+            
+          ))}
+          </ImagesArea>
+          
         </ContentArea>
         
         
@@ -309,4 +318,19 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 
+`
+const ImagesArea = styled.div`
+display: flex;
+flex-direction: column;
+gap: 20px;
+`
+
+const ImageWrapper = styled.div`
+  width: 500px;
+  height: 500px;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
 `
