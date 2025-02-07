@@ -8,6 +8,7 @@ import Info from "../../../components/detail/Info";
 import { RatingStars } from "../../../components/detail/RatingStars";
 import { useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
+import PostMenu from "../../../components/post/PostMenu";
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 function ReviewPost() {
@@ -60,30 +61,6 @@ function ReviewPost() {
     { label: "특징", value: d.content},
   ];
 
-  const handleDelete = async () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      try {
-        const response = await axios.delete(`${muit_server}/delete/${postId}`, {
-          headers: { 
-            Authorization: token 
-          },
-        });
-  
-        if (response.data.isSuccess) {
-          alert("게시글이 삭제되었습니다.");
-          navigate("/board/item/lost"); // 삭제 후 홈으로 이동
-        } else {
-          alert("삭제 실패: " + response.data.message);
-        }
-      } catch (error) {
-        console.error("삭제 오류:", error);
-        alert("삭제 중 오류가 발생했습니다.");
-      }
-    }
-  };
-  
-
-  console.log(d.rating);
   return (
     <>
       <ReviewPostContainer>
@@ -96,26 +73,7 @@ function ReviewPost() {
           <TitleWrapper>
             <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
           </TitleWrapper>
-          <SelectWrapper>
-        {/*이후 3도트 눌러서 수정삭제 드롭박스 생기도록 수정*/}
-        {/*<BsThreeDotsVertical />*/}
-          <select
-            onChange={(e) => {
-              if (e.target.value === "edit") {
-                console.log("editing");
-                // navigate("/edit-page"); // 수정 페이지로 이동
-              } else if (e.target.value === "delete") {
-                console.log("delete");
-                // 삭제 로직 실행
-                handleDelete();
-              }
-            }}
-            >
-            <option value="edit">수정</option>
-            <option value="delete">삭제</option>
-          </select>
-            </SelectWrapper>
-        
+          <PostMenu />
         </TopWrapper>
 
         <SubTitleWrapper>

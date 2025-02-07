@@ -40,11 +40,20 @@ const Wrapper = styled.div`
 `;
 
 const InfoImage = styled.div`
-  flex: 1;
+  display: flex;
+  width: ${(props) => props.width ? props.width : '320px'};
+  height: ${(props) => props.height ? props.height : '320px'};
+  background:#F5F5F5;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 60px;
   img {
-    width: ${(props) => props.width ? props.width : '320px'};
-    height: ${(props) => props.height ? props.height : '320px'};
+    max-width: 100%;
+    max-height: 100%;
     background-color: #f0f0f0;
+    object-fit: contain;
   }
 `;
 

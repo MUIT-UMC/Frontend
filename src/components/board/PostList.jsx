@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import PageNavigator from "./PageNavigator";
-function PostList({ details, headers, cols, currentPage, totalPages, onPageChange }) {
+function PostList({ details, headers }) {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 경로를 가져옴
 
@@ -17,18 +17,19 @@ function PostList({ details, headers, cols, currentPage, totalPages, onPageChang
       <PostListWrapper>
         <thead>
           <tr>
-            {headers.map((name) => (
+            {headers?.map((name) => (
               <th key={name}>{name}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {details.map((d) => (
+          {details?.map((d) => (
             <tr key={d.id} onClick={() => handleRowClick(d.id)}>
               <td>{d.title}</td>
-              <td>{d.musicalName}</td>
-              <td>{d.location}</td>
+              {d.musicalName ? <td>{d.musicalName}</td> : null }
+              {d.location ? <td>{d.location}</td> : null }
               {d.lostDate ? <td>{d.lostDate.split("T")[0]}</td> : null}
+              {d.status ? <td>{d.status}</td> : null }
             </tr>
           ))}
         </tbody>

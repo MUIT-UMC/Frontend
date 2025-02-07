@@ -64,7 +64,9 @@ import AdminSmallReserve from "./pages/adminpage/small-theater/reservation/Admin
 import AdminSmallReserveDetail from "./pages/adminpage/small-theater/reservation/AdminSmallReserveDetail";
 import AdminSmallRefund from "./pages/adminpage/small-theater/refund/AdminSmallRefund";
 import AdminSmallRefundDetail from "./pages/adminpage/small-theater/refund/AdminSmallRefundDetail";
-
+import ItemPostEdit from "./pages/board/edit/ItemPostEdit";
+import AnonymousPostEdit from './pages/board/edit/AnonymousPostEdit';
+import ReviewPostEdit from "./pages/board/edit/ReviewPostEdit";
 function App() {
   return (
     
@@ -110,6 +112,10 @@ function App() {
         <Route path="/board/anonymous/write" element={<WriteAnonymousPost />} />
         <Route path="/board/review/write" element={<WriteReviewPost />} />
         
+        <Route path="/board/item/lost/:postId/edit" element={<ItemPostEdit />} />
+        <Route path="/board/anonymous/all/:postId/edit" element={<AnonymousPostEdit />} />
+        <Route path="/board/review/musical/:postId/edit" element={<ReviewPostEdit />} />
+
         <Route path="/event-check/:musicalId" element={<EventDetail/>}/>
 
       

@@ -2,10 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import starFull from "../../assets/icons/star-full.svg";
 import starOutline from "../../assets/icons/star-outline.svg";
+import { useEffect } from "react";
 import { useState } from "react";
-  export const InteractiveRatingStars = ({ rating = 0, starSize = 24, onRatingChange }) => {
+  export const InteractiveRatingStars = ({ rating, starSize = 24, onRatingChange }) => {
     const [currentRating, setCurrentRating] = useState(rating);
-  
+    console.log(rating);
+    console.log("커런트레이팅", currentRating);
+
+    useEffect(() => {
+      setCurrentRating(rating);
+    }, [rating]);
+
     const handleClick = (newRating) => {
       setCurrentRating(newRating);
       if (onRatingChange) {
@@ -14,9 +21,12 @@ import { useState } from "react";
       }
     };
   
+    const stars = Array.from({ length: 5 }, (_, index) => index < currentRating);
+
+
     return (
       <StarWrapper>
-        {Array.from({ length: 5 }, (_, index) => (
+        {stars.map((isFull, index) => (
           <Star
             key={index}
             src={index < currentRating ? starFull : starOutline}

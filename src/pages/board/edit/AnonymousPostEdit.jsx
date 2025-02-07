@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Camera from "../../../assets/icons/Camera.svg";
 
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const muit_server = import.meta.env.VITE_APP_SERVER_URL;
+const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
 
-function WriteAnonymousPost() {
-
+function 
+AnonymousPostEdit() {
   const navigate = useNavigate();
+  const { postId } = useParams(); // URL에서 postId 가져오기
 
-  // useState
+  // 게시글 데이터 상태 관리
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
@@ -22,51 +22,81 @@ function WriteAnonymousPost() {
   useEffect(() => {
     setButtonDisabled(!(title.trim() && content.trim()));
   }, [title, content]);
+  
+  // 기존 데이터 불러오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${serverUrl}/posts/${postId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-  // 업로드할 사진 선택 & 미리보기 
+        const data = response.data.result;
+        console.log("불러온 데이터:", data);
+
+        setContent(data.content);
+        setTitle(data.title);
+      } catch (error) {
+        console.error("게시글 불러오기 오류:", error);
+      }
+    };
+
+    fetchData();
+  }, [postId]);
+
+  // 이미지 파일 변경 핸들러
   const handleImageChange = (e) => {
     setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
     console.log('이미지파일스 미리보기', imgFiles[0]);
   };
   const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
 
-  // 글 업로드하기 
-  const handleSubmit = async () => {
-    
-    const postData = new FormData();
+  
+// 게시글 수정 API 요청
+const handleUpdate = async () => {
+  if (!title || !content) {
+    alert("모든 필드를 입력해주세요.");
+    return;
+  }
 
-    // FormData에 JSON 데이터를 추가하기
-    postData.append("postRequestDTO", JSON.stringify({
-      memberId: 1, // 실제 회원 ID로 변경
-      isAnonymous: true,
-      title: title.trim(),
-      content: content.trim(),
-    }));
-  
-    // 이미지 파일이 있다면 FormData에 추가하기
-    for (let i = 0; i < imgFiles.length; i++) { 
-        postData.append("imageFiles", imgFiles[i]);
-      }
-  
-    try {
-      const response = await axios.post(
-        `${muit_server}/posts`,
-        postData, // FormData 전송
-        {
-          headers: {
-            "Authorization": token ? `Bearer ${token}` : "",
-            "Content-Type": "multipart/form-data", // multipart/form-data로 전송
-          },
-        }
-      );
-      alert("게시글이 성공적으로 등록되었습니다!");
-      console.log(response.data);
-      navigate(`/board/anonymous/all/${response.data.result.id}`); // 게시글 등록 후 이동
-    } catch (error) {
-      alert("게시글 등록 중 오류가 발생했습니다.");
-      console.error(error);
-    }
+  const formData = new FormData();
+  const updateData = {
+    title,
+    content,
+   // postType: categoryState,
   };
+
+  formData.append(
+    "postRequestDTO",
+    new Blob([JSON.stringify(updateData)], { type: "application/json" })
+  );
+  // console.log('수정된 데이터', updateData);
+
+  // 여러 개의 이미지 파일을 imageFiles 배열로 추가
+  for (let i = 0; i < imgFiles.length; i++) { 
+      formData.append("imageFiles", imgFiles[i]);
+    }
+  
+    // formData 확인용 콘솔로그 
+ formData.forEach((value, key) => {
+  console.log(key, value);
+});
+  try {
+    const response = await axios.patch(`${serverUrl}/posts/${postId}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    alert("게시글이 성공적으로 수정되었습니다!");
+    console.log(response.data);
+    navigate(`/board/anonymous/all/${postId}`);
+  } catch (error) {
+    alert("게시글 수정 중 오류가 발생했습니다.");
+    console.error(error);
+  }
+};
 
   return (
     <WritePostContainer>
@@ -78,7 +108,7 @@ function WriteAnonymousPost() {
         />
         <Button
           disabled={isButtonDisabled}
-          onClick={isButtonDisabled ? undefined : handleSubmit}
+          onClick={isButtonDisabled ? undefined : handleUpdate}
         >
           등록
         </Button>
@@ -116,7 +146,8 @@ function WriteAnonymousPost() {
   );
 }
 
-export default WriteAnonymousPost;
+export default AnonymousPostEdit;
+
 const WritePostContainer = styled.div`
   margin: 86px 100px;
 `;
@@ -149,7 +180,7 @@ const Button = styled.div`
     color: ${({ disabled }) => (disabled ? "#FFF" : "#FFF")};
     cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
     transition: all 0.3s ease;
-`
+`;
 const Input = styled.input`
   width: 100%;
   border: none;

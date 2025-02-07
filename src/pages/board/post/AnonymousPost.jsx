@@ -6,22 +6,28 @@ import Comment from "../../../components/post/Comment";
 import Reply from "../../../components/post/Reply";
 import Info from "../../../components/detail/Info";
 import ThumbsUp from "../../../assets/icons/ThumbsUp.svg";
+import ThumbsUpFill from "../../../assets/icons/thumbsup-fill.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
+import useCustomFetch from "../../../hooks/useCustomFetch";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import PostMenu from "../../../components/post/PostMenu";
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 import axios from "axios";
 
 function AnonymousPost() {
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   const {postId} = useParams();
   console.log(postId);
 
   // 코멘트 입력 시 댓글 자동 재렌더링 - 미완성 
   const [commentTrigger, setCommentTrigger] = useState(0);
-  console.log(commentTrigger);
-
+  
   // 게시글 데이터 
   const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
@@ -32,9 +38,19 @@ function AnonymousPost() {
     },
   });
   console.log('데이터', data);
+  const [isButtonLiked, setIsButtonLiked] = useState(data?.result?.isLiked);
+  const [likeCount, setLikeCount] = useState(data?.result?.likeCount);
 
+  useEffect(() => {
+    if (data?.result?.isLiked !== undefined) {
+      setIsButtonLiked(data.result.isLiked);
+      setLikeCount(data.result.likeCount);
+    }
+  }, [data]);
+  
+  
   // 🔹 댓글 데이터 (commentTrigger 변경 시 재요청)
-  const { data: comment, error: commentError, loading: commentLoading } = useFetch(
+  const { data: comment, error: commentError, loading: commentLoading } = useCustomFetch(
     `/comments/${postId}?page=0&size=20`,
     {
     headers: {
@@ -45,33 +61,32 @@ function AnonymousPost() {
   console.log("에러:", commentError);
   console.log("로딩:", commentLoading);
 
-  // 🔹 댓글이 등록되면 commentTrigger 업데이트
-  const handleCommentAdded = () => {
-    setCommentTrigger((prev) => prev + 1);
-  };
-  
-  const handleDelete = async () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
+  console.log('이즈버튼라잌드', isButtonLiked);
+  const likeButtonHandler = async () => {
       try {
-        const response = await axios.delete(`${muit_server}/delete/${postId}`, {
+        const response = await axios.get(`${muit_server}/likes/${postId}`, {
           headers: { 
             Authorization: token ? `Bearer ${token}` : "",
           },
         });
   
         if (response.data.isSuccess) {
-          alert("게시글이 삭제되었습니다.");
-          navigate("/board/item/lost"); // 삭제 후 홈으로 이동
+          // alert("좋아요 버튼을 클릭했습니다. ");
+          setIsButtonLiked(!isButtonLiked);
+          if (!isButtonLiked) {
+            setLikeCount(likeCount+1);
+          } else {
+            setLikeCount(likeCount-1);
+          }
+          console.log('isLiked: ', isButtonLiked);
         } else {
-          alert("삭제 실패: " + response.data.message);
+          alert("좋아요 실패: " + response.data.message);
         }
       } catch (error) {
-        console.error("삭제 오류:", error);
-        alert("삭제 중 오류가 발생했습니다.");
+        console.error("좋아요 오류:", error);
+        alert("좋아요 중 오류가 발생했습니다.");
       }
-    }
   };
-
   // 로딩, 오류, 데이터가 없을 경우의 처리 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
@@ -84,8 +99,9 @@ function AnonymousPost() {
   const user = "익명";
   const date = d.createdAt?.split('T')[0];
   const content = d.content;
-  const image = d?.imgUrls;
+  const images = d?.imgUrls;
   const listSize = comment?.result?.listSize;
+  // const likeCount = d?.likeCount;
 
   return (
     <>
@@ -98,25 +114,7 @@ function AnonymousPost() {
           <TitleWrapper>
             <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
           </TitleWrapper>
-          <SelectWrapper>
-        {/*이후 3도트 눌러서 수정삭제 드롭박스 생기도록 수정*/}
-        {/*<BsThreeDotsVertical />*/}
-          <select
-            onChange={(e) => {
-              if (e.target.value === "edit") {
-                console.log("editing");
-                // navigate("/edit-page"); // 수정 페이지로 이동
-              } else if (e.target.value === "delete") {
-                console.log("delete");
-                // 삭제 로직 실행
-                handleDelete();
-              }
-            }}
-            >
-            <option value="edit">수정</option>
-            <option value="delete">삭제</option>
-          </select>
-            </SelectWrapper>
+          <PostMenu />
         
         </TopWrapper>
 
@@ -128,6 +126,15 @@ function AnonymousPost() {
 
         <ContentArea>
           <p>{content}</p>
+          <ImagesArea>
+          {images.map((url) => (
+            <ImageWrapper>
+              <img src={url} />
+            </ImageWrapper>
+            
+          ))}
+          </ImagesArea>
+          
         </ContentArea>
         
         
@@ -136,9 +143,11 @@ function AnonymousPost() {
         {/*댓글 작성부분 - 한 컴포넌트로 묶기 */}
         <CommentSectionTop>
         <PostTitle marginBottom='20px'>댓글 {listSize}개</PostTitle>
-        <IconWrapper>
-          <img src={ThumbsUp} alt="likes" />
-          <Text color='#919191'></Text>
+        <IconWrapper onClick={() => likeButtonHandler()}>
+        <img src={isButtonLiked ? ThumbsUpFill : ThumbsUp} alt="likes" />
+          
+          
+          <Text color='#919191'>{likeCount}</Text>
         </IconWrapper>
         </CommentSectionTop>
         
@@ -305,3 +314,21 @@ flex-direction: row;
 justify-content: space-between;
 
 `
+const ImagesArea = styled.div`
+display: flex;
+flex-direction: column;
+gap: 20px;
+`
+const ImageWrapper = styled.div`
+ width: 100%;
+  max-height: 500px;  /* 최대 높이 600px */
+  display: flex;
+
+  img {
+    max-width: 100%;
+    max-height: 500px;  /* 이미지 높이는 600px로 제한 */
+    width: auto;        /* 비율에 맞게 너비 조정 */
+    height: auto;       /* 비율에 맞게 높이 조정 */
+    object-fit: contain; /* 이미지 비율 유지하며 크기 맞춤 */
+  }
+`;

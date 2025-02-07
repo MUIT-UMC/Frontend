@@ -1,29 +1,26 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Camera from "../../../assets/icons/Camera.svg";
-import axios from "axios"; // axios 추가
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const muit_server = import.meta.env.VITE_APP_SERVER_URL;
+const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
 
-function WriteItemPost({category}) {
-
+function ItemPostEdit() {
   const navigate = useNavigate();
+  const { postId } = useParams(); // URL에서 postId 가져오기
 
-  // useState 
-  const isAnonymous = true;
+  // 게시글 데이터 상태 관리
+  const [title, setTitle] = useState("");
   const [musicalName, setMusicalName] = useState("");
-  // const [title, setTitle] = useState(""); // ItemPost는 title이 lostItem
-  const [content, setContent] = useState("");
   const [location, setLocation] = useState("");
   const [lostItem, setLostItem] = useState("");
   const [lostDate, setLostDate] = useState("");
-
+  const [content, setContent] = useState("");
+  // const [categoryState, setCategoryState] = useState("LOST");
   const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
 
-  const [categoryState, setCategoryState] = useState("LOST"); // category 상태 추가
-
-  // 업로드 버튼 비활성화 처리 
+  // 필드 전부 입력 해야 버튼 활성화화
   const [isButtonDisabled, setButtonDisabled] = useState(true);
   
   useEffect(() => {
@@ -32,76 +29,106 @@ function WriteItemPost({category}) {
     );
     console.log(isButtonDisabled);
   }, [content, musicalName, location, lostItem, lostDate]);
+  
+  
+  // 기존 데이터 불러오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${serverUrl}/losts/${postId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-  // 업로드할 사진 선택 & 미리보기 
+        const data = response.data.result;
+        console.log("불러온 데이터:", data);
+
+        setTitle(data.title);
+        setMusicalName(data.musicalName);
+        setLocation(data.location);
+        setLostItem(data.lostItem);
+        setLostDate(data.lostDate.split("T")[0]); // 날짜 형식 변환
+        setContent(data.content);
+        // setCategoryState(data.postType);
+        // setImgFiles(data.imgUrls);
+      } catch (error) {
+        console.error("게시글 불러오기 오류:", error);
+      }
+    };
+
+    fetchData();
+  }, [postId]);
+
+  // 이미지 파일 변경 핸들러
   const handleImageChange = (e) => {
-    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능... 하나 보이는 건 첫 사진만
+    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
     console.log('이미지파일스 미리보기', imgFiles[0]);
   };
   const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
-  
-  // 글 업로드하기 
-  const handleSubmit = async () => {
+
+  // 게시글 수정 API 요청
+  const handleUpdate = async () => {
+    if (!musicalName || !location || !lostItem || !lostDate || !content) {
+      alert("모든 필드를 입력해주세요.");
+      return;
+    }
 
     const formData = new FormData();
-
-    const lostRequestDTO = {
-      isAnonymous: isAnonymous,
-      musicalName: musicalName.trim(),
-      title: lostItem.trim(),
-      content: content.trim(),
-      location: location.trim(),
-      lostItem: lostItem.trim(),
-      lostDate: lostDate.trim(),
+    const updateData = {
+      title,
+      musicalName,
+      location,
+      lostItem,
+      lostDate,
+      content,
+     // postType: categoryState,
     };
-    
-    // 제출할 데이터를 formData에 추가한다. 
+
     formData.append(
       "lostRequestDTO",
-      new Blob([JSON.stringify(lostRequestDTO)], { type: "application/json" })
-    );   
+      new Blob([JSON.stringify(updateData)], { type: "application/json" })
+    );
+    // console.log('수정된 데이터', updateData);
 
     // 여러 개의 이미지 파일을 imageFiles 배열로 추가
     for (let i = 0; i < imgFiles.length; i++) { 
         formData.append("imageFiles", imgFiles[i]);
       }
-   // formData 확인용 콘솔로그 
+    
+      // formData 확인용 콘솔로그 
    formData.forEach((value, key) => {
     console.log(key, value);
   });
-
-      
     try {
-      const response = await axios.post(
-        `${muit_server}/losts?postType=${categoryState}`,
-        formData,
-        {
-          headers: {
-            "Authorization": token ? `Bearer ${token}` : "",
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      alert("게시글이 성공적으로 등록되었습니다!");
+      const response = await axios.patch(`${serverUrl}/losts/${postId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      alert("게시글이 성공적으로 수정되었습니다!");
       console.log(response.data);
-      navigate(`/board/item/lost/${response.data.result.id}`);
+      navigate(`/board/item/lost/${postId}`);
     } catch (error) {
-      alert("게시글 등록 중 오류가 발생했습니다.");
+      alert("게시글 수정 중 오류가 발생했습니다.");
       console.error(error);
     }
   };
 
 
   return (
-    <WritePostContainer>
+<WritePostContainer>
       <InputWrapper>
         <Input
           placeholder="물품명을 입력해주세요."
           type="text"
           value={lostItem}
-          onChange={(e) => setLostItem(e.target.value)}
+          onChange={(e) => {
+            setLostItem(e.target.value);
+            setTitle(e.target.value);
+          }}
         />
-        <Button onClick={handleSubmit} disabled={isButtonDisabled}>
+        <Button onClick={handleUpdate} disabled={isButtonDisabled}>
           등록
         </Button>
       </InputWrapper>
@@ -122,7 +149,7 @@ function WriteItemPost({category}) {
           />
           <label htmlFor="fileInput">
             {console.log("이미지파일스 미리보기", imgFiles[0])}
-            {imgFiles.length > 0 ? (
+            {imgFiles ? (
               <img
                 src={previewImage}
                 alt="첨부된 이미지"
@@ -136,7 +163,8 @@ function WriteItemPost({category}) {
           </label>
         </ImgWrapper>
       <Form>
-      <div>
+        {/*
+        <div>
             <label>분류</label>
             <SelectWrapper>
               <select
@@ -148,7 +176,9 @@ function WriteItemPost({category}) {
               </select>
             </SelectWrapper>
           </div>
-        <div>
+        
+         */}
+      <div>
           <label>뮤지컬명</label>
           <input
             type="text"
@@ -183,7 +213,10 @@ function WriteItemPost({category}) {
           <input
             type="text"
             value={lostItem}
-            onChange={(e) => setLostItem(e.target.value)}
+            onChange={(e) => {
+              setLostItem(e.target.value);
+              setTitle(e.target.value);
+            }}
           />
         </div>
         <div>
@@ -199,7 +232,7 @@ function WriteItemPost({category}) {
   );
 }
 
-export default WriteItemPost;
+export default ItemPostEdit;
 
 const WritePostContainer = styled.div`
   margin: 86px 100px;
