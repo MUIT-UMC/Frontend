@@ -3,16 +3,20 @@ import SearchIcon from '../../assets/icons/Search2.svg'
 import React, { useState } from "react";
 
 
-const SearchBar = () => {
-    const [searchValue, setSearchValue] = useState("");
-    const onChange = (e) => {
-      setSearchValue(e.target.value);
-    }
+const SearchBar = ({onSearchChange}) => {
+    const handleInputChange = (label, value) => {
+      onSearchChange(label, value); // 부모 컴포넌트로 값 전달
+    };
+    
     return (
         <Search>
           <img src={SearchIcon} className="search-btn" />
             <input className="search-txt"
-                value={searchValue} onChange={onChange}
+                onChange={(e) => {
+                  handleInputChange("search", e.target.value);
+                  console.log(e.target.value);
+                }
+                }
                 placeholder="원하시는 내용을 검색하세요." />
 
         </Search>

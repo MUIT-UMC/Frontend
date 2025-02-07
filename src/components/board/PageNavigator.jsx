@@ -5,7 +5,7 @@ import ChevronRight from "../../assets/icons/ChevronRight.svg";
 
 const PageNavigator = ({ currentPage, totalPages, onPageChange }) => {
   const handlePageClick = (page) => {
-    if (page >= 1 && page <= totalPages) {
+    if (page >= 0 && page <= totalPages) {
       onPageChange(page);
     }
   };

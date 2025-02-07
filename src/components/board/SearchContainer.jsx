@@ -2,16 +2,16 @@ import React from "react";
 import styled from "styled-components";
 
 function SearchContainer({ fields, onSearchChange }) {
-  const isTwoColumns = fields.length === 2;
+  // const isTwoColumns = fields.length === 2;
 
   const handleInputChange = (label, value) => {
     onSearchChange(label, value); // 부모 컴포넌트로 값 전달
   };
 
   return (
-    <ContainerWrapper isTwoColumns={isTwoColumns}>
+    <ContainerWrapper >
       {fields.map(({ labelkor, label, placeholder }, index) => (
-        <SearchForm key={index} isTwoColumns={isTwoColumns}>
+        <SearchForm key={index} >
           <div>{labelkor}</div>
           <Input
             placeholder={placeholder}
@@ -32,12 +32,12 @@ export default SearchContainer;
 const ContainerWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap:  ${({ isTwoColumns }) => isTwoColumns ? "0px 24px" : "24px 24px"};
+  gap: 24px 24px;
   width: 866px;
   border: 1px solid var(--Gray-outline, #e6e6e6);
   padding: 12px 28px;
-
 `;
+
 const SearchForm = styled.div`
   display: flex;
   flex-direction: row;
