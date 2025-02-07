@@ -8,44 +8,53 @@ import { useState } from "react";
 import PageNavigator from "../../../components/board/PageNavigator";
 import useFetch from "../../../hooks/useFetch";
 
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
 const HotBoard = () => {
-
-  // 현재 페이지 세팅 
+const [postType] = useState("HOT");
   const [currentPage, setCurrentPage] = useState(0);
-  console.log(currentPage);
-  useEffect(() => {
-    localStorage.setItem("currentPage", currentPage);
-  }, [currentPage]);
+  const [size] = useState(5); // 한 페이지당 게시물 수
 
-  const url = `/posts?postType=HOT&page=0&size=20`;
+  const [searchParams, setSearchParams] = useState({
+    search:""
+  });
 
-  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+  const [doSearch, setDoSearch] = useState(false);
 
-  const { data, error, loading } = useFetch(url, {
+  const queryString = new URLSearchParams({
+    postType,
+    page: currentPage,
+    size,
+    search: searchParams.search,
+  }).toString();
+
+  const url = `/posts?${queryString}`;
+
+  const { data, error, loading } = useCustomFetch(url, {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
   });
 
-  console.log("데이터", data);
-  if (!data || data.result.posts.length === 0) {
-    return <p>게시글이 없습니다.</p>;
-  }
+  const handleSearchChange = (label, value) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      [label]: value, // 필드 값 업데이트
+    }));
+    setCurrentPage(0);
+  };
 
 // API에서 받은 데이터와 상태 처리
   const totalPages = data?.result?.totalPage || 1; // 전체 페이지 수
-  console.log(totalPages);
 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>에러 발생: {error}</div>;
-
-  console.log(data.result.posts);
 
   return (
     <>
       <Text>좋아요 10개를 받으면 HOT 게시물로 자동 선정됩니다.</Text>
       <ButtonWrapper>
-        <SearchBar />
+        <SearchBar onSearchChange={handleSearchChange}/>
       </ButtonWrapper>
       {loading && <div>로딩 중...</div>}
       {error && <div>에러 발생: {error}</div>}
@@ -53,7 +62,7 @@ const HotBoard = () => {
       <>
       <PostList2 posts={data.result.posts} />
       <PageNavigator
-        currentPage={1}
+        currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
