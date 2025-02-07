@@ -15,18 +15,33 @@ function WriteReviewPost() {
   const [musicalName, setMusicalName] = useState("");
   const [location, setLocation] = useState("");
   const [rating, setRating] = useState(0);
-  const [isButtonDisabled, setButtonDisabled] = useState(true);
+  
   const [categoryState, setCategoryState] = useState("REVIEW"); // category 상태 추가
+  const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
+  
+
+  // 업로드 버튼 비활성화 처리 
+  const [isButtonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
     setButtonDisabled(!(title.trim() && content.trim() && musicalName.trim() && location.trim()));
   }, [title, content, musicalName, location]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // 업로드할 사진 선택 & 미리보기 
+  const handleImageChange = (e) => {
+    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
+    console.log('이미지파일스 미리보기', imgFiles[0]);
+  };
+  const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
 
-    const reviewRequestDTO = {
-      memberId: 1, // 회원 ID (적절한 값으로 대체하세요)
+  // 글 업로드하기
+  const handleSubmit = async (e) => {
+    
+    const postData = new FormData();
+
+    // FormData에 JSON 데이터를 추가하기
+    postData.append("reviewRequestDTO", JSON.stringify({
+      memberId: 1, // 실제 회원 ID로 변경
       isAnonymous: true,
       title: title.trim(),
       content: content.trim(),
@@ -34,23 +49,18 @@ function WriteReviewPost() {
       location: location.trim(),
       musicalId: 2, // 뮤지컬 ID (적절한 값으로 대체하세요)
       rating: rating, // 평점이 필요하지 않다면 생략 가능
-    };
+    }));
 
-    console.log('평점', reviewRequestDTO);
-
-    const formData = new FormData();
-
-    formData.append(
-      "reviewRequestDTO",
-      new Blob([JSON.stringify(reviewRequestDTO)], { type: "application/json" })
-    ); 
-    
-    console.log('폼데이터', formData);
+    // 이미지 파일이 있다면 FormData에 추가하기
+    for (let i = 0; i < imgFiles.length; i++) { 
+        postData.append("imageFiles", imgFiles[i]);
+      }
+  
     try {
       console.log(categoryState);
       const response = await axios.post(
         `${muit_server}/reviews?postType=${categoryState}`,
-        formData,
+        postData,
         {
           headers: {
             "Authorization": token ? `Bearer ${token}` : "",
@@ -135,6 +145,23 @@ function WriteReviewPost() {
           </div>
         </Form>
       </Content>
+      <ImageInsertButtonWrapper>
+        {/* 
+        <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
+          <img src={Camera} alt="camera icon" />
+          <Text>사진</Text>
+        </label>
+        */}
+        
+        <input
+          type="file"
+          accept="image/*"
+          id="fileInput"
+          multiple
+          onChange={handleImageChange}
+          // style={{ display: 'none' }} // 기본 input 스타일 숨기기
+        />
+    </ImageInsertButtonWrapper>
     </WritePostContainer>
   );
 }
@@ -296,4 +323,32 @@ const Content = styled.div`
   display: flex;
   flex-direction: row;
   gap: 100px;
+`
+
+
+const ImageInsertButtonWrapper = styled.div`
+width: 100%;
+display: flex;
+// justify-content: flex-end;
+label {
+display: flex;
+flex-direction: row;
+gap: 8px;
+}
+input {
+// width: 190px;
+}
+input[type=file]::file-selector-button {
+  color: #919191;
+  width: 80px;
+  height: 30px;
+  background: #fff;
+  border: 1px solid #E6E6E6;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+* {
+color: #919191;
+}
 `
