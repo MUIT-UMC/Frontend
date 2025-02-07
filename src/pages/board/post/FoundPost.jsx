@@ -7,6 +7,7 @@ import Reply from "../../../components/post/Reply";
 import Info from "../../../components/detail/Info";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
+import PostMenu from "../../../components/post/PostMenu";
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 function FoundPost() {
@@ -49,7 +50,7 @@ function FoundPost() {
   
   const d = data.result;
   const title = d.title;
-  const board = "분실";
+  const board = "습득";
   const user = d.nickname;
   const date = d.createdAt.split('T')[0];
   const image = d?.imgUrls;
@@ -63,28 +64,6 @@ function FoundPost() {
       { label: "물품명", value: d.lostItem },
       { label: "특징", value: d.content },
     ];
-
-    const handleDelete = async () => {
-      if (window.confirm("정말 삭제하시겠습니까?")) {
-        try {
-          const response = await axios.delete(`${muit_server}/dekete/${postId}`, {
-            headers: { 
-              Authorization: token ? `Bearer ${token}` : "",
-            },
-          });
-    
-          if (response.data.isSuccess) {
-            alert("게시글이 삭제되었습니다.");
-            navigate("/board/item/lost"); // 삭제 후 홈으로 이동
-          } else {
-            alert("삭제 실패: " + response.data.message);
-          }
-        } catch (error) {
-          console.error("삭제 오류:", error);
-          alert("삭제 중 오류가 발생했습니다.");
-        }
-      }
-    };
     
   return (
     <>
@@ -92,31 +71,13 @@ function FoundPost() {
       <Text 
         style={{textDecoration: 'underline', marginBottom: '20px'}}
         color='#919191' 
-        onClick={()=>navigate("/board/review/musical")}>게시글 목록으로 돌아가기...</Text>
+        onClick={()=>navigate("/board/item/found")}>게시글 목록으로 돌아가기...</Text>
         
         <TopWrapper>
           <TitleWrapper>
             <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
           </TitleWrapper>
-          <SelectWrapper>
-        {/*이후 3도트 눌러서 수정삭제 드롭박스 생기도록 수정*/}
-        {/*<BsThreeDotsVertical />*/}
-          <select
-            onChange={(e) => {
-              if (e.target.value === "edit") {
-                console.log("editing");
-                // navigate("/edit-page"); // 수정 페이지로 이동
-              } else if (e.target.value === "delete") {
-                console.log("delete");
-                // 삭제 로직 실행
-                handleDelete();
-              }
-            }}
-            >
-            <option value="edit">수정</option>
-            <option value="delete">삭제</option>
-          </select>
-            </SelectWrapper>
+          <PostMenu />
         
         </TopWrapper>
         <SubTitleWrapper>
