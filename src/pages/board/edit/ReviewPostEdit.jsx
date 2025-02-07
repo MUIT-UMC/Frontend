@@ -2,40 +2,32 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { InteractiveRatingStars } from "../../../components/detail/InteractiveRatingStars";
 
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
 
-function ItemPostEdit() {
+function ReviewPostEdit() {
   const navigate = useNavigate();
   const { postId } = useParams(); // URL에서 postId 가져오기
 
   // 게시글 데이터 상태 관리
   const [title, setTitle] = useState("");
   const [musicalName, setMusicalName] = useState("");
+  const [musicalId, setMusicalId] = useState(2);
   const [location, setLocation] = useState("");
   const [lostItem, setLostItem] = useState("");
   const [lostDate, setLostDate] = useState("");
   const [content, setContent] = useState("");
   // const [categoryState, setCategoryState] = useState("LOST");
   const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
+  const [rating, setRating] = useState(0);
 
-  // 필드 전부 입력 해야 버튼 활성화화
-  const [isButtonDisabled, setButtonDisabled] = useState(true);
-  
-  useEffect(() => {
-    setButtonDisabled(
-      !(content.trim() && musicalName && location && lostItem && lostDate)
-    );
-    console.log(isButtonDisabled);
-  }, [content, musicalName, location, lostItem, lostDate]);
-  
-  
   // 기존 데이터 불러오기
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${serverUrl}/losts/${postId}`, {
+        const response = await axios.get(`${serverUrl}/reviews/${postId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -45,9 +37,9 @@ function ItemPostEdit() {
         setTitle(data.title);
         setMusicalName(data.musicalName);
         setLocation(data.location);
-        setLostItem(data.lostItem);
-        setLostDate(data.lostDate.split("T")[0]); // 날짜 형식 변환
         setContent(data.content);
+        setRating(data.rating);
+        console.log('평점', data.rating);
         // setCategoryState(data.postType);
         // setImgFiles(data.imgUrls);
       } catch (error) {
@@ -58,33 +50,26 @@ function ItemPostEdit() {
     fetchData();
   }, [postId]);
 
-  // 이미지 파일 변경 핸들러
-  const handleImageChange = (e) => {
-    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
-    console.log('이미지파일스 미리보기', imgFiles[0]);
-  };
-  const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
-
   // 게시글 수정 API 요청
   const handleUpdate = async () => {
-    if (!musicalName || !location || !lostItem || !lostDate || !content) {
-      alert("모든 필드를 입력해주세요.");
-      return;
-    }
+    //if (!musicalName || !location || !content) {
+    //  alert("모든 필드를 입력해주세요.");
+    //  return;
+    //}
 
     const formData = new FormData();
     const updateData = {
       title,
       musicalName,
+      musicalId,
       location,
-      lostItem,
-      lostDate,
       content,
+      rating,
      // postType: categoryState,
     };
 
     formData.append(
-      "lostRequestDTO",
+      "reviewRequestDTO",
       new Blob([JSON.stringify(updateData)], { type: "application/json" })
     );
     // console.log('수정된 데이터', updateData);
@@ -99,7 +84,7 @@ function ItemPostEdit() {
     console.log(key, value);
   });
     try {
-      const response = await axios.patch(`${serverUrl}/losts/${postId}`, formData, {
+      const response = await axios.patch(`${serverUrl}/reviews/${postId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -108,27 +93,37 @@ function ItemPostEdit() {
 
       alert("게시글이 성공적으로 수정되었습니다!");
       console.log(response.data);
-      navigate(`/board/item/lost/${postId}`);
+      navigate(`/board/review/musical/${postId}`);
     } catch (error) {
       alert("게시글 수정 중 오류가 발생했습니다.");
       console.error(error);
     }
   };
 
-
+// 필드 전부 입력 해야 버튼 활성화화
+  const [isButtonDisabled, setButtonDisabled] = useState(true);
+  
+  useEffect(() => {
+    setButtonDisabled(
+      !(content.trim() && musicalName && location && lostItem && lostDate)
+    );
+    console.log(isButtonDisabled);
+  }, [content, musicalName, location, lostItem, lostDate]);
   return (
 <WritePostContainer>
       <InputWrapper>
         <Input
-          placeholder="물품명을 입력해주세요."
+          placeholder="제목을 입력하세요"
           type="text"
-          value={lostItem}
+          value={title}
           onChange={(e) => {
-            setLostItem(e.target.value);
             setTitle(e.target.value);
           }}
         />
-        <Button onClick={handleUpdate} disabled={isButtonDisabled}>
+        <Button
+         onClick={handleUpdate} 
+         // disabled={isButtonDisabled}
+         >
           등록
         </Button>
       </InputWrapper>
@@ -137,31 +132,6 @@ function ItemPostEdit() {
       <Hr marginTop="20px" marginBottom="36px" />
 
       <Content>
-      {/*이미지 첨부 기능*/}
-      <ImgWrapper>
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }} // 기본 input 스타일 숨기기
-            id="fileInput"
-            multiple 
-            onChange={handleImageChange}
-          />
-          <label htmlFor="fileInput">
-            {console.log("이미지파일스 미리보기", imgFiles[0])}
-            {imgFiles ? (
-              <img
-                src={previewImage}
-                alt="첨부된 이미지"
-                style={{ maxWidth: "100%",
-                  maxHeight: "100%",
-                  objectFit: "contain", }}
-              />
-            ) : (
-              <img src={Camera} alt="카메라 아이콘" />
-            )}
-          </label>
-        </ImgWrapper>
       <Form>
         {/*
         <div>
@@ -198,25 +168,12 @@ function ItemPostEdit() {
           />
         </div>
         <div>
-          <label>분실일</label>
-          <input
-            type="datetime-local"
-            value={lostDate}
-            onChange={(e) => {
-              setLostDate(e.target.value);
-              console.log(lostDate);
-            }}
-          />
-        </div>
-        <div>
-          <label>물품명</label>
-          <input
-            type="text"
-            value={lostItem}
-            onChange={(e) => {
-              setLostItem(e.target.value);
-              setTitle(e.target.value);
-            }}
+          <label>평점</label>
+          <InteractiveRatingStars
+            starSize={36}
+            value={rating}
+            rating={rating}
+            onRatingChange={setRating}
           />
         </div>
         <div>
@@ -232,7 +189,7 @@ function ItemPostEdit() {
   );
 }
 
-export default ItemPostEdit;
+export default ReviewPostEdit;
 
 const WritePostContainer = styled.div`
   margin: 86px 100px;
