@@ -65,18 +65,17 @@ function CommentInputArea({ postId, setCommentTrigger, commentTrigger, isReplyin
   return (
     <>
       <CommentInputWrapper> 
-        <TopWrapper>
-          <Text color='#000'>하지희</Text>
-          {isReplying && <GoX  onClick={() => setIsReplying(false)} size={20}/>}
-          
-        </TopWrapper>
-        
         <TextArea 
         id="user-comment" 
         rows="6" cols="22" 
         placeholder="내용을 입력하세요."
         value={comment}
         onChange={handleCommentChange}  />
+        <TopWrapper>
+          {/*<Text color='#000'>익명</Text>*/}
+          {isReplying && <GoX  onClick={() => setIsReplying(false)} size={20}/>}
+          
+        </TopWrapper>
       </CommentInputWrapper>
       <OptionWrapper>
       <div style={{display:'flex', flexDirection: 'row', gap: '8px', width: '100%'}}>
@@ -99,6 +98,8 @@ const CommentInputWrapper = styled.div`
   border-radius: 3px 3px 0px 0px;
   border: 1px solid var(--Gray-outline, #E6E6E6);
   padding: 20px 16px;
+  display: flex;
+  flex-direction: row;
 `
 
 const OptionWrapper = styled.div`
@@ -150,7 +151,6 @@ const TextArea = styled.textarea`
   font-style: normal;
   font-weight: 500;
   line-height: 25px; /* 156.25% */
-    margin-top: 12px;
     &::placeholder {
       color: #ccc; /* 플레이스홀더 색상 */
     }
@@ -190,5 +190,5 @@ const ErrorMessage = styled.div`
 const TopWrapper = styled.div`
 display: flex;
 flex-direction: row;
-justify-content: space-between;
+justify-content: flex-end;
 `
