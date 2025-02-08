@@ -15,13 +15,31 @@ const Info = ({ image, width, height, alt, details, valueWidth }) => {
           <Item key={index}>
             <Label>{label}</Label>
             <div>
-              <Value width={valueWidth}>{value}</Value>
-              {extra && (
-                <div style={{ display: "flex", flexDirection: "row", gap: "4px", marginTop: "11px" }}>
-                  <SightLink>{extra.text}</SightLink>
-                  <img src={ChevronRight} alt="Chevron Right" />
-                </div>
-              )}
+
+              <ValueWrapper>
+              {/* Value가 배열일 경우: 가격을 표시할 경우*/}
+              {Array.isArray(value) ? (
+                  value.map((item, index) => (
+                    <PriceWrapper key={index}>
+                    <Value width='60px'  color='#919191'>
+                      {item.seat}
+                    </Value>
+                    <Value width='80px' style={{display: 'flex', flexDirection: 'row', justifyContent:'flex-end'}}>
+                    {item.price}
+                  </Value>
+                    </PriceWrapper>
+                  ))
+                ) : (
+                  <Value width={valueWidth}>{value}</Value>
+                )}
+              </ValueWrapper>
+              {/* extra 정보가 있을 경우 */}
+                {extra && (
+                  <div style={{ display: "flex", flexDirection: "row", gap: "4px", marginTop: "11px" }}>
+                    <SightLink>{extra.text}</SightLink>
+                    <img src={ChevronRight} alt="Chevron Right" />
+                  </div>
+                )}
             </div>
           </Item>
         ))}
@@ -78,7 +96,7 @@ const Label = styled.div`
 
 const Value = styled.div`
   color: ${(props) => (props.color ? props.color : "#000")};
-  width: ${(props) => (props.width ? props.width : "340px")};
+  width: ${(props) => (props.width ? props.width : "300px")};
   font-family: Pretendard;
   font-size: ${(props) => (props.fontSize ? props.fontSize : "16px")};
   font-weight: 500;
@@ -98,3 +116,14 @@ const SightLink = styled.div`
   display: flex;
   align-items: center;
 `;
+
+const ValueWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`
+
+const PriceWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`

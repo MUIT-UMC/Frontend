@@ -2,53 +2,38 @@ import React from "react";
 import styled from "styled-components";
 import HwangMinsu from "../../../assets/images/actor-pic-hwangminsu.png";
 import LikeActorButton from "../../../components/detail/LikeActorButton";
+import { useParams } from "react-router-dom";
+import useFetch from "../../../hooks/useFetch";
 function CastsDetail() {
+  const {musicalId} = useParams();
+  const url = `/musicals/${musicalId}/casting`;
+
+  const { data, error, loading } = useFetch(url);
+  console.log('캐스팅 데이터', data?.result);
 
   return (
+    
     <>
-
-      <CharacterWrapper>
-        <h3>리차드</h3>
-        <ActorsWrapper>
-        <Actor>
-        <ProfileWrapper>
-          <img src={HwangMinsu} alt="Hwang Minsu" />
-          <LikeActorButtonWrapper>
-            <LikeActorButton />
-          </LikeActorButtonWrapper>
-        </ProfileWrapper>
-        <div>황민수</div>
-        </Actor>
-        <Actor>
-        <ProfileWrapper>
-          <img src={HwangMinsu} alt="Hwang Minsu" />
-          <LikeActorButtonWrapper>
-            <LikeActorButton />
-          </LikeActorButtonWrapper>
-        </ProfileWrapper>
-        <div>황민수</div>
-        </Actor>
-        <Actor>
-        <ProfileWrapper>
-          <img src={HwangMinsu} alt="Hwang Minsu" />
-          <LikeActorButtonWrapper>
-            <LikeActorButton />
-          </LikeActorButtonWrapper>
-        </ProfileWrapper>
-        <div>황민수</div>
-        </Actor>
-        <Actor>
-        <ProfileWrapper>
-          <img src={HwangMinsu} alt="Hwang Minsu" />
-          <LikeActorButtonWrapper>
-            <LikeActorButton />
-          </LikeActorButtonWrapper>
-        </ProfileWrapper>
-        <div>황민수</div>
-        </Actor>
-        </ActorsWrapper>
-        
-      </CharacterWrapper>
+      {data?.result?.map((role) => (
+        <CharacterWrapper key={role?.roleName}>
+          <h3>{role?.roleName}</h3>
+          
+          <ActorsWrapper>
+            {role?.actorList?.map((actor) => (
+              <Actor key={actor?.realName}>
+                <ProfileWrapper>
+                  <img src={actor?.actorPic} alt={`${actor?.realName} 프로필`} />
+                  <LikeActorButtonWrapper>
+                    <LikeActorButton />
+                  </LikeActorButtonWrapper>
+                </ProfileWrapper>
+                <div>{actor?.realName}</div>
+              </Actor>
+            ))}
+          </ActorsWrapper>
+        </CharacterWrapper>
+      ))}
+     
    </>
     
   );

@@ -7,9 +7,10 @@ import ChevronDown from '../../assets/icons/ChevronDown.svg';
     function MainBanner({ 
       data
     }) {
+      console.log("배경이미지",data.desImgUrl[0]);
       return (
         <BannerContainer backgroundImage={data.desImgUrl[0]}>
-          <EngHeader className="candlescript-text">{data.name}</EngHeader>
+          <EngHeader className="candlescript-text">{data.fancyTitle}</EngHeader>
           <Header>{data.name}</Header>
           <TagWrapper>
             {/*data.tags.map((tag, index) => (

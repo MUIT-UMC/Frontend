@@ -120,7 +120,7 @@ function App() {
 
       
         {/* 7) 상세 페이지 */}
-        <Route path="/detail" element={<Detail />} />
+        <Route path="/detail/:musicalId" element={<Detail />} />
         
         {/* 9) 로그인/회원가입 */}
         <Route path="/login" element={<Login />} />
