@@ -7,6 +7,7 @@ import Reply from "../../../components/post/Reply";
 import Info from "../../../components/detail/Info";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
+import PostMenu from "../../../components/post/PostMenu";
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 function FoundPost() {
@@ -19,7 +20,7 @@ function FoundPost() {
   const url = `/losts/${postId}`;
   const { data, error, loading } = useFetch(url, {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log('데이터', data);
@@ -29,7 +30,7 @@ function FoundPost() {
     `/comments/${postId}?page=0&size=20`,
     {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log("코멘트 데이터:", comment);
@@ -49,7 +50,7 @@ function FoundPost() {
   
   const d = data.result;
   const title = d.title;
-  const board = "분실";
+  const board = "습득";
   const user = d.nickname;
   const date = d.createdAt.split('T')[0];
   const image = d?.imgUrls;
@@ -63,7 +64,6 @@ function FoundPost() {
       { label: "물품명", value: d.lostItem },
       { label: "특징", value: d.content },
     ];
-
     
   return (
     <>
@@ -71,10 +71,15 @@ function FoundPost() {
       <Text 
         style={{textDecoration: 'underline', marginBottom: '20px'}}
         color='#919191' 
-        onClick={()=>navigate("/board/item/lost")}>게시글 목록으로 돌아가기...</Text>
-        <TitleWrapper>
-        <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
-        </TitleWrapper>
+        onClick={()=>navigate("/board/item/found")}>게시글 목록으로 돌아가기...</Text>
+        
+        <TopWrapper>
+          <TitleWrapper>
+            <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
+          </TitleWrapper>
+          <PostMenu />
+        
+        </TopWrapper>
         <SubTitleWrapper>
           <User>{user}</User><PostDate>{date}</PostDate>
         </SubTitleWrapper>
@@ -194,4 +199,29 @@ const Text = styled.div`
   font-weight: 500;
   line-height: 25px; /* 156.25% */
 
+`
+
+const TopWrapper = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+`
+
+const SelectWrapper = styled.div`
+  padding-bottom: 4px;
+
+  select {
+    border: none;
+    color: var(--Gray-maintext, #000);
+
+    /* Body-me */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 25px; /* 156.25% */
+  }
+    select:focus {
+    outline: none;
+    }
 `

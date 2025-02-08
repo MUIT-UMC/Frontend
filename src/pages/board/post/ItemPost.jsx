@@ -13,10 +13,13 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 import axios from "axios";
+import { useLocation } from "react-router-dom";
+import PostMenu from "../../../components/post/PostMenu";
 
 function ItemPost() {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { postId } = useParams();
   const [categoryState, setCategoryState] = useState("REVIEW"); // category 상태 추가
@@ -27,7 +30,7 @@ function ItemPost() {
   const url = `/losts/${postId}`;
   const { data, error, loading } = useFetch(url, {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log('데이터', data);
@@ -37,7 +40,7 @@ function ItemPost() {
     `/comments/${postId}?page=0&size=20`,
     {
     headers: {
-      Authorization: token ? `${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   });
   console.log("코멘트 데이터:", comment);
@@ -54,45 +57,24 @@ function ItemPost() {
   if (!data || !data.result) return <div>데이터가 없습니다.</div>;
   // console.log('데이터', data);
 
+  
   const d = data.result;
   const title = d.title;
   const board = "분실";
   const nickname = d.nickname;
   const date = d.createdAt.split('T')[0];
-  const image = d?.imgUrls;
+  const image = d?.imgUrls[0];
 
   const listSize = comment?.result?.listSize;
   // console.log('image', image);
     const details = [
       { label: "뮤지컬명", value: d.musicalName},
       { label: "장소", value: d.location },
-      { label: "일시", value: d?.lostDate?.split('T')[0] },
+      { label: "분실일", value: d?.lostDate?.split('T')[0] },
       { label: "물품명", value: d.lostItem },
       { label: "특징", value: d.content },
     ];
 
-    const handleDelete = async () => {
-      if (window.confirm("정말 삭제하시겠습니까?")) {
-        try {
-          const response = await axios.delete(`${muit_server}/posts/${postId}`, {
-            headers: { 
-              Authorization: token 
-            },
-          });
-    
-          if (response.data.isSuccess) {
-            alert("게시글이 삭제되었습니다.");
-            navigate("/board/item/lost"); // 삭제 후 홈으로 이동
-          } else {
-            alert("삭제 실패: " + response.data.message);
-          }
-        } catch (error) {
-          console.error("삭제 오류:", error);
-          alert("삭제 중 오류가 발생했습니다.");
-        }
-      }
-    };
-    
   return (
     <>
       <LostItemPostContainer>
@@ -105,26 +87,7 @@ function ItemPost() {
           <TitleWrapper>
             <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
           </TitleWrapper>
-          <SelectWrapper>
-        {/*이후 3도트 눌러서 수정삭제 드롭박스 생기도록 수정*/}
-        {/*<BsThreeDotsVertical />*/}
-          <select
-            onChange={(e) => {
-              if (e.target.value === "edit") {
-                console.log("editing");
-                // navigate("/edit-page"); // 수정 페이지로 이동
-              } else if (e.target.value === "delete") {
-                console.log("delete");
-                // 삭제 로직 실행
-                handleDelete();
-              }
-            }}
-            >
-            <option value="edit">수정</option>
-            <option value="delete">삭제</option>
-          </select>
-            </SelectWrapper>
-        
+        <PostMenu />
         </TopWrapper>
         
        
@@ -241,21 +204,6 @@ const CommentWrapper = styled.div`
 
 const SelectWrapper = styled.div`
   padding-bottom: 4px;
-
-  select {
-    border: none;
-    color: var(--Gray-maintext, #000);
-
-    /* Body-me */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 25px; /* 156.25% */
-  }
-    select:focus {
-    outline: none;
-    }
 `
 const TopWrapper = styled.div`
 display: flex;
@@ -273,4 +221,7 @@ const Text = styled.div`
   font-weight: 500;
   line-height: 25px; /* 156.25% */
 
+`
+
+const MenuWrapper = styled.div`
 `

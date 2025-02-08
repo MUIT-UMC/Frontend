@@ -3,8 +3,14 @@ import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const muit_server = import.meta.env.VITE_APP_SERVER_URL;
+
 function WriteContact() {
+
   const navigate = useNavigate();
+
+  // useState
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isButtonDisabled, setButtonDisabled] = useState(true);
@@ -13,33 +19,27 @@ function WriteContact() {
     setButtonDisabled(!(title.trim() && content.trim()));
   }, [title, content]);
 
+  // 글 업로드하기 
   const handleSubmit = async () => {
-    const postData = new FormData();
-    const postRequestDTO = {
-      memberId: 1, // 실제 회원 ID로 변경
-      isAnonymous: true,
+    const postData = {
       title: title.trim(),
       content: content.trim(),
     };
 
-    postData.append(
-      "postRequestDTO",
-      new Blob([JSON.stringify(postRequestDTO)], { type: "application/json" })
-    ); 
-
     try {
       const response = await axios.post(
-        "http://13.209.69.125:8080/posts/",
-        postData,
+        `${muit_server}/inquiries`,
+        postData, 
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Authorization": token ? `Bearer ${token}` : "",
+            "Content-Type": "application/json", // JSON으로 전송
           },
         }
       );
       alert("게시글이 성공적으로 등록되었습니다!");
       console.log(response.data);
-      navigate("/mypage/support/contact/write/complete"); // 게시글 등록 후 이동
+      navigate(`/mypage/support/contact/${response.data.result.id}`);
     } catch (error) {
       alert("게시글 등록 중 오류가 발생했습니다.");
       console.error(error);

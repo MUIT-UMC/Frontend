@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 import SearchIcon from "../assets/icons/SearchButton.svg";
 import DivideBarIcon from "../assets/icons/DivideBarSearch.svg";
@@ -14,137 +15,81 @@ const COLOR_GRAY_SUB = "#919191";
 
 const MAX_WIDTH = 1440;
 
-// TICKET OPEN 목업 데이터(임시) -> 추후 API
-const SearchData = [
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24012498_p.gif",
-    title: "알라딘",
-    locate: "샤롯데씨어터",
-    date: "2024.11.22 ~ 2025.06.22",
-    ranking: "1",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014885_p.gif",
-    title: "시라노",
-    locate: "예술의 전당",
-    date: "2024.12.06 ~ 2025.02.23",
-    ranking: "2",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24013928_p.gif",
-    title: "지킬앤하이드",
-    locate: "블루스퀘어 신한카드홀",
-    date: "2024.11.29 ~ 2025.05.18",
-    ranking: "3",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24016737_p.gif",
-    title: "웃는남자",
-    locate: "예술의전당 오페라극장",
-    date: "2025.01.09 ~ 2025.03.09",
-    ranking: "4",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/L0/L0000106_p.gif",
-    title: "마타하리",
-    locate: "LG아트센터 서울 LG SIGNATURE 홀",
-    date: "2024.12.05 ~ 2025.03.02",
-    ranking: "5",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24016374_p.gif",
-    title: "미아 파밀리아",
-    locate: "링크아트센터드림 드림1관",
-    date: "2024.12.19 ~ 2025.03.23",
-    ranking: "6",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24015073_p.gif",
-    title: "테일러",
-    locate: "대학로 TOM 1관",
-    date: "2024.11.19 ~ 2025.02.09",
-    ranking: "7",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014511_p.gif",
-    title: "이프덴",
-    locate: "홍익대 대학로 아트센터",
-    date: "2024.12.03 ~ 2025.03.02",
-    ranking: "8",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014865_p.gif",
-    title: "글루미 선데이",
-    locate: "링크아트센터 페이코홀",
-    date: "2024.11.05 ~ 2025.01.26",
-    ranking: "9",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24017198_p.gif",
-    title: "베르테르",
-    locate: "디큐브 링크아트센터",
-    date: "2025.01.17 ~ 2025.03.16",
-    ranking: "10",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018180_p.gif",
-    title: "라파치니의 정원",
-    locate: "플러스씨어터",
-    date: "2025.01.30 ~ 2025.04.20",
-    ranking: "11",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/25/25000113_p.gif",
-    title: "무명호걸",
-    locate: "CKL스테이지",
-    date: "2025.02.04 ~ 2025.02.19",
-    ranking: "12",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018133_p.gif",
-    title: "시카고",
-    locate: "계명아트센터",
-    date: "2025.02.07 ~ 2025.02.09",
-    ranking: "13",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018006_p.gif",
-    title: "원스",
-    locate: "코엑스 신한카드 아티움",
-    date: "2025.02.19 ~ 2025.05.31",
-    ranking: "14",
-  },
-];
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 export default function Search() {
-  // 상태들
+  
+  const [hotMusicals, setHotMusicals] = useState([]);           // 핫뮤지컬 목록 (Hot 10 API)
   const [searchInput, setSearchInput] = useState("");           // 검색어 입력값
   const [isFocused, setIsFocused] = useState(false);            // 검색창 포커스 여부
-  const [recentSearches, setRecentSearches] = useState([        // 최근 검색어 목록
+  const searchBarRef = useRef(null);
+  const [recentSearches, setRecentSearches] = useState([        // 최근 검색어 목록(Figma예시 상태)
     "진짜 나쁜 소녀",
     "알라딘",
     "킹키부츠",
     "마타하리",
     "지킬 앤 하이드",
   ]);
-  const [filteredData, setFilteredData] = useState(SearchData); // 필터링된 검색 결과
+  const [filteredData, setFilteredData] = useState([]);         // 검색결과 목록 (검색 API)
 
-  // 핫뮤지컬(1~10)
-  const hotMusicals = SearchData
-    .filter((item) => parseInt(item.ranking, 10) <= 10)
-    .sort((a, b) => parseInt(a.ranking, 10) - parseInt(b.ranking, 10));
+  useEffect(() => {
+    fetchHotMusicals();
+  }, []);
 
-  // 검색어 변경 시 필터링
+  // 최근 핫뮤지컬 10 클릭
+  const handleHotMusicalClick = (title) => {
+    setSearchInput(title);
+    addRecentSearch(title);
+    setIsFocused(true);
+  };
+
+  //Hot 10 API
+  const fetchHotMusicals = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/musicals/hot/all?page=1`);
+      const dataArr = response.data.result.content;
+      const topTen = dataArr.slice(0, 10);
+      const refined = topTen.map((item, idx) => ({
+        poster: item.posterUrl,
+        title: item.name,
+        locate: item.place,
+        date: item.duration,
+        ranking: (idx + 1).toString()
+      }));
+      
+      setHotMusicals(refined);
+    } catch (error) {
+      console.error("Error fetching hot musicals:", error);
+      setHotMusicals([]);
+    }
+  };
+
   useEffect(() => {
     if (searchInput.trim() === "") {
-      setFilteredData([]); // 입력이 없으면 결과 비움
+      setFilteredData([]);
     } else {
-      const result = SearchData.filter((item) =>
-        item.title.toLowerCase().includes(searchInput.toLowerCase())
-      );
-      setFilteredData(result);
+      fetchSearchData(searchInput.trim());
     }
   }, [searchInput]);
+
+   // 검색 API
+   const fetchSearchData = async (keyword) => {
+    try {
+      const res = await axios.get(`${baseURL}/musicals`, {params: { musicalName: keyword } });
+      const list = res.data.result.musicalHomeList || [];
+      const refined = list.map((item) => ({
+        poster: item.posterUrl,
+        title: item.name,
+        locate: item.place,
+        date: item.duration
+      }));
+      setFilteredData(refined);
+    } catch (err) {
+      console.error("Search API Error:", err);
+      setFilteredData([]);
+    }
+  };
 
   // 최근 검색어 추가
   const addRecentSearch = (keyword) => {
@@ -180,6 +125,20 @@ export default function Search() {
     setIsFocused(true);
   };
 
+  // 검색바 전환
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (searchBarRef.current && !searchBarRef.current.contains(e.target)) {
+        setIsFocused(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <Container>
       <Title>
@@ -188,7 +147,7 @@ export default function Search() {
       </Title>
 
       {/* 검색창 + 아래 내용(상태별 표시) */}
-      <SearchBarWrapper
+      <SearchBarWrapper ref={searchBarRef}
         // 디자인 구분을 위해 상태 전달
         $isFocused={isFocused}
         $hasInput={!!searchInput.trim()}
@@ -247,7 +206,7 @@ export default function Search() {
               <PopularSearches>
                 <Column>
                   {hotMusicals.slice(0, 5).map((item, idx) => (
-                    <PopularSearchItem key={idx}>
+                    <PopularSearchItem key={idx} onClick={() => handleHotMusicalClick(item.title)}>
                       <RankingText $rank={Number(item.ranking)}>
                         {item.ranking}
                       </RankingText>
@@ -259,7 +218,7 @@ export default function Search() {
                 </Column>
                 <Column>
                   {hotMusicals.slice(5, 10).map((item, idx) => (
-                    <PopularSearchItem key={idx}>
+                    <PopularSearchItem key={idx} onClick={() => handleHotMusicalClick(item.title)}>
                       <RankingText $rank={Number(item.ranking)}>
                         {item.ranking}
                       </RankingText>
@@ -521,6 +480,7 @@ const PopularSearchItem = styled.div`
   justify-content: flex-start;
   gap: 8px;
   margin-top: 8px;
+  cursor: pointer;
 `;
 
 const RankingText = styled.span`

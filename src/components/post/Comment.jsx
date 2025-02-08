@@ -11,6 +11,7 @@ const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function Comment({data, noneCommentIcon}) {
   console.log('Comment.jsx', data);
+  const [isWriter, setIsWriter] = useState(data.nickname=='글쓴이');
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(data.content);
@@ -25,7 +26,7 @@ function Comment({data, noneCommentIcon}) {
         {
           method: "DELETE",
           headers: {
-            "Authorization": token ? `${token}` : "",
+            "Authorization": token ? `Bearer ${token}` : "",
             "Content-Type": "application/json",
           },
         }
@@ -81,7 +82,7 @@ function Comment({data, noneCommentIcon}) {
     <CommentWrapper>
         <Top>
           <TopLeft>
-            <UserName>{data.nickname}</UserName>
+            <UserName isWriter={isWriter}>{data.nickname}</UserName>
             
             <Text>{data.createdAt?.split('T')[0]}</Text>
             <Text>{data.commentId}</Text>
@@ -103,7 +104,7 @@ function Comment({data, noneCommentIcon}) {
               </>
             ) : (
               <>
-                <Text onClick={() => setIsEditing(true)}>수정</Text>
+                {/*<Text onClick={() => setIsEditing(true)}>수정</Text>*/}
                 <Text onClick={deleteHandler}>삭제</Text>
               </>
             )}
@@ -160,8 +161,7 @@ width: 100%;
 
 `
 const UserName = styled.div`
-  color: ${(props) => props.color ? props.color : '#000'};
-
+  color: ${(props) => (props.isWriter ? '#A00000' : props.color || '#000')};
 /* Body-bold */
 font-family: Pretendard;
 font-size: 16px;

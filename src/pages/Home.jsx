@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import ArrowPrevIcon from '../assets/icons/ArrowPrev.svg';
 import ArrowNextIcon from '../assets/icons/ArrowNext.svg';
@@ -10,7 +11,7 @@ import Upcoming from "./Upcoming";
 // 색상, 폰트 상수, 레이아웃 (디자인 가이드)
 const COLOR_MUIT_RED = "#A00000";
 const COLOR_GRAY_MAINTEXT = "000000";
-const COLOR_GRAY_SUB = "#919191";  // 비활성 상태의 회색
+const COLOR_GRAY_SUB = "#919191";   
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_GRAY_OUTLINE = "#E6E6E6";
 
@@ -18,134 +19,87 @@ const MAX_WIDTH = 1440;
 const SIDE_MARGIN = 100; // 좌우 마진
 const COLUMN_GAP = 20;   // column 간격
 
-// HOT NOW 목업 데이터(임시) -> 추후 API
-const slidesData_HotNow = [
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24016374_p.gif",
-    title: "미아 파밀리아",
-    locate: "링크아트센터드림 드림1관",
-    date: "2024.12.19 ~ 2025.03.23",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24015073_p.gif",
-    title: "테일러",
-    locate: "대학로 TOM 1관",
-    date: "2024.11.19 ~ 2025.02.09",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014885_p.gif",
-    title: "시라노",
-    locate: "예술의 전당",
-    date: "2024.12.06 ~ 2025.02.23",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014511_p.gif",
-    title: "이프덴",
-    locate: "홍익대 대학로 아트센터",
-    date: "2024.12.03 ~ 2025.03.02",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014865_p.gif",
-    title: "글루미 선데이",
-    locate: "링크아트센터 페이코홀",
-    date: "2024.11.05 ~ 2025.01.26",
-  },
-];
-
-// TICKET OPEN 목업 데이터(임시) -> 추후 API
-const slidesData_TicketOpen = [
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24017198_p.gif",
-    title: "베르테르",
-    locate: "디큐브 링크아트센터",
-    date: "2025.01.17 ~ 2025.03.16",
-    Dday: "D-5",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018180_p.gif",
-    title: "라파치니의 정원",
-    locate: "플러스씨어터",
-    date: "2025.01.30 ~ 2025.04.20",
-    Dday: "D-18",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/25/25000113_p.gif",
-    title: "무명호걸",
-    locate: "CKL스테이지",
-    date: "2025.02.04 ~ 2025.02.19",
-    Dday: "D-25",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018133_p.gif",
-    title: "시카고",
-    locate: "계명아트센터",
-    date: "2025.02.07 ~ 2025.02.09",
-    Dday: "D-28",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24018006_p.gif",
-    title: "원스",
-    locate: "코엑스 신한카드 아티움",
-    date: "2025.02.19 ~ 2025.05.31",
-    Dday: "D-40",
-  },
-];
-
-// TICKET OPEN 목업 데이터(임시) -> 추후 API
-const slidesData_Ranking = [
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24012498_p.gif",
-    title: "알라딘",
-    locate: "샤롯데씨어터",
-    date: "2024.11.22 ~ 2025.06.22",
-    Ranking: "1",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24014885_p.gif",
-    title: "시라노",
-    locate: "예술의 전당",
-    date: "2024.12.06 ~ 2025.02.23",
-    Ranking: "2",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24013928_p.gif",
-    title: "지킬앤하이드",
-    locate: "블루스퀘어 신한카드홀",
-    date: "2024.11.29 ~ 2025.05.18",
-    Ranking: "3",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/24/24016737_p.gif",
-    title: "웃는남자",
-    locate: "예술의전당 오페라극장",
-    date: "2025.01.09 ~ 2025.03.09",
-    Ranking: "4",
-  },
-  {
-    poster: "https://ticketimage.interpark.com/Play/image/large/L0/L0000106_p.gif",
-    title: "마타하리",
-    locate: "LG아트센터 서울 LG SIGNATURE 홀",
-    date: "2024.12.05 ~ 2025.03.02",
-    Ranking: "5",
-  },
-];
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 function Home() {
 
+  // 데이터를 저장할 state들
+  const [hotNowData, setHotNowData] = useState([]);
+  const [ticketOpenData, setTicketOpenData] = useState([]);
+  const [rankingData, setRankingData] = useState([]);
+
   // 왼쪽 옵션 스테이트, default = hotnow
   const [selectedOption, setSelectedOption] = useState("hotNow");
+
+  useEffect(() => {
+    fetchHotNow();
+    fetchTicketOpen();
+    fetchRanking();
+  }, []);
+
+  //Hot Now
+  const fetchHotNow = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/musicals/hot`);
+      const dataArr = response.data.result.musicalHomeList; 
+      const refined = dataArr.map(item => ({
+        poster: item.posterUrl,
+        title: item.name,
+        locate: item.place,
+        date: item.duration
+      }));
+      setHotNowData(refined);
+    } catch (error) {
+      console.error("HOT NOW fetch error:", error);
+    }
+  };
+  // 오픈예정 
+  const fetchTicketOpen = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/musicals/open`);
+      const dataArr = response.data.result;
+      const refined = dataArr.map(item => ({
+        poster: item.posterUrl,
+        title: item.name,
+        locate: item.place,
+        date: item.duration,
+        Dday: item.dday
+      }));
+      setTicketOpenData(refined);
+    } catch (error) {
+      console.error("TICKET OPEN fetch error:", error);
+    }
+  };
+  // 랭킹5
+  const fetchRanking = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/musicals/rank`);
+      const dataArr = response.data.result.musicalHomeList; 
+      const refined = dataArr.map((item, idx) => ({
+        poster: item.posterUrl,
+        title: item.name,
+        locate: item.place,
+        date: item.duration,
+        Ranking: (idx+1).toString() //인덱스 이용용
+      }));
+      setRankingData(refined);
+    } catch (error) {
+      console.error("RANKING fetch error:", error);
+    }
+  };
 
   // 선택된 옵션에 따른 슬라이드 데이터
   const getSlidesData = () => {
     switch (selectedOption) {
       case "hotNow":
-        return slidesData_HotNow;
+        return hotNowData;
       case "ticketOpen":
-        return slidesData_TicketOpen;
+        return ticketOpenData;
       case "ranking":
-        return slidesData_Ranking;
+        return rankingData;
       default:
-        return slidesData_HotNow;
+        return hotNowData;
     }
   };
   const slidesData = getSlidesData();
@@ -235,14 +189,14 @@ function Home() {
           <Poster $isRanking={selectedOption === "ranking"}>
             <TextBox>
               {/*티켓오픈 -> Dday표시*/}
-              { selectedOption === "ticketOpen" && ( <DdayText>{slide.Dday}</DdayText> )}
-              <TitleText>{slide.title}</TitleText>
-              <LocateText>{slide.locate}</LocateText>
-              <DateText>{slide.date}</DateText>
+              { selectedOption === "ticketOpen" && ( <DdayText>{slide?.Dday}</DdayText> )}
+              <TitleText>{slide?.title}</TitleText>
+              <LocateText>{slide?.locate}</LocateText>
+              <DateText>{slide?.date}</DateText>
             </TextBox>
               {selectedOption === "ranking" && (
                 <RankingBox>
-                  {slide.Ranking}
+                  {slide?.Ranking}
                 </RankingBox>
               )}
             <ArrowButtons>
@@ -250,7 +204,7 @@ function Home() {
                 <ArrowIcon><img src={ArrowPrevIcon} alt="Arrow Icon" /></ArrowIcon>
               </ArrowButton>
               <CardBox>
-                <PosterImage src={slide.poster} alt="포스터 이미지" />
+                <PosterImage src={slide?.poster} alt="포스터 이미지" />
                 {/* 점(인디케이터) */}
                 <DotWrapper>
                   {slidesData.map((_, i) => (

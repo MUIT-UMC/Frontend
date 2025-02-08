@@ -64,7 +64,9 @@ import AdminSmallReserve from "./pages/adminpage/small-theater/reservation/Admin
 import AdminSmallReserveDetail from "./pages/adminpage/small-theater/reservation/AdminSmallReserveDetail";
 import AdminSmallRefund from "./pages/adminpage/small-theater/refund/AdminSmallRefund";
 import AdminSmallRefundDetail from "./pages/adminpage/small-theater/refund/AdminSmallRefundDetail";
-
+import ItemPostEdit from "./pages/board/edit/ItemPostEdit";
+import AnonymousPostEdit from './pages/board/edit/AnonymousPostEdit';
+import ReviewPostEdit from "./pages/board/edit/ReviewPostEdit";
 function App() {
   return (
     
@@ -110,11 +112,15 @@ function App() {
         <Route path="/board/anonymous/write" element={<WriteAnonymousPost />} />
         <Route path="/board/review/write" element={<WriteReviewPost />} />
         
+        <Route path="/board/item/lost/:postId/edit" element={<ItemPostEdit />} />
+        <Route path="/board/anonymous/all/:postId/edit" element={<AnonymousPostEdit />} />
+        <Route path="/board/review/musical/:postId/edit" element={<ReviewPostEdit />} />
+
         <Route path="/event-check/:musicalId" element={<EventDetail/>}/>
 
       
         {/* 7) 상세 페이지 */}
-        <Route path="/detail" element={<Detail />} />
+        <Route path="/detail/:musicalId" element={<Detail />} />
         
         {/* 9) 로그인/회원가입 */}
         <Route path="/login" element={<Login />} />
@@ -128,7 +134,7 @@ function App() {
         <Route path="/mypage/:category/:type" element={<MyPage />} />
         <Route path="/mypage/:category/:type/:field" element={<MyPage />} />
         <Route path="/mypage/support/contact/write" element={<WriteContact />} />
-        <Route path="/mypage/support/contact/1" element={<ContactPost />} />
+        <Route path="/mypage/support/contact/:postId" element={<ContactPost />} />
         <Route path="/mypage/support/contact/write/complete" element={<ConctactComplete />} />
         <Route path="/mypage/account-deletion" element={<AccountDeletion />} />
         <Route path="/mypage/account-deletion/complete" element={<AccountDeletionComplete />} />
