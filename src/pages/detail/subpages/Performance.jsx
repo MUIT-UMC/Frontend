@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-function Performance() {
-
+function Performance({ data }) {
+  console.log('퍼포먼스', data);
   return (
+    
     <>
-      <h1>공연 정보</h1>
+      <img src={data?.result?.desImgUrl[0]} />
    </>
     
   );
