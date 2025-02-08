@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { InteractiveRatingStars } from "../../../components/detail/InteractiveRatingStars";
 import { useNavigate } from "react-router-dom";
+import MusicalIdSearchBar from "../../../components/post/MusicalIdSearchBar";
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
@@ -12,7 +13,8 @@ function WriteReviewPost() {
   
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [musicalName, setMusicalName] = useState("");
+  // const [musicalName, setMusicalName] = useState("");
+  const [musicalId, setMusicalId] = useState(0);
   const [location, setLocation] = useState("");
   const [rating, setRating] = useState(0);
   
@@ -24,8 +26,8 @@ function WriteReviewPost() {
   const [isButtonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
-    setButtonDisabled(!(title.trim() && content.trim() && musicalName.trim() && location.trim()));
-  }, [title, content, musicalName, location]);
+    setButtonDisabled(!(title.trim() && content.trim() && location.trim()));
+  }, [title, content, location]);
 
   // 업로드할 사진 선택 & 미리보기 
   const handleImageChange = (e) => {
@@ -45,9 +47,8 @@ function WriteReviewPost() {
       isAnonymous: true,
       title: title.trim(),
       content: content.trim(),
-      musicalName:  musicalName.trim(),
       location: location.trim(),
-      musicalId: 2, // 뮤지컬 ID (적절한 값으로 대체하세요)
+      musicalId: musicalId, // 뮤지컬 ID (적절한 값으로 대체하세요)
       rating: rating, // 평점이 필요하지 않다면 생략 가능
     }));
 
@@ -84,7 +85,7 @@ function WriteReviewPost() {
   return (
     <WritePostContainer>
       <InputWrapper>
-        <Input
+        <InputTitle
           placeholder="제목을 입력하세요"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -111,16 +112,11 @@ function WriteReviewPost() {
           </div>
           <div>
             <label>뮤지컬명</label>
-            <input
-              type="text"
-              placeholder="뮤지컬 이름을 검색하세요"
-              value={musicalName}
-              onChange={(e) => setMusicalName(e.target.value)}
-            />
+            <MusicalIdSearchBar setMusicalId={setMusicalId}/>
           </div>
           <div>
             <label>장소</label>
-            <input
+            <Input
               type="text"
               placeholder="뮤지컬 장소를 입력하세요"
               value={location}
@@ -201,7 +197,7 @@ const Button = styled.div`
     cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
     transition: all 0.3s ease;
 `
-const Input = styled.input`
+const InputTitle = styled.input`
   width: 100%;
   border: none;
   border-radius: 4px;
@@ -238,23 +234,7 @@ const Form = styled.form`
     gap: 10px; /* 라벨과 textarea 간 간격 */
   }
 
-  div > input {
-    width: 610px;
-    border: none;
-    border-bottom: 1px solid #E6E6E6;
-    color: var(--Gray-maintext, #000);
-
-    /* Body-me */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 25px; /* 156.25% */
-
-  }
-  div > input:focus {
-     outline: none;
-  }
+  
 
   div > label {
     width: 100px;
@@ -352,3 +332,21 @@ input[type=file]::file-selector-button {
 color: #919191;
 }
 `
+
+const Input = styled.input`
+    width: 610px;
+    border: none;
+    border-bottom: 1px solid #E6E6E6;
+    color: var(--Gray-maintext, #000);
+
+    /* Body-me */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 25px; /* 156.25% */
+
+  }
+  input:focus {
+     outline: none;
+  }`

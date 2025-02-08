@@ -134,7 +134,7 @@ function App() {
         <Route path="/mypage/:category/:type" element={<MyPage />} />
         <Route path="/mypage/:category/:type/:field" element={<MyPage />} />
         <Route path="/mypage/support/contact/write" element={<WriteContact />} />
-        <Route path="/mypage/support/contact/1" element={<ContactPost />} />
+        <Route path="/mypage/support/contact/:postId" element={<ContactPost />} />
         <Route path="/mypage/support/contact/write/complete" element={<ConctactComplete />} />
         <Route path="/mypage/account-deletion" element={<AccountDeletion />} />
         <Route path="/mypage/account-deletion/complete" element={<AccountDeletionComplete />} />
