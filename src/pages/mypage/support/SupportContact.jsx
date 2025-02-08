@@ -7,27 +7,26 @@ import { useState } from "react";
 import { useEffect } from "react";
 import PageNavigator from "../../../components/board/PageNavigator";
 import useCustomFetch from "../../../hooks/useCustomFetch";
+
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
 const SupportContact = () => {
   
   const [postType] = useState("LOST");
   const [currentPage, setCurrentPage] = useState(0);
-  const [size] = useState(20); // 한 페이지당 게시물 수
+  const [size] = useState(10); // 한 페이지당 게시물 수
   console.log("첫", currentPage);
+  console.log("사이즈", size);
 
-  // const url = `http://13.209.69.125:8080/losts/?postType=LOST&page=${currentPage}`;
+  const url = `/inquiries?page=${currentPage}&size=${size}`;
 
-  // const { data, error, loading } = useCustomFetch(url);
-
-  const data = [
-    {id: 1, title: '뮤지컬 결제 관련 문의', musicalName: '2025-01-15', location: '답변 완료'}
-  ]
+  const { data, error, loading } = useCustomFetch(url, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  });
   console.log('데이터', data);
-  const fieldsForFour = [
-    { label: "분실일", placeholder: "" },
-    { label: "분실장소", placeholder: "" },
-    { label: "분실물명", placeholder: "" },
-    { label: "뮤지컬명", placeholder: "" },
-  ];
+
   const tableHeaders = ["제목", "날짜", "상태"];
 
 
@@ -49,7 +48,7 @@ const SupportContact = () => {
       {/*error && <div>에러 발생: {error}</div>*/}
       {/*!loading && !error &&*/ (
         <>
-          <PostList details={data} headers={tableHeaders} cols="3" />
+          <PostList details={data?.result?.inquiries} headers={tableHeaders} cols="3" />
           <PageNavigator
             currentPage={currentPage}
             totalPages={totalPages}

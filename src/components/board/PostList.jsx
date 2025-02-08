@@ -29,6 +29,7 @@ function PostList({ details, headers }) {
               {d.musicalName ? <td>{d.musicalName}</td> : null }
               {d.location ? <td>{d.location}</td> : null }
               {d.lostDate ? <td>{d.lostDate.split("T")[0]}</td> : null}
+              {d.createdAt? <td>{d.createdAt.split("T")[0]}</td>: null}
               {d.status ? <td>{d.status}</td> : null }
             </tr>
           ))}
