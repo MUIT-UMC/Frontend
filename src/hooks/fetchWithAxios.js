@@ -14,7 +14,7 @@ const useCustomFetch = (url) => {
             try {
                 const response = await axiosInstance.get(url);
                 setData(response.data); // response 전체가 아니라 response.data 저장
-                setError(false); // 에러 초기화
+                setError(false); 
             } catch (err) {
                 setError(true);
             } finally {
@@ -25,7 +25,25 @@ const useCustomFetch = (url) => {
         fetchData();
     }, [url]);
 
-    return { data, loading, error };
+    // POST, PUT, DELETE
+    const fetchData = async (url, method = "GET", body = null) => {
+        setLoading(true);
+        try {
+            const response = await axiosInstance({
+                method,
+                url,
+                data: body,
+            });
+            return response.data;
+        } catch (err) {
+            console.error("API 요청 실패:", err);
+            return { isSuccess: false, message: "API 요청 실패" };
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { data, loading, error, fetchData }; 
 };
 
 export default useCustomFetch;

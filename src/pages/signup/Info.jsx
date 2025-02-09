@@ -1,4 +1,4 @@
-import {useForm} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRef, useState } from "react";
@@ -9,13 +9,24 @@ import SeePassword from '../../assets/icons/SeePassword.svg';
 import SearchRed from "../../assets/icons/SearchRed.svg";
 import ConditionCheck from "../../assets/icons/ConditionCheck.svg";
 import ConditionX from "../../assets/icons/ConditionX.svg";
+import useCustomFetch from '../../hooks/fetchWithAxios';
 
 
 const COLOR_MUIT_RED = "#A00000";
 const COLOR_SUCCESS_BLUE = "#029DF3";
 
 function Info() {
+    const { fetchData } = useCustomFetch();
+    const [isShowPWChecked, setIsShowPWChecked] = useState(false);
+    const [ageCheck, setAgeCheck] = useState(false);
+    const [serverCode, setServerCode] = useState(null);
+    const [selectedGender, setSelectedGender] = useState(null);
+    const [address, setAddress] = useState(null);
+    const [isCodeSent, setIsCodeSent] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
+
     const schema = yup.object().shape({
+        name: yup.string().required(),
         id: yup.string()
             .matches(/^[a-zA-Z0-9]+$/, "6~20자 영문, 숫자 입력")
             .min(6, "6~20자 영문, 숫자 입력")
@@ -28,65 +39,123 @@ function Info() {
             .required("비밀번호를 입력해주세요."),
         confirmPassword: yup.string()
             .oneOf([yup.ref("password"), null], "동일한 비밀번호 입력")
-            .required("비밀번호 확인을 입력해주세요."),
+            .required(),
         email: yup.string()
-            .email('유효한 이메일 주소를 입력해 주세요.')
-            .required("이메일을 반드시 입력해 주세요."),
+            .email()
+            .required(),
+        gender: yup.string().oneOf(["MALE", "FEMALE"]).required(),
+        phone: yup.string().required(),
+        address: yup.string().required(),
+        verificationCode: yup.string()
+            .test("match", (value) => value === serverCode)
     });
-    
+
     const {
         register,
         handleSubmit,
         watch,
+        setValue,
         formState: { errors },
     } = useForm({
         mode: "onChange",
         resolver: yupResolver(schema),
     });
-    
-    const [isShowPWChecked, setIsShowPWChecked] = useState(false);
-    const [ageCheck, setAgeCheck] = useState(false);
+
     const passwordRef = useRef(null);
 
-    const handleShowPWChecked = async() => {
+    const handleShowPWChecked = async () => {
         setIsShowPWChecked(!isShowPWChecked);
     };
 
-    const onSubmit = (data) => {
-        console.log("회원가입 정보:", data);
+    const sendVerificationCode = async () => {
+        setIsCodeSent(true);
+        setServerCode('200');
+        {/*
+        try {
+            const email = watch('email');
+            if (!email) {
+                alert('이메일을 입력해주세요.');
+                return;
+            }
+            const response = await fetchData('/sendCode', 'POST', { email });
+            setServerCode(response.data.code);
+            setIsCodeSent(true);
+            alert('인증번호가 전송되었습니다.');
+        } catch (error) {
+            alert('인증번호 전송에 실패했습니다.');
+        }
+             */}
     };
-    
+    const verifyCode = () => {
+        const enteredCode = watch('verificationCode');
+        if (enteredCode === serverCode) {
+            setIsVerified(true);
+            alert('이메일 인증이 완료되었습니다.');
+        } else {
+            alert('인증번호가 일치하지 않습니다.');
+        }
+    };
+
+    const onSubmit = async (data, e) => {
+        console.log("제출 데이터:", data);        
+        try {
+            const response = await fetchData('/member/register', 'POST', data);
+            console.log("서버 응답:", response);
+            if (response?.isSuccess) {
+                navigate('/signup/complete');
+            } else {
+                alert("회원가입 실패: " + response?.message);
+            }
+        } catch (error) {
+            console.error("API 요청 실패:", error);
+            alert("회원가입 중 오류 발생: " + error.message);
+        }
+    };
+
+    const handleGenderSelect = (gender) => {
+        setSelectedGender(gender);
+        setValue("gender", gender);
+        register(gender);
+        console.log('선택성별:', gender);
+    };
+
+    const handleAddress = () => {
+        setAddress('서울시');
+        register(address);
+        console.log('입력주소:', address);
+    }
+
     const navigate = useNavigate();
-    const onPrevious = () => {
-        navigate(-1);
-    };
     const EndSignUp = () => {
         navigate('/signup/complete');
     };
 
-    const [selectedGender, setSelectedGender] = useState(null); // 성별 상태 관리
-    const handleGenderSelect = (gender) => {
-        setSelectedGender(gender); // 선택된 성별 상태 업데이트
-    };
-
-    console.log(errors);
-
-    return(
+    return (
         <Page>
             <MuitLogo />
             <Container>
                 <SideMenu>
                     <div> 01 약관 동의 </div>
-                    <div  className="nowHere"> 02 정보 입력 </div>
+                    <div className="nowHere"> 02 정보 입력 </div>
                 </SideMenu>
 
                 <InfoArea>
                     <h2 className="Title-B-600">회원가입</h2>
-                    <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Form onSubmit={handleSubmit((data) => {
+                        console.log("폼 제출 시작");
+                        onSubmit(data);
+                    })}>
+                        <InputArea>
+                            <p className="body-B-600">이름</p>
+                            <Input>
+                                <input placeholder="이름을 입력하세요"
+                                {...register("name")} />
+                            </Input>
+                        </InputArea>
 
-                    {[{ field: 'id', label: '아이디', messages: ["6~20자 영문, 숫자 입력", "이미 사용 중이거나 탈퇴한 아이디입니다."] },
-                          { field: 'password', label: '비밀번호', messages: ["8~20자 이상 입력", "영문, 숫자, 특수문자 포함"] },
-                          { field: 'confirmPassword', label: '비밀번호 확인', messages: ["동일한 비밀번호 입력"] }
+                        {[{ field: 'id', label: '아이디', messages: ["6~20자 영문, 숫자 입력", "이미 사용 중이거나 탈퇴한 아이디입니다."] },
+                        { field: 'password', label: '비밀번호', messages: ["8~20자 이상 입력", "영문, 숫자, 특수문자 포함"] },
+                        { field: 'confirmPassword', label: '비밀번호 확인', messages: ["동일한 비밀번호 입력"] }
                         ].map(({ field, label, messages }) => (
                             <InputArea key={field}>
                                 <p className="body-B-600">{label}</p>
@@ -96,8 +165,8 @@ function Info() {
                                             placeholder={`${label}를 입력하세요`}
                                             type={
                                                 field === 'password' || field === 'confirmPassword' ?
-                                                (isShowPWChecked ? "text" : "password") :
-                                                "text"
+                                                    (isShowPWChecked ? "text" : "password") :
+                                                    "text"
                                             }
                                             {...register(field)}
                                         />
@@ -106,7 +175,7 @@ function Info() {
                                     {watch(field) && messages.map((msg, index) => (
                                         <ValidationMessage key={index} isValid={!errors[field]}>
                                             <ValidationIcon
-                                                src={!errors[field] ? ConditionCheck : ConditionX} // ✅ 유효성 상태에 따라 이미지 변경
+                                                src={!errors[field] ? ConditionCheck : ConditionX}
                                                 alt="Validation Icon"
                                             />
                                             {msg}
@@ -115,38 +184,57 @@ function Info() {
                                 </div>
                             </InputArea>
                         ))}
-                        
 
                         <InputArea>
                             <p className="body-B-600">이메일</p>
                             <Input>
-                                <input placeholder="예: muit1234@gmail.com" type={'email'} />
-                                <button className='passkey-btn'>인증번호 받기</button>
+                                <input placeholder="예: muit1234@gmail.com" type={'email'}
+                                    {...register("email")} />
+                                <button className='passkey-btn'
+                                onClick={sendVerificationCode}>인증번호 받기</button>
                             </Input>
                         </InputArea>
+                        {isCodeSent && (
+                            <InputArea>
+                                <p className="body-B-600">인증번호</p>
+                                <Input>
+                                    <input
+                                        placeholder='인증번호 8자리 입력'
+                                        type='text'
+                                        {...register('verificationCode')}
+                                    />
+                                    <button className='passkey-btn'
+                                    onClick={verifyCode}> 인증번호 확인</button>
+                                </Input>
+                            </InputArea>
+                        )}
 
                         <InputArea>
                             <p className="body-B-600">성별</p>
                             <GenderSelectBtn>
                                 <button
-                                    className={`gender-select ${selectedGender === "male" ? "selected" : ""}`}
-                                    onClick={() => handleGenderSelect("male")}> 남성</button>
+                                    className={`gender-select ${selectedGender === "MALE" ? "selected" : ""}`}
+                                    onClick={(e) => { e.preventDefault(); handleGenderSelect("MALE"); }}> 남성</button>
                                 <button
-                                    className={`gender-select ${selectedGender === "female" ? "selected" : ""}`}
-                                    onClick={() => handleGenderSelect("female")}>여성</button>
+                                    className={`gender-select ${selectedGender === "FEMALE" ? "selected" : ""}`}
+                                    onClick={(e) => { e.preventDefault(); handleGenderSelect("FEMALE"); }}>여성</button>
                             </GenderSelectBtn>
                         </InputArea>
 
                         <InputArea>
                             <p className="body-B-600">휴대폰 번호</p>
                             <Input>
-                                <input placeholder="숫자를 입력하세요" />
+                                <input placeholder="숫자를 입력하세요"
+                                    {...register("phone")} />
                             </Input>
                         </InputArea>
 
                         <InputArea>
                             <p className="body-B-600">주소</p>
-                            <div className='address-search'> <img src={SearchRed}/> 주소 검색</div>
+                            <div className='address-search'
+                            onClick={handleAddress}>
+                                <img src={SearchRed} /> 주소 검색
+                            </div>
                         </InputArea>
 
                         <Check>
@@ -169,20 +257,16 @@ function Info() {
 
                         <BtnArea>
                             <Button className="previous"
-                            onClick={onPrevious}>이전</Button>
+                                onClick={() => navigate(-1)}>이전</Button>
                             <Button className="next"
                                 disabled={!ageCheck}
-                                onClick={EndSignUp}>가입하기</Button>
+                                type='submit'
+                                onClick={onSubmit}>가입하기</Button>
                         </BtnArea>
-
                     </Form>
-
                 </InfoArea>
-
             </Container>
-
         </Page>
-
     )
 }
 
