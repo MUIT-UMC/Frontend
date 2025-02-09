@@ -27,11 +27,11 @@ function PostList2({ posts }) {
                 <IconsWrapper>
                   <IconWrapper>
                     <img src={ThumbsUp} alt="likes" />
-                    <Text color="#919191">{post.likes || 0}</Text>
+                    <Text color="#919191">{post.likeCount || 0}</Text>
                   </IconWrapper>
                   <IconWrapper>
                     <img src={CommentBubbleOutLine} alt="comments" />
-                    <Text color="#919191">{post.comments || 0}</Text>
+                    <Text color="#919191">{post.commentCount || 0}</Text>
                   </IconWrapper>
                   <Text color="#919191">{post.createdAt?.split("T")[0]}</Text>
                 </IconsWrapper>

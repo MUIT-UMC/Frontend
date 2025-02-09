@@ -11,11 +11,14 @@ import Price from "../../components/detail/Price";
 import Calendar from "../../components/Calendar";
 import { RatingStars } from './../../components/detail/RatingStars';
 import useFetch from "../../hooks/useFetch";
+import { useParams } from 'react-router-dom';
 
 function Detail() {
-  
-  const url = `/musicals/2`;
+  const {musicalId} = useParams();
+  const url = `/musicals/${musicalId}`;
+
   const { data, error, loading } = useFetch(url);
+  console.log(data);
 
   if (loading) return <div>Loading...</div>;
   if (error || !data.isSuccess) return <div>데이터를 불러오지 못했습니다.</div>;
@@ -23,14 +26,25 @@ function Detail() {
   const musical = data.result;
   const name = musical.name;
   const poster = musical.posterUrl || "";
+
+  const priceInfoArray = musical.priceInfo[0].split(", ");
+
+  const parsedPriceInfo = priceInfoArray.map(item => {
+    const [seat, price] = item.split(" "); // 띄어쓰기로 분리
+    return { seat, price };
+  });
+  
+  console.log(parsedPriceInfo);
+
   const details = [
     { label: "장소", value: musical.place },
     { label: "공연 기간", value: `${musical.perFrom} ~ ${musical.perTo}` },
     { label: "공연 시간", value: musical.runTime },
     { label: "관람 연령", value: musical.ageLimit },
     { label: "출연", value: musical.actorPreview.join(", ") },
-    { label: "가격", value: <Price prices={musical.priceInfo} /> },
+    { label: "가격", value: parsedPriceInfo },
   ];
+
 
   return (
     <>
@@ -56,7 +70,7 @@ function Detail() {
         <Info image={poster} alt='포스터 이미지' height='430px' details={details} />
 
         {/*하단 nav bar */}
-        <PerformanceDetails/>
+        <PerformanceDetails data={data}/>
         </LeftSection>
 
         <RightSection>

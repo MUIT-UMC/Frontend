@@ -17,7 +17,7 @@ const navItems = [
   { id: 'reviews', name: '관람 후기' },
 ];
 
-function PerformanceDetails() {
+function PerformanceDetails({data}) {
   const [activeTab, setActiveTab] = useState('details');
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
@@ -64,7 +64,7 @@ function PerformanceDetails() {
       </Navbar>
 
       <Content>
-        {activeTab === 'details' && <Performance/>}
+        {activeTab === 'details' && <Performance data={data}/>}
         {activeTab === 'cast' && <Casts />}
         {activeTab === 'view-guide' && <Seats />}
         {activeTab === 'reviews' && <Review />}
