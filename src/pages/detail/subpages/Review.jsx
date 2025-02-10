@@ -4,35 +4,57 @@ import starFull from '../../../assets/icons/star-full.svg';
 import starOutline from '../../../assets/icons/star-outline.svg';
 import ReviewContainer from "../../../components/detail/ReviewContainer";
 import { RatingStars } from "../../../components/detail/RatingStars";
+import { useState } from "react";
+import useFetch from "../../../hooks/useFetch";
+import { useNavigate } from "react-router-dom";
 
-function Review() {
-  const reviewData = [
-    {
-      title: "알라딘 관람 후기",
-      author: "최윤경",
-      date: "2025-01-05",
-      rating: 4.0,
-      reviewText:
-        "알라딘 뮤지컬은 진짜 꿈같은 시간이었어요. 시작부터 끝까지 눈을 뗄 수 없는 화려한 무대 연출과 배우들의 열정적인 연기가 정말 감동적이었어요. 특히 지니 캐릭터는 예상보다 훨씬 더 유쾌하고 재치 넘쳐서 웃음이 끊이지 않았어요. 'A Whole new ∙∙∙",
-    },
-    {
-      title: "라이온 킹 관람 후기",
-      author: "김민수",
-      date: "2024-12-25",
-      rating: 5.0,
-      reviewText:
-        "라이온 킹은 어렸을 적 추억을 다시 떠올리게 하는 멋진 공연이었어요. 특히 'Circle of Life' 장면에서는 눈물이 나올 정도로 감동적이었어요. 무대 연출과 음악, 그리고 배우들의 목소리까지 완벽했습니다.",
-    },
-    {
-      title: "위키드 관람 후기",
-      author: "이수진",
-      date: "2025-01-15",
-      rating: 4.0,
-      reviewText:
-        "위키드는 늘 기대를 저버리지 않는 뮤지컬이에요. 특히 엘파바의 솔로곡에서 나오는 감정은 정말 소름이 돋을 정도였습니다. 다만, 일부 장면에서 음향이 조금 아쉬웠어요.",
-    },
-  ];
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
+function Review({ musicalName }) {
+
+  const navigate = useNavigate();
+
+  const [postType] = useState("REVIEW");
+    const [currentPage, setCurrentPage] = useState(0);
+    const [size] = useState(5); // 한 페이지당 게시물 수
+    const [searchParams, setSearchParams] = useState({
+      musicalName: "",
+      location: "",
+    });
   
+    const queryString = new URLSearchParams({
+      postType,
+      page: currentPage,
+      size,
+      musicalName: musicalName,
+    }).toString();
+  
+    const url = `/reviews?${queryString}`;
+
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  });
+
+  console.log('상세 리뷰 데이터', data?.result?.posts
+  );
+
+
+  const calculateAverageRating = (posts) => {
+    if (!posts || posts.length === 0) {
+      console.log("포스트가 없습니다.");
+      return 0; }
+      ;
+  
+    const totalRating = posts.reduce((sum, post) => sum + post.rating, 0);
+    return (totalRating / posts.length).toFixed(1); // 소수점 2자리까지 표시
+  };
+  
+  const reviewAverage = calculateAverageRating(data?.result?.posts);
+  
+  console.log(reviewAverage);
+
   return (
     <>
       <Text fontWeight='700'>게시판 운영 규정</Text>
@@ -43,15 +65,17 @@ function Review() {
         <Left>
         <Title>관람 평점</Title>
         <RatingWrapper>
-          <RatingStars rating={4} starSize={36}/>
-          <Rating>4.0</Rating>
+          {/*<RatingStars rating={reviewAverage} starSize={36}/>*/}
+          <img src={starFull} style={{width: '36px'}}/>
+          <Rating>{reviewAverage}</Rating>
         </RatingWrapper>
         </Left>
-        <Button>후기 작성하기</Button>
+        <Button onClick={() => navigate(`/board/review/write`)}>후기 작성하기</Button>
       </Header>
       
       <Content>
-      <Form>
+        {/*
+        <Form>
         <select name="language" >
           <option value="korean" selected>최신순</option>
           <option value="english">영어</option>
@@ -59,8 +83,9 @@ function Review() {
           <option value="spanish">스페인어</option>
         </select>
       </Form>
-        {reviewData.map((data) => (
-            <ReviewContainer data={data} />
+         */}
+        {data?.result?.posts?.map((d) => (
+            <ReviewContainer data={d} />
         ))}
 
       </Content>
