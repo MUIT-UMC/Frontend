@@ -3,22 +3,24 @@ import styled from "styled-components";
 import starFull from '../../assets/icons/star-full.svg';
 import starOutline from '../../assets/icons/star-outline.svg';
 import { RatingStars } from "./RatingStars";
+import { useNavigate } from "react-router-dom";
 const ReviewContainer = ({ data }) => {
-  const { title, author, date, rating, reviewText } = data;
+  const { id, title, createdAt, rating, content } = data;
 
+  const navigate = useNavigate();
   return (
     <Container>
       <Top>
         <Title>{title}</Title>
-        <Text color="#919191">{`${author} | ${date}`}</Text>
+        <Text color="#919191">{createdAt}</Text>
       </Top>
       <RatingWrapper>
         <RatingStars rating={rating} starSize={20} /> {/* RatingStars 사용 */}
         <Rating>{`${rating.toFixed(1)}/5.0`}</Rating>
       </RatingWrapper>
-      <Text>{reviewText}</Text>
-      <Bottom>
-        <Text color="#919191">더보기</Text>
+      <Text>{content}</Text>
+      <Bottom  >
+        <Text color="#919191" onClick={()=> {navigate(`/board/review/musical/${id}`)}}>더보기</Text>
       </Bottom>
     </Container>
   );

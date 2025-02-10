@@ -12,7 +12,7 @@ import Calendar from "../../components/Calendar";
 import { RatingStars } from './../../components/detail/RatingStars';
 import useFetch from "../../hooks/useFetch";
 import { useParams } from 'react-router-dom';
-
+import ChevronRight from "../../assets/icons/ChevronRight.svg";
 function Detail() {
   const {musicalId} = useParams();
   const url = `/musicals/${musicalId}`;
@@ -79,7 +79,12 @@ function Detail() {
             <hr />
             티켓 오픈 컴포넌트
           </CalendarWrapper>
+          {/*
           <GroupPurchaseButton>공동 구매하기</GroupPurchaseButton>
+           */}
+          <EventLink>
+          <Text>이벤트 확인하기</Text><img src={ChevronRight} />
+          </EventLink>
         </RightSection>
         </div>
       </MainContent>
@@ -188,4 +193,22 @@ const CalendarWrapper = styled.div`
     width: 90%;
     margin: 0px 16px;
   }
+`
+const Text = styled.div`
+color: #000;
+
+/* Body-me */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 25px; /* 156.25% */
+`
+const EventLink = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: flex-end;
+  margin-top: 16px;
+  gap: 4px;
 `
