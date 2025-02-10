@@ -4,7 +4,8 @@ import Review from '../../pages/detail/subpages/Review';
 import Casts from '../../pages/detail/subpages/Casts';
 import Performance from '../../pages/detail/subpages/Performance';
 import Seats from '../../pages/detail/subpages/Seats';
-
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 const Content = styled.div`
   padding-top: 32px;
   width: 820px;
@@ -18,6 +19,14 @@ const navItems = [
 ];
 
 function PerformanceDetails({data}) {
+
+  console.log('퍼포먼스디테일', data?.result?.id);
+
+  const musicalId = data?.result?.id; 
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [activeTab, setActiveTab] = useState('details');
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
@@ -39,6 +48,7 @@ function PerformanceDetails({data}) {
   }, [activeTab, tabRefs, indicatorStyle]);
 
   const handleTabClick = (id, index) => {
+    // navigate(`/detail/${musicalId}/${activeTab}`);
     setActiveTab(id);
     const tabElement = tabRefs[index]?.current;
     if (tabElement) {
@@ -67,7 +77,7 @@ function PerformanceDetails({data}) {
         {activeTab === 'details' && <Performance data={data}/>}
         {activeTab === 'cast' && <Casts />}
         {activeTab === 'view-guide' && <Seats />}
-        {activeTab === 'reviews' && <Review />}
+        {activeTab === 'reviews' && <Review musicalName={data.result.name} />}
       </Content>
     </div>
   );
