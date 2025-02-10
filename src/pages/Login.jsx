@@ -1,80 +1,122 @@
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+import useCustomFetch from "../hooks/fetchWithAxios";
 
-import {useForm} from 'react-hook-form';
-import * as yup from 'yup';
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import MuitElement from '../assets/logos/MuitElement.png';
-import Google from '../assets/logos/google.png';
-import Kakao from '../assets/logos/kakao.png';
-import Naver from '../assets/logos/naver.png';
-import SeePassword from '../assets/icons/SeePassword.svg';
+import MuitElement from "../assets/logos/MuitElement.png";
+import Google from "../assets/logos/google.png";
+import Kakao from "../assets/logos/kakao.png";
+import Naver from "../assets/logos/naver.png";
+import SeePassword from "../assets/icons/SeePassword.svg";
 import { useRef, useState } from "react";
 
 const COLOR_MUIT_RED = "#A00000";
 
 function Login() {
+    const { fetchData } = useCustomFetch();
     const schema = yup.object().shape({
         id: yup.string().required(),
+        email: yup.string().required(),
         password: yup.string().required(),
-    })
+    });
+
     const navigate = useNavigate();
     const navigateToSignUp = () => {
-        navigate('/signup');
+        navigate("/signup");
     };
+
     const [isShowPWChecked, setIsShowPWChecked] = useState(false);
     const passwordRef = useRef(null);
-    const handleShowPWChecked = async() => {
-        const password = await passwordRef.current
-        if(password === null) return
 
-        await setIsShowPWChecked(!isShowPWChecked)
-        if(!isShowPWChecked){
-            password.type = 'text';
-        } else{
-            password.type = 'password';
+    const handleShowPWChecked = () => {
+        if (!passwordRef.current) return;
+
+        setIsShowPWChecked((prev) => !prev);
+        passwordRef.current.type = isShowPWChecked ? "password" : "text";
+    };
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm({
+        mode: "onChange",
+        resolver: yupResolver(schema),
+    });
+
+    const onSubmit = async () => {
+        try {
+            const email = watch('email');
+            const pw = watch('password');
+            const response = await fetchData("/member/email/login", 'POST', { email, pw });
+            console.log("응답:", response);
+            localStorage.setItem("token", response?.result?.accessToken);
+            localStorage.setItem("userName", response?.result?.userName);
+            navigate("/", {});
+        } catch (error) {
+            console.error("이메일 인증 실패:", error);
+            alert("로그인에 실패했습니다.");
         }
-    }
+    };
 
-    return(
-        <Containter>
-            <img src={MuitElement} className="MuitElement"/>
+    return (
+        <Container>
+            <img src={MuitElement} className="MuitElement" alt="Muit Logo" />
             <LogoLink>MUIT</LogoLink>
-            <LoginForm>
+
+            <LoginForm onSubmit={handleSubmit(onSubmit)}>
                 <Input>
-                    <input type={'id'} placeholder="아이디"/>                
-                </Input> 
+                    <input
+                        type="text"
+                        placeholder="이메일"
+                        {...register("email")}
+                    />
+                </Input>
                 <Input>
-                    <input type={'password'} ref={passwordRef} placeholder="비밀번호"/>
-                    <img src={SeePassword} onClick={handleShowPWChecked}/>
-                </Input> 
+                    <input
+                        type="password"
+                        ref={passwordRef}
+                        placeholder="비밀번호"
+                        {...register("password")}
+                    />
+                    <img src={SeePassword} onClick={handleShowPWChecked} alt="비밀번호 보기" />
+                </Input>
+
+                <OptionArea>
+                    <div className="keepLogin">
+                        <input type="checkbox" className="LoginCheck" id="LoginCheck" />
+                        <label htmlFor="LoginCheck">로그인 상태 유지</label>
+                    </div>
+                    <FindInfo>
+                        <span>아이디 찾기</span>
+                        <span> | </span>
+                        <span>비밀번호 찾기</span>
+                    </FindInfo>
+                </OptionArea>
+
+                <BtnArea>
+                    <LoginBtn type="submit" onClick={onSubmit}>로그인</LoginBtn>
+                    <SignUpBtn type="button" onClick={navigateToSignUp}>
+                        회원가입
+                    </SignUpBtn>
+                </BtnArea>
             </LoginForm>
-            <OptionArea>
-                <div className="keepLogin">
-                    <input type="checkbox" className="LoginCheck" id="LoginCheck"/>
-                    <label htmlFor="LoginCheck">로그인 상태 유지</label>
-                </div>
-                <FindInfo>
-                    <span>아이디 찾기</span>
-                    <span> | </span>
-                    <span>비밀번호 찾기</span>
-                </FindInfo>
-            </OptionArea>
-            <BtnArea>
-                <LoginBtn>로그인</LoginBtn>
-                <SignUpBtn onClick={navigateToSignUp}>회원가입</SignUpBtn>
-            </BtnArea>
+
             <SocialLogin>
-                <SocialIcon url={Kakao}/>
-                <SocialIcon url={Naver}/>
-                <SocialIcon url={Google} border={'#E6E6E6'}/>
+                <SocialIcon src={Kakao} />
+                <SocialIcon src={Naver} />
+                <SocialIcon src={Google} border="#E6E6E6" />
             </SocialLogin>
-        </Containter>
-    )
+        </Container>
+    );
 }
 
-const Containter = styled.div`
+
+const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -98,11 +140,10 @@ const LogoLink = styled.div`
   text-decoration: none;
   color: ${COLOR_MUIT_RED};
 `
-
-const LoginForm = styled.div`
+const LoginForm = styled.form`
     margin-bottom: 20px;    
 `
-const Input = styled.form`
+const Input = styled.div`
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -133,6 +174,7 @@ const Input = styled.form`
     }
 `
 const OptionArea = styled.div`
+    margin-top: 16px;
     width: 500px;
     display: flex;
     justify-content: space-between;
@@ -168,6 +210,7 @@ const BtnArea = styled.div`
 
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 20px;
 `
 const LoginBtn = styled.button`
@@ -213,7 +256,7 @@ const SocialIcon = styled.button`
     border: 1px solid ${(props) => props.border || '#00000000'};
     border-radius: 50%;
     cursor: pointer;
-    background: url('${(props) => props.url}');
+    background: url('${(props) => props.src}');
 
     background-size: cover;
     cursor:pointer;

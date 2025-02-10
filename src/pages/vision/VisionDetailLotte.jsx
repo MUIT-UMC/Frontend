@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Seat1 from '../assets/images/Seat1.png'
-import bluesquare1723 from '../assets/images/bluesquare1-7-23.png';
-import location from '../assets/icons/location.svg';
-import ChevronRight from '../assets/icons/ChevronRight.svg';
-import Search from '../assets/icons/Search2.svg';
+
+import bluesquare1723 from '../../assets/images/bluesquare1-7-23.png';
+import location from '../../assets/icons/location.svg';
+import ChevronRight from '../../assets/icons/ChevronRight.svg';
+import Search from '../../assets/icons/Search2.svg';
 import {
     A_Before,
     B_Before,
@@ -37,7 +37,7 @@ import {
     N_After,
     O_After,
 
-} from "../assets/theaterSeat/charlotte/charlotteSeat";
+} from "../../assets/theaterSeat/charlotte/charlotteSeat";
 
 const VisionDetail = () => {
     const [searchValue, setSearchValue] = useState("");

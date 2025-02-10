@@ -34,7 +34,6 @@ const SearchBar = () => {
     );
 
     const result = data?.isSuccess ? data.result.theatreResults || [] : [];
-    console.log(result.length);
 
     return (
       <>
