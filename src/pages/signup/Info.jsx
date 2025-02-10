@@ -10,6 +10,7 @@ import SearchRed from "../../assets/icons/SearchRed.svg";
 import ConditionCheck from "../../assets/icons/ConditionCheck.svg";
 import ConditionX from "../../assets/icons/ConditionX.svg";
 import useCustomFetch from '../../hooks/fetchWithAxios';
+import useFetch from '../../hooks/useFetch';
 
 
 const COLOR_MUIT_RED = "#A00000";
@@ -19,7 +20,6 @@ function Info() {
     const { fetchData } = useCustomFetch();
     const [isShowPWChecked, setIsShowPWChecked] = useState(false);
     const [ageCheck, setAgeCheck] = useState(false);
-    const [serverCode, setServerCode] = useState(null);
     const [selectedGender, setSelectedGender] = useState(null);
     const [address, setAddress] = useState(null);
     const [isCodeSent, setIsCodeSent] = useState(false);
@@ -46,8 +46,7 @@ function Info() {
         gender: yup.string().oneOf(["MALE", "FEMALE"]).required(),
         phone: yup.string().required(),
         address: yup.string().required(),
-        verificationCode: yup.string()
-            .test("match", (value) => value === serverCode)
+        verificationCode: yup.string(),
     });
 
     const {
@@ -68,38 +67,62 @@ function Info() {
     };
 
     const sendVerificationCode = async () => {
-        setIsCodeSent(true);
-        setServerCode('200');
-        {/*
         try {
             const email = watch('email');
             if (!email) {
                 alert('이메일을 입력해주세요.');
                 return;
             }
-            const response = await fetchData('/sendCode', 'POST', { email });
-            setServerCode(response.data.code);
-            setIsCodeSent(true);
+            fetchData('/sendCode', 'POST', { email });
             alert('인증번호가 전송되었습니다.');
+            setIsCodeSent(true);
         } catch (error) {
             alert('인증번호 전송에 실패했습니다.');
+            console.log(error);
         }
-             */}
     };
-    const verifyCode = () => {
-        const enteredCode = watch('verificationCode');
-        if (enteredCode === serverCode) {
-            setIsVerified(true);
-            alert('이메일 인증이 완료되었습니다.');
-        } else {
-            alert('인증번호가 일치하지 않습니다.');
+    const verifyCode = async () => {
+        try {
+            const email = watch('email');
+            const [username, domain] = email.split("@");
+            const verificationCode = watch('verificationCode');
+            const url = `/verify?email=${username}%40${domain}&code=${verificationCode}`
+            
+            if (!verificationCode) {
+                alert('인증번호를 입력해주세요.');
+                return;
+            }
+            const response = await fetchData(url, 'POST', { 
+                email, 
+                code: String(verificationCode) }
+            );
+            console.log('response:', response);
+
+            if (response?.isSuccess) {
+                alert('이메일 인증이 완료되었습니다.');
+                setIsVerified(true);
+            } else {
+                alert(response?.message);
+            }
+        } catch (error) {
+            console.error("이메일 인증 실패:", error);
+            alert('이메일 인증에 실패했습니다.');
         }
     };
 
-    const onSubmit = async (data, e) => {
-        console.log("제출 데이터:", data);        
+    const onSubmit = async () => {
+        const name = watch('name');
+        const username = watch('id');
+        const pw = watch('password');
+        const pw_check = watch('confirmPassword');
+        const email = watch('email');
+        const gender = watch('gender');
+        const phone = watch('phone');
+        const address = watch('address');    
         try {
-            const response = await fetchData('/member/register', 'POST', data);
+            const response = await fetchData('/member/register', 'POST', {
+                name, username, pw, pw_check, email, gender, phone, address
+            });
             console.log("서버 응답:", response);
             if (response?.isSuccess) {
                 navigate('/signup/complete');
@@ -141,10 +164,7 @@ function Info() {
 
                 <InfoArea>
                     <h2 className="Title-B-600">회원가입</h2>
-                    <Form onSubmit={handleSubmit((data) => {
-                        console.log("폼 제출 시작");
-                        onSubmit(data);
-                    })}>
+                    <Form onSubmit={handleSubmit(onSubmit)}>
                         <InputArea>
                             <p className="body-B-600">이름</p>
                             <Input>

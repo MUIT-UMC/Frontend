@@ -16,9 +16,11 @@ import { useRef, useState } from "react";
 const COLOR_MUIT_RED = "#A00000";
 
 function Login() {
+    const { fetchData } = useCustomFetch();
     const schema = yup.object().shape({
-        id: yup.string().required("아이디를 입력하세요."),
-        password: yup.string().required("비밀번호를 입력하세요."),
+        id: yup.string().required(),
+        email: yup.string().required(),
+        password: yup.string().required(),
     });
 
     const navigate = useNavigate();
@@ -39,22 +41,24 @@ function Login() {
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors },
     } = useForm({
         mode: "onChange",
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = async (data) => {
+    const onSubmit = async () => {
         try {
-            const response = await useCustomFetch().post("/member/email/login", {
-                id: data.id,
-                password: data.password,
-            });
-            console.log(response);
-            localStorage.setItem("token", response.data.accessToken);
+            const email = watch('email');
+            const pw = watch('password');
+            const response = await fetchData("/member/email/login", 'POST', { email, pw });
+            console.log("응답:", response);
+            localStorage.setItem("token", response?.result?.accessToken);
+            localStorage.setItem("userName", response?.result?.userName);
             navigate("/", {});
         } catch (error) {
+            console.error("이메일 인증 실패:", error);
             alert("로그인에 실패했습니다.");
         }
     };
@@ -68,10 +72,9 @@ function Login() {
                 <Input>
                     <input
                         type="text"
-                        placeholder="아이디"
-                        {...register("id")}
+                        placeholder="이메일"
+                        {...register("email")}
                     />
-                    {errors.id && <ErrorText>{errors.id.message}</ErrorText>}
                 </Input>
                 <Input>
                     <input
@@ -81,7 +84,6 @@ function Login() {
                         {...register("password")}
                     />
                     <img src={SeePassword} onClick={handleShowPWChecked} alt="비밀번호 보기" />
-                    {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
                 </Input>
 
                 <OptionArea>
@@ -97,7 +99,7 @@ function Login() {
                 </OptionArea>
 
                 <BtnArea>
-                    <LoginBtn type="submit">로그인</LoginBtn>
+                    <LoginBtn type="submit" onClick={onSubmit}>로그인</LoginBtn>
                     <SignUpBtn type="button" onClick={navigateToSignUp}>
                         회원가입
                     </SignUpBtn>
@@ -254,7 +256,7 @@ const SocialIcon = styled.button`
     border: 1px solid ${(props) => props.border || '#00000000'};
     border-radius: 50%;
     cursor: pointer;
-    background: url('${(props) => props.url}');
+    background: url('${(props) => props.src}');
 
     background-size: cover;
     cursor:pointer;
