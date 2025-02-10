@@ -53,8 +53,8 @@ const SeatsBoard = () => {
 
     
     const fieldsForTwo = [
-      { label: "뮤지컬명", placeholder: "" },
-      { label: "장소", placeholder: "" },
+      { labelkor: "뮤지컬명", label: "musicalName", placeholder: "" },
+      { labelkor: "장소", label:"location", placeholder: "" },
     ];
     const tableHeaders = [
       "제목", "뮤지컬명", "장소"
