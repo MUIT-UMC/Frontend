@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import useCustomFetch from "../../hooks/fetchWithAxios";
+import { useParams } from "react-router-dom";
 
-import bluesquare1723 from '../../assets/images/bluesquare1-7-23.png';
+
+import TheatreInfo from "../../components/vision/detail/TheatereInfo";
+import SeatView from "../../components/vision/detail/SeatInfo";
+import SearchBarDetail from "../../components/vision/detail/SearchBarDetail";
 import location from '../../assets/icons/location.svg';
 import ChevronRight from '../../assets/icons/ChevronRight.svg';
 import Search from '../../assets/icons/Search2.svg';
@@ -39,7 +44,13 @@ import {
 
 } from "../../assets/theaterSeat/charlotte/charlotteSeat";
 
+
 const VisionDetail = () => {
+    const { theatreId } = useParams();
+    const { data: theatre, error, loading } = useCustomFetch(
+        `/theatres/${theatreId}/sectionType?sectionType`
+    );
+
     const [searchValue, setSearchValue] = useState("");
     const [activeFloor, setActiveFloor] = useState(1);
     const [selectedArea, setSelectedArea] = useState(null);
@@ -77,12 +88,9 @@ const VisionDetail = () => {
         N: { Before: N_Before, After: N_After },
         O: { Before: O_Before, After: O_After },
     };
-    
-
     const onChange = (e) => {
         setSearchValue(e.target.value);
     }
-
     const handleFloorToggle = (floor) => {
         setActiveFloor(floor);
         setSelectedArea(null);
@@ -114,6 +122,9 @@ const VisionDetail = () => {
         });
         setSelectedArea(area);
     };
+
+    
+
     return(
         <Container>
             <SearchBar>
@@ -124,60 +135,51 @@ const VisionDetail = () => {
             </SearchBar>
 
             <DetailArea>
-                {/*공연장별로 다 따로 페이지를 만들기?*/}
+                <div>
+                    <SearchBarDetail />
 
-                <SeatArea>
-                    <div className="Stage">STAGE</div>
-                    <p className="FloorTag"
-                    style={{
-                        background: activeFloor === 1 ? "#A00000" : "#C1C1C1",
-                    }}>1층</p>
-                    <Floor>
-                        {["A", "B", "C", "D", "E", "F", "G", "H", "I"].map((area) => (
-                            <img
-                                key={area}
-                                src={areaImages[area][seatStates[area]]} // Before/After에 따라 이미지 변경
-                                alt={area}
-                                className={
-                                    ["A", "D", "G"].includes(area) ? "left-seat-img" :
-                                        ["B", "E", "H"].includes(area) ? "center-seat-img" :
-                                            "right-seat-img"
-                                }
-                            />
-                        ))}
-                    </Floor>
-                    <p className="FloorTag"
-                    style={{
-                        background: activeFloor === 2 ? "#A00000" : "#C1C1C1",
-                    }}>2층</p>
-                    <Floor>
-                        {["J", "K", "L", "M", "N", "O"].map((area) => (
-                            <img
-                                key={area}
-                                src={areaImages[area][seatStates[area]]} // Before/After에 따라 이미지 변경
-                                alt={area}
-                                className={
-                                    ["J", "M"].includes(area) ? "left-seat-img" :
-                                        ["K", "N"].includes(area) ? "center-seat-img" :
-                                            "right-seat-img"
-                                }
-                            />
-                        ))}
-                    </Floor>
-                </SeatArea>
-
+                    <SeatArea>
+                        <div className="Stage">STAGE</div>
+                        <p className="FloorTag"
+                            style={{
+                                background: activeFloor === 1 ? "#A00000" : "#C1C1C1",
+                            }}>1층</p>
+                        <Floor>
+                            {["A", "B", "C", "D", "E", "F", "G", "H", "I"].map((area) => (
+                                <img
+                                    key={area}
+                                    src={areaImages[area][seatStates[area]]} // Before/After에 따라 이미지 변경
+                                    alt={area}
+                                    className={
+                                        ["A", "D", "G"].includes(area) ? "left-seat-img" :
+                                            ["B", "E", "H"].includes(area) ? "center-seat-img" :
+                                                "right-seat-img"
+                                    }
+                                />
+                            ))}
+                        </Floor>
+                        <p className="FloorTag"
+                            style={{
+                                background: activeFloor === 2 ? "#A00000" : "#C1C1C1",
+                            }}>2층</p>
+                        <Floor>
+                            {["J", "K", "L", "M", "N", "O"].map((area) => (
+                                <img
+                                    key={area}
+                                    src={areaImages[area][seatStates[area]]}
+                                    alt={area}
+                                    className={
+                                        ["J", "M"].includes(area) ? "left-seat-img" :
+                                            ["K", "N"].includes(area) ? "center-seat-img" :
+                                                "right-seat-img"
+                                    }
+                                />
+                            ))}
+                        </Floor>
+                    </SeatArea>
+                </div>
                 <SeatInfo>
-                    <TheaterInfo>
-                        <img src={location}/>
-
-                        <h3 className="title-B">샤롯데씨어터</h3>    
-                        <p className="body-M-500">서울특별시 송파구 올림픽로 240</p>
-                        <div className="NowShowing"> 
-                            <p className="body-M-400">현재 공연 <span className="ShowTitle">미아 파밀리아</span></p>
-                            <img src={ChevronRight}/>
-                        </div>
-                        <hr className="hr-line"/>
-                    </TheaterInfo> 
+                    <TheatreInfo data={theatre?.result}/>
 
                     <AreaBtn>
                         <button
@@ -220,32 +222,10 @@ const VisionDetail = () => {
 
                     <hr className="hr-line"/>
 
-                    <View>
-                    {selectedArea === "F" && (
-                            <div>
-                                <p className="body-B-600">F 구역 1열~10열 (1번~9번까지)</p>
-                                <div className="feature">
-                                    <span className="body-M-600">시야 가림 X</span>
-                                    <span className="body-M-600">오페라글라스 O</span>
-                                </div>
-                                <img src={bluesquare1723} className="view-img" />
-                                <p className="body-M-500">F구역 5열 1번</p>
-                            </div>
-
-                        )}
-                        {selectedArea === "O" && (
-                            <div>
-                                <p className="body-B-600">O 구역 1열~10열 (1번~9번까지)</p>
-                                <div className="feature">
-                                    <span className="body-M-600">시야 가림 X</span>
-                                    <span className="body-M-600">오페라글라스 O</span>
-                                </div>
-                                <img src={bluesquare1723} className="view-img" />
-                                <p className="body-M-500">O구역 5열 1번</p>
-                            </div>
-
-                        )}
-                    </View>                  
+                    <SeatView
+                    key={selectedArea}
+                    theatreId={theatreId}
+                    area={selectedArea}/>                   
                 </SeatInfo>
 
             </DetailArea>

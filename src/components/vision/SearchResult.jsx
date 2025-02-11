@@ -4,7 +4,10 @@ import styled from "styled-components";
 const SearchResult = (props) => {
     const navigate = useNavigate();
     const ToVisionDetail = () => {
-        navigate(`/vision/${props.id}`);
+        navigate(`/vision/${props.id}`, {
+            replace: false,
+            state: { theatreId: props.id },
+        });
     };
 
     return (
