@@ -18,7 +18,7 @@ const navItems = [
   { id: 'reviews', name: '관람 후기' },
 ];
 
-function PerformanceDetails({data}) {
+function PerformanceDetails({data, score}) {
 
   console.log('퍼포먼스디테일', data?.result?.id);
 
@@ -77,7 +77,7 @@ function PerformanceDetails({data}) {
         {activeTab === 'details' && <Performance data={data}/>}
         {activeTab === 'cast' && <Casts />}
         {activeTab === 'view-guide' && <Seats />}
-        {activeTab === 'reviews' && <Review musicalName={data.result.name} />}
+        {activeTab === 'reviews' && <Review musicalName={data.result.name} score={score}/>}
       </Content>
     </div>
   );
