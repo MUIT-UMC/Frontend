@@ -3,9 +3,10 @@ import styled from "styled-components";
 import SearchIcon from "../../assets/icons/Search2.svg"; // 파일 직접 불러오기
 import { useState } from "react";
 import useCustomFetch from "../../hooks/useCustomFetch";
+import MusicalIdSearchItem from "./MusicalIdSearchItem";
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
-const MusicalIdSearchBar = ({setMusicalId}) => {
+const MusicalIdSearchBar = ({setMusicalId, setLocation}) => {
 
   const [searchParams, setSearchParams] = useState({
     musicalName:""
@@ -46,24 +47,30 @@ const MusicalIdSearchBar = ({setMusicalId}) => {
       onFocus={() => setIsFocused(true)} // focus 상태 변경
         onBlur={() => setIsFocused(false)} // blur 상태 변경
       />
-       {isFocused && ( // focus 상태일 때만 ResultWrapper 렌더링
-        <ResultWrapper onMouseDown={(e) => e.preventDefault()}>
-          <ResultList>
-            {data?.result?.musicalHomeList.map((d) => (
-              <div
-                key={d.id}
-                onClick={() => {
-                  setMusicalId(d.id);
-                  handleSearchChange("musicalName", d.name);
-                  console.log(d.id);
-                }}
-              >
-                {d.name}
-              </div>
-            ))}
-          </ResultList>
-        </ResultWrapper>
+      {isFocused && (
+  <ResultWrapper onMouseDown={(e) => e.preventDefault()}>
+    <ResultList>
+      {data?.result?.musicalHomeList && data.result.musicalHomeList.length > 0 ? (
+        data.result.musicalHomeList.map((d) => (
+          <div
+            key={d.id}
+            onClick={() => {
+              setMusicalId(d.id);
+              setLocation(d.place);
+              handleSearchChange("musicalName", d.name);
+              console.log(d.id);
+            }}
+          >
+            <MusicalIdSearchItem data={d} />
+          </div>
+        ))
+      ) : (
+        <div>{/*검색 결과가 없습니다.*/}</div>
       )}
+    </ResultList>
+  </ResultWrapper>
+)}
+
       
     </Wrapper>
       
@@ -88,6 +95,8 @@ const Input = styled.input`
 
 const Wrapper = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: row;
   width: 610px;
   border: none;
   border-bottom: 1px solid #e6e6e6;
@@ -114,6 +123,10 @@ const ResultList = styled.div`
   flex-direction: column;
   gap: 10px;
   padding: 10px;
+
+  max-height: 300px; /* 최대 높이를 300px로 지정, 필요에 따라 조정 가능 */
+  overflow-y: auto; /* 내용이 최대 높이를 초과하면 스크롤바 표시 */
+
   div {
     padding: 5px;
     cursor: pointer;

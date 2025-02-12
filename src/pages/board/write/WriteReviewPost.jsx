@@ -98,7 +98,7 @@ function WriteReviewPost() {
       <Hr marginTop="20px" marginBottom="36px" />
       <Content>
         <Form onSubmit={handleSubmit}>
-          <div>
+          <Div>
             <label>분류</label>
             <SelectWrapper>
               <select
@@ -109,36 +109,36 @@ function WriteReviewPost() {
                 <option value="SIGHT">시야 리뷰</option>
               </select>
             </SelectWrapper>
-          </div>
-          <div>
+          </Div>
+          <Div>
             <label>뮤지컬명</label>
-            <MusicalIdSearchBar setMusicalId={setMusicalId}/>
-          </div>
-          <div>
+            <MusicalIdSearchBar setMusicalId={setMusicalId} setLocation={setLocation}/>
+          </Div>
+          <Div>
             <label>장소</label>
             <Input
               type="text"
-              placeholder="뮤지컬 장소를 입력하세요"
+              placeholder="뮤지컬명 검색 결과에 따라 자동 입력됩니다"
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              disabled
             />
-          </div>
-          <div>
+          </Div>
+          <Div>
             <label>평점</label>
             <InteractiveRatingStars
               starSize={36}
               value={rating}
               onRatingChange={setRating}
             />
-          </div>
-          <div>
+          </Div>
+          <Div>
             <label>내용</label>
             <textarea
               placeholder="악의적인 비방과 욕설이 포함된 글은 무통보 삭제될 수 있습니다."
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />
-          </div>
+          </Div>
         </Form>
       </Content>
       <ImageInsertButtonWrapper>
@@ -222,21 +222,14 @@ const Text = styled.div`
 const Label = styled.label`
   
 `
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
 
-  div {
+const Div = styled.div`
     display: flex;
     flex-direction: row;
     align-items: flex-start; /* 라벨을 상단 정렬 */
     gap: 10px; /* 라벨과 textarea 간 간격 */
-  }
 
-  
-
-  div > label {
+    label {
     width: 100px;
     color: #000;
 
@@ -247,8 +240,7 @@ const Form = styled.form`
     font-weight: 700;
     line-height: normal;
   }
-
-  div > textarea {
+    textarea {
     border: none;
     width: 1104px;
     height: 600px;
@@ -262,10 +254,15 @@ const Form = styled.form`
     line-height: 25px; /* 156.25% */
     padding: 0px;
   }
-
-  div > textarea:focus {
+    textarea:focus {
     outline: none;
   }
+
+`
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 `;
 
 
