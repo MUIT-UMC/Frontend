@@ -3,17 +3,60 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import PageNavigator from "./PageNavigator";
-function PostList({ details, headers }) {
+function PostList({ details, headers, boardType }) {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 경로를 가져옴
 
-
-  const handleRowClick = (id) => {
-    navigate(`${location.pathname}/${id}`);
+  console.log(details);
+  console.log(boardType);
+  const getUrl = (id, postType) => {
+    if (boardType === 'mypost') {
+      console.log('포스트타입', postType);
+      if (postType === "LOST") {
+        return `/board/item/lost/${id}`;
+      } 
+      else if (postType === "FOUND") {
+        return `/board/item/found/${id}`;
+      } 
+      else if (postType === "BLIND") {
+        return `/board/anonymous/all/${id}`;
+      } 
+      else if (postType === "HOT") {
+        return `/board/anonymous/hot/${id}`;
+      } 
+      else if (postType === "REVIEW") {
+        return `/board/review/musical/${id}`;
+      } 
+      else if (postType === "SIGHT") {
+        return `/board/review/seats/${id}`;
+      }
+    }
+  
+    return `${location.pathname}/${id}`; // 기본 URL
   };
+  
+  const handleRowClick = (id, postType) => {
+    const url = getUrl(id, postType); 
+    navigate(url);
+  };
+  
+  
+  const korPostType = {
+    LOST: "분실물 게시판",
+    FOUND: "분실물 게시판",
+    BLIND: "익명 게시판",
+    HOT: "익명 게시판",
+    REVIEW: "리뷰 게시판",
+    SIGHT: " 리뷰 게시판"
+  }; 
 
+  const korStatus = {
+    AWAIT: "답변 대기중",
+    COMPLETED: "답변 완료",
+  }
   return (
     <>
+      
       <PostListWrapper>
         <thead>
           <tr>
@@ -24,13 +67,14 @@ function PostList({ details, headers }) {
         </thead>
         <tbody>
           {details?.map((d) => (
-            <tr key={d.id} onClick={() => handleRowClick(d.id)}>
+            <tr key={d.id} onClick={() => handleRowClick(d.id, d.postType)}>
               <td>{d.title}</td>
-              {d.musicalName ? <td>{d.musicalName}</td> : null }
-              {d.location ? <td>{d.location}</td> : null }
-              {d.lostDate ? <td>{d.lostDate.split("T")[0]}</td> : null}
-              {d.createdAt? <td>{d.createdAt.split("T")[0]}</td>: null}
-              {d.status ? <td>{d.status}</td> : null }
+              {boardType=='mypost' && d.postType ? <td>{korPostType[d.postType] || d.postType}</td> : null}
+              {boardType!=='mypost' && d.musicalName ? <td>{d.musicalName}</td> : null }
+              {boardType!=='mypost' && d.location ? <td>{d.location}</td> : null }
+              {boardType!=='mypost' && d.lostDate ? <td>{d.lostDate.split("T")[0]}</td> : null}
+              {(boardType=='mypost' || boardType=='contact' )&& d.createdAt? <td>{d.createdAt.split("T")[0]}</td>: null}
+              {d.status ? <td>{korStatus[d.status]}</td> : null }
             </tr>
           ))}
         </tbody>

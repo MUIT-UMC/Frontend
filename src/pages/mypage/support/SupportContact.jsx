@@ -14,7 +14,7 @@ const SupportContact = () => {
   
   const [postType] = useState("LOST");
   const [currentPage, setCurrentPage] = useState(0);
-  const [size] = useState(10); // 한 페이지당 게시물 수
+  const [size] = useState(8); // 한 페이지당 게시물 수
   console.log("첫", currentPage);
   console.log("사이즈", size);
 
@@ -48,7 +48,7 @@ const SupportContact = () => {
       {/*error && <div>에러 발생: {error}</div>*/}
       {/*!loading && !error &&*/ (
         <>
-          <PostList details={data?.result?.inquiries} headers={tableHeaders} cols="3" />
+          <PostList details={data?.result?.inquiries} headers={tableHeaders} cols="3" boardType='contact'/>
           <PageNavigator
             currentPage={currentPage}
             totalPages={totalPages}
