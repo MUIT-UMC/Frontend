@@ -51,7 +51,7 @@ function ReviewPost() {
   const user = "익명";
   const date = d.createdAt?.split('T')[0];
   const image = d?.imgUrls;
-
+  const commentCount = d?.commentCount;
   const listSize = comment?.result?.listSize;
   // console.log('image', image);
   const details = [
@@ -88,7 +88,7 @@ function ReviewPost() {
         <Hr marginTop='60px' marginBottom='20px'/>
 
         {/*댓글 작성부분 - 한 컴포넌트로 묶기 */}
-        <PostTitle marginBottom='20px'>댓글 {listSize}개</PostTitle>
+        <PostTitle marginBottom='20px'>댓글 {commentCount}개</PostTitle>
         <CommentInputArea postId={postId}/>
         <CommentWrapper>
         {comment?.result?.comments?.map((data) => (
