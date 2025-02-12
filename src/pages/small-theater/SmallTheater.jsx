@@ -15,7 +15,8 @@ const SmallTheater = () => {
       Authorization: token ? `Bearer ${token}` : "",
     },
   });
-  console.log('데이터', data);
+   console.log('데이터', data);
+
   useEffect(() => {
     if (data && data.result) {
       const formattedMusicals = data.result.map((musical) => ({
@@ -55,7 +56,7 @@ const SmallTheater = () => {
         </DropdownWrapper>
         <TicketList>
           {SmallMusicals.map((musical) => (
-            <MusicalItem key={musical.id}>
+            <MusicalItem key={musical.id} onClick={() => navigate(`/small-detail/${musical.id}`)}>
               <img src={musical.image} alt={musical.name} />
               <div className="details">
                 <div className="title">{musical.name}</div>

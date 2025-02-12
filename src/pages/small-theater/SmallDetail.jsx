@@ -7,18 +7,39 @@ import ChevronDown from '../../assets/icons/ChevronDown.svg';
 import DetailImg from "../../assets/images/lost-detail.png";
 import CastList from "../../components/small-theater/CastList";
 import CreditInfo from "../../components/small-theater/CreditInfo";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";  
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
 
 function SmallDetail() {
   const navigate = useNavigate();
-  const poster = posterImg;
+  const { amateurId } = useParams();  // amateurId를 URL 파라미터에서 가져옵니다.
+  console.log(amateurId);
+  const url = `/amateurs/${amateurId}`;
+
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  });
+  
+  // 로딩 상태 처리
+  if (loading) return <div>Loading...</div>;
+  if (error || !data) return <div>데이터를 불러오지 못했습니다.</div>;
+
+  // API에서 받아온 데이터를 처리합니다.
+  const musical = data.result; 
+  const name = musical.name;
+
+  const poster =  musical.posterImgUrl
   const detailImg=DetailImg;
   const details = [
-    { label: "장소", value: "홍익대학교 학생회관 3층 소극장"},
-    { label: "공연 기간", value: "2024.10.03 목요일 19시" },
+    { label: "장소", value: musical.place},
+    { label: "공연 기간", value: musical.schedule },
     { label: "공연 시간", value: "60분 (인터미션 없음)" },
     { label: "관람 연령", value: "중학생 이상 관람가" },
-    { label: "출연", value: "권혁진, 백승민, 이승재, 이지후, 임유빈, 이서연" },
+    { label: "출연", value: musical.starring },
     { label: "가격", value: <Price>
       <div className="item">
         <div className="type">일반예매</div>
@@ -36,7 +57,7 @@ function SmallDetail() {
     <>
       {/*빨간배너 */}
        <BannerContainer>
-                <Header>실종</Header>
+                <Header>{name}</Header>
                 <TagWrapper>
                   <Tag>극중극</Tag>
                   <Tag>드라마</Tag>
@@ -60,7 +81,7 @@ function SmallDetail() {
         <LeftSection>
 
         <TitleWrapper>
-          <h1>실종</h1>
+          <h1>{name}</h1>
         </TitleWrapper>
 
         <Info image={poster} alt='포스터 이미지' height='430px' details={details} />
