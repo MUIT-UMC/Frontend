@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import EventContent from "../components/eventcheck/EventContent";
 import Calendar from "../components/Calendar2";
 import ChevronRight from '../assets/icons/ChevronRight.svg';
@@ -15,14 +15,20 @@ function EventDetail() {
   const { data: musicals } = useFetch(`/musicals/${musicalId}`);
 
   const handleDateSelect = (date) => {
-      console.log("선택된 날짜:", date);
       setSelectedDate(date);
   };
+
+  const navigate = useNavigate();
+  const toMusicalDetail = () => {
+    navigate(`/detail/${musicalId}`, {
+        replace: false,
+    })
+  }
 
   return (
       <Container>
           <MusicalInfo>
-              <div className="Title">
+              <div className="Title" onClick={toMusicalDetail}>
                   <h3 className="title-B-600">{musicalEvents?.result?.musicalName}</h3>
                   <img src={ChevronRight} className="ChevronRight" />
               </div>
@@ -34,7 +40,6 @@ function EventDetail() {
           <EventInfo>
               {musicalEvents?.result?.eventResultListDTO.map((musical, index) => {
                   const isSelected = selectedDate && musical.evFrom <= selectedDate && (!musical.evTo || musical.evTo >= selectedDate);
-                  //const isLast = index === musical.length+1;
                   console.log(musical.length);
                   return (
                       <EventContent
@@ -43,7 +48,6 @@ function EventDetail() {
                           startAt={musical.evFrom}
                           finishAt={musical.evTo}
                           isSelected={isSelected}
-                          //isLast={isLast}
                       />
                   );
               })}

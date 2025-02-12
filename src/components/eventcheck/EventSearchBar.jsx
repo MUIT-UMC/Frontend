@@ -33,7 +33,7 @@ const EventSearchBar = () => {
     );
 
     const result = data?.isSuccess ? data?.result?.musicalHomeList || [] : [];
-    console.log(result.length);
+    //console.log(result.length);
 
     return (
       <>

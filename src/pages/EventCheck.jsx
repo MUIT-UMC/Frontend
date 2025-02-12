@@ -15,7 +15,7 @@ function EventCheck() {
   const [page, setPage] = useState(0); 
 
   const { data: events, error, loading } = useFetch(`/events?page=${page}`);
-  console.log("현재 페이지:", page);
+  //console.log("현재 페이지:", page);
 
   const handlePrevPage = () => {
     if (page > 0) setPage(page - 1);
@@ -23,6 +23,8 @@ function EventCheck() {
   const handleNextPage = () => {
     setPage(page + 1);
   };
+
+  console.log('총 페이지 수:', events?.result?.totalPages);
 
   return (
     <Container>
@@ -73,7 +75,7 @@ function EventCheck() {
             이전
           </button>
           <span>{page+1}</span>
-          <button onClick={handleNextPage}>
+          <button onClick={handleNextPage} disabled={page+1 === events?.result?.totalPages}>
             다음
           </button>
         </Pagination>
