@@ -100,7 +100,9 @@ function AnonymousPost() {
   const date = d.createdAt?.split('T')[0];
   const content = d.content;
   const images = d?.imgUrls;
+  const commentCount = d?.commentCount;
   const listSize = comment?.result?.listSize;
+
   // const likeCount = d?.likeCount;
 
   return (
@@ -142,7 +144,7 @@ function AnonymousPost() {
 
         {/*댓글 작성부분 - 한 컴포넌트로 묶기 */}
         <CommentSectionTop>
-        <PostTitle marginBottom='20px'>댓글 {listSize}개</PostTitle>
+        <PostTitle marginBottom='20px'>댓글 {commentCount}개</PostTitle>
         <IconWrapper onClick={() => likeButtonHandler()}>
         <img src={isButtonLiked ? ThumbsUpFill : ThumbsUp} alt="likes" />
           

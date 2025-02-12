@@ -5,6 +5,7 @@ import starFull from '../../assets/icons/star-full.svg';
 import starOutline from '../../assets/icons/star-outline.svg';
 import PerformanceDetails from "../../components/detail/PerformanceDetails";
 import MainBanner from "../../components/detail/MainBanner";
+import HeartFull from "../../assets/icons/heart-full.svg";
 import HeartLine from "../../assets/icons/heart-line.svg";
 import Info from "../../components/detail/Info";
 import Price from "../../components/detail/Price";
@@ -13,7 +14,10 @@ import { RatingStars } from './../../components/detail/RatingStars';
 import useFetch from "../../hooks/useFetch";
 import { useParams } from 'react-router-dom';
 import ChevronRight from "../../assets/icons/ChevronRight.svg";
+import { useState } from "react";
 function Detail() {
+  const [liked, setLiked] = useState(false);
+  
   const {musicalId} = useParams();
   const url = `/musicals/${musicalId}`;
 
@@ -26,6 +30,7 @@ function Detail() {
   const musical = data.result;
   const name = musical.name;
   const poster = musical.posterUrl || "";
+  const score = musical.score;
 
   const priceInfoArray = musical.priceInfo[0].split(", ");
 
@@ -45,7 +50,6 @@ function Detail() {
     { label: "가격", value: parsedPriceInfo },
   ];
 
-
   return (
     <>
       {/*빨간배너 */}
@@ -58,19 +62,24 @@ function Detail() {
 
         <TitleWrapper>
           <h1>{name}</h1>
-          <img src={HeartLine} />
+          <img
+            src={liked ? HeartFull : HeartLine}
+            alt="하트 아이콘"
+            onClick={() => setLiked(!liked)}
+            style={{ cursor: "pointer" }}
+          />
         </TitleWrapper>
         
         <RatingWrapper>
-          <RatingStars rating={4} starSize={36}/>
-          <Rating>4.0</Rating>
+          <RatingStars rating={score} starSize={36}/>
+          <Rating>{score}</Rating>
         </RatingWrapper>
         
 
         <Info image={poster} alt='포스터 이미지' height='430px' details={details} />
 
         {/*하단 nav bar */}
-        <PerformanceDetails data={data}/>
+        <PerformanceDetails data={data} score={score}/>
         </LeftSection>
 
         <RightSection>

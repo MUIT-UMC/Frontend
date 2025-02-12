@@ -170,7 +170,7 @@ function WriteItemPost({category}) {
         <div>
           <label>분실일</label>
           <input
-            type="datetime-local"
+            type="date"
             value={lostDate}
             onChange={(e) => {
               setLostDate(e.target.value);

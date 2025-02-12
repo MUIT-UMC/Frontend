@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
-function Review({ musicalName }) {
+function Review({ musicalName, score }) {
 
   const navigate = useNavigate();
 
@@ -41,6 +41,7 @@ function Review({ musicalName }) {
   );
 
 
+  /*
   const calculateAverageRating = (posts) => {
     if (!posts || posts.length === 0) {
       console.log("포스트가 없습니다.");
@@ -54,6 +55,7 @@ function Review({ musicalName }) {
   const reviewAverage = calculateAverageRating(data?.result?.posts);
   
   console.log(reviewAverage);
+*/
 
   return (
     <>
@@ -65,9 +67,8 @@ function Review({ musicalName }) {
         <Left>
         <Title>관람 평점</Title>
         <RatingWrapper>
-          {/*<RatingStars rating={reviewAverage} starSize={36}/>*/}
-          <img src={starFull} style={{width: '36px'}}/>
-          <Rating>{reviewAverage}</Rating>
+          <RatingStars rating={score} starSize={36}/>
+          <Rating>{score}</Rating>
         </RatingWrapper>
         </Left>
         <Button onClick={() => navigate(`/board/review/write`)}>후기 작성하기</Button>
