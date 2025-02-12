@@ -12,7 +12,7 @@ const ReviewContainer = ({ data }) => {
     <Container>
       <Top>
         <Title>{title}</Title>
-        <Text color="#919191">{createdAt.split('T')[0]}</Text>
+        <Text color="#919191">{createdAt}</Text>
       </Top>
       <RatingWrapper>
         <RatingStars rating={rating} starSize={20} /> {/* RatingStars 사용 */}
