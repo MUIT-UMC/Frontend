@@ -76,7 +76,7 @@ export default function Search() {
    // 검색 API
    const fetchSearchData = async (keyword) => {
     try {
-      const res = await axios.get(`${baseURL}/musicals`, {params: { musicalName: keyword } });
+      const res = await axios.get(`${baseURL}/musicals/search`, {params: { musicalName: keyword } });
       const list = res.data.result.musicalHomeList || [];
       const refined = list.map((item) => ({
         poster: item.posterUrl,

@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import styled from 'styled-components';
+import axios from 'axios';
 
 import SearchIconBlack from "../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
@@ -21,144 +22,42 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-//User Mock Data
-export const userData = [
-  { id: "diana8443", name: "전시연", email: "jjjun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "dsad8ad",   name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "dsad8ad",   name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "dsad8ad",   name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "sdsaf1v",  name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-  { id: "vxzvw211", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", gender: "여" },
-];
-export const colKeys = ["id", "name", "email", "phone", "gender"];
-export const colLabels = ["아이디", "이름", "E-mail", "번호", "성별"];
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+
+const colKeys = ["username", "name", "email", "phone", "gender"];
+const colLabels = ["아이디", "이름", "E-mail", "번호", "성별"];
 
 export default function AdminUser() {
+
+  // 사용자 데이터 API
+  const [userList, setUserList] = useState([]);
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/admin/members?page=0&size=20`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`
+        }
+      });
+      const contentArr = response.data.result.content || [];
+      const refined = contentArr.map(item => ({
+        id: item.memberId,
+        username: item.username,
+        name: item.name,
+        email: item.email,
+        phone: item.phone,
+        gender: item.gender === "MALE" ? "남" : "여"
+      }));
+      setUserList(refined);
+
+    } catch (error) {
+      console.error("User fetch error:", error);
+      setUserList([]); // 실패 시 빈 배열
+    }
+  };
 
   // 1. 체크박스 기능 ////////////////////////////////////////////////
   const [checkboxes, setCheckboxes] = useState([false, false, false, false, false]);
@@ -194,11 +93,11 @@ export default function AdminUser() {
   }
 
   // 4. SearchBar 검색 로직 ////////////////////////////////////////////
-  let searchKey = "id"; // default - 아무것도 체크 안 됐으면 id로 검색, 체크된 게 있으면 해당 컬럼으로 검색
+  let searchKey = "username"; // default - 아무것도 체크 안 됐으면 username(아이디)으로 
   if (checkedIndex !== -1) {
     searchKey = colKeys[checkedIndex];
   }
-  const filteredData = userData.filter((user) => {
+  const filteredData = userList.filter((user) => {
     if (!searchTerm) return true; // 아무것도 안쳤다면 전체
     const fieldValue = (user[searchKey] ?? "").toString().toLowerCase();
     return fieldValue.includes(searchTerm.toLowerCase());
