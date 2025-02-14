@@ -7,6 +7,7 @@ import SeePassword from "../../../assets/icons/SeePassword.svg";
 
 // 색상
 const COLOR_MUIT_RED = "#A00000";
+const COLOR_GRAY_MAINTEXT = "#000000";
 
 const AdminLogin = () => {
 
@@ -70,7 +71,6 @@ const AdminLogin = () => {
 
         <BtnArea>
           <LoginBtn onClick={handleLogin}>로그인</LoginBtn>
-          <SignUpBtn>회원가입</SignUpBtn>
         </BtnArea>
       </ContentWrapper>
     </LoginContainer>
@@ -155,7 +155,7 @@ const OptionArea = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #989898;
+  color: ${COLOR_GRAY_MAINTEXT};
   font-size: 14px;
   font-weight: 500;
 
@@ -169,7 +169,7 @@ const OptionArea = styled.div`
     width: 20px;
     height: 20px;
     border-radius: 3px;
-    border: 1px solid #898989;
+    border: 1px solid ${COLOR_GRAY_MAINTEXT};
   }
   .LoginCheck:checked {
     background: ${COLOR_MUIT_RED};
@@ -194,20 +194,6 @@ const LoginBtn = styled.button`
   border: 1px solid #a00000;
   background: #a00000;
   color: #fff;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-`;
-
-const SignUpBtn = styled.button`
-  box-sizing: border-box;
-  width: 400px;
-  height: 40px;
-  border-radius: 3px;
-  border: 1px solid #e6e6e6;
-  background: #fff;
-  color: #000;
   font-family: Pretendard;
   font-size: 16px;
   font-weight: 700;

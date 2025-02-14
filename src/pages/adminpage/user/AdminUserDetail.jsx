@@ -60,7 +60,6 @@ export default function AdminUserDetail() {
   // 사용자 상세 조회 API
   const fetchUserDetail = async (userId) => {
     try {
-      // GET /admin/members/{memberId}
       const res = await axios.get(`${baseURL}/admin/members/${userId}`, {
         headers: {
           Authorization: `Bearer ${token_admin}`,
@@ -78,7 +77,6 @@ export default function AdminUserDetail() {
         address: data.address || "",
       };
       setUserInfo(refined);
-      // 수정모드 form 도 미리 채워놓음
       setEditForm({ ...refined });
     } catch (err) {
       console.error("사용자 정보 조회 실패:", err);

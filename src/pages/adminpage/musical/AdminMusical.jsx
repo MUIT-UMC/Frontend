@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
+
+import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
+import axios from 'axios';
 
 import SearchIconBlack from "../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
@@ -11,7 +13,6 @@ import SingleLeftIcon from "../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../assets/icons/DoubleRight.svg";
 
-import SearchBar from "../components/SearchBar";
 import SearchBar1 from '../components/SearchBar1';
 
 const COLOR_WHITE = "#FFFFFF";
@@ -20,122 +21,44 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-//Musical Mock Data
-export const musicalData = [
-  { musical: "아스날", date_time: "1889-01-09 / 12:20", price: "VIP석 290,000원 R석 260,000원  S석 230,000원  A석 190,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-  { musical: "알라딘", date_time: "2025-01-09 / 14:50", price: "VIP석 190,000원 R석 160,000원  S석 130,000원  A석 90,000원" },
-]
-export const colKeys = ["musical", "date_time", "price"];
-export const colLabels = ["뮤지컬", "시간/날짜", "가격"];
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+
+const colKeys = ["musicalName", "duration", "price"];
+const colLabels = ["뮤지컬", "기간", "가격"];
 
 export default function AdminMusical() {
   
+  // 뮤지컬 데이터 API
+  const [musicalData, setMusicalData] = useState([]);
+  useEffect(() => {
+    fetchMusicalData();
+  }, []);
+  const fetchMusicalData = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/admin/musicals`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`
+        }
+      });
+      const contentArr = response.data.result.content || [];
+      const refined = contentArr.map(item => ({
+        musicalId: item.id,
+        musicalName: item.name,
+        duration: item.duration,
+        // priceInfo가 배열이면 join
+        price: item.priceInfo ? item.priceInfo.join(", ") : ""
+      }));
+
+      setMusicalData(refined);
+
+    } catch (err) {
+      console.error("뮤지컬 조회 실패:", err);
+      alert("뮤지컬 목록을 불러오는 중 오류가 발생했습니다.");
+      setMusicalData([]); 
+    }
+  };
+
   // 1. 체크박스 기능 ////////////////////////////////////////////////
   const [checkboxes, setCheckboxes] = useState([false, false, false]);
   const toggleCheck = (index) => {
@@ -153,9 +76,8 @@ export default function AdminMusical() {
   // 2. SearchBar 검색 기능 ////////////////////////////////////////////
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (inputValue) => {
-    // 검색버튼 누르면 SearchBar에서 넘어온 값
-    setSearchTerm(inputValue);
-    setCurrentPage(1); // 검색 시 1페이지로
+    setSearchTerm(inputValue);  // 검색버튼 누르면 SearchBar에서 넘어온 값
+    setCurrentPage(1);          // 검색 시 1페이지로
   };
 
   // 3. Table 기능 ////////////////////////////////////////////////////
@@ -170,7 +92,7 @@ export default function AdminMusical() {
   }
 
   // 4. SearchBar 검색 로직 ////////////////////////////////////////////
-  let searchKey = "musical"; // default - 아무것도 체크 안 됐으면 뮤지컬명으로 검색, 체크된 게 있으면 해당 컬럼으로 검색
+  let searchKey = "musicalName"; // default 뮤지컬명
   if (checkedIndex !== -1) {
     searchKey = colKeys[checkedIndex];
   }
@@ -260,7 +182,7 @@ export default function AdminMusical() {
                   ))}
                   {/* 상세페이지버튼 */}
                   <td>
-                    <DetailButton to={`/adminpage/musical/detail/${musical.musical}`}>상세</DetailButton>
+                    <DetailButton to={`/adminpage/musical/detail/${musical.musicalId}`}>상세</DetailButton>
                   </td>
                 </tr>
               ))}
@@ -392,6 +314,7 @@ const StyledTable = styled.table`
   border-collapse: collapse;  /* 겹치지 않게 */
 
   th, td {
+    min-width: 50px;
     line-height: 30px;
     border: 1px solid ${COLOR_GRAY_MAINTEXT};
     text-align: center;

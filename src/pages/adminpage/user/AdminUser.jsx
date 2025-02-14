@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -13,7 +13,6 @@ import SingleLeftIcon from "../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../assets/icons/DoubleRight.svg";
 
-import SearchBar from "../components/SearchBar";
 import SearchBar1 from '../components/SearchBar1';
 
 const COLOR_WHITE = "#FFFFFF";
@@ -37,7 +36,7 @@ export default function AdminUser() {
   }, []);
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${baseURL}/admin/members?page=0&size=20`, {
+      const response = await axios.get(`${baseURL}/admin/members`, {
         headers: {
           Authorization: `Bearer ${token_admin}`
         }
@@ -53,9 +52,10 @@ export default function AdminUser() {
       }));
       setUserList(refined);
 
-    } catch (error) {
-      console.error("User fetch error:", error);
-      setUserList([]); // 실패 시 빈 배열
+    } catch (err) {
+      console.error("사용자 조회 실패:", err);
+      alert("사용자 목록을 불러오는 중 오류가 발생했습니다.");
+      setUserList([]); 
     }
   };
 
@@ -76,9 +76,8 @@ export default function AdminUser() {
   // 2. SearchBar 검색 기능 ////////////////////////////////////////////
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (inputValue) => {
-    // 검색버튼 누르면 SearchBar에서 넘어온 값
-    setSearchTerm(inputValue);
-    setCurrentPage(1); // 검색 시 1페이지로
+    setSearchTerm(inputValue);  // 검색버튼 누르면 SearchBar에서 넘어온 값
+    setCurrentPage(1);          // 검색 시 1페이지로
   };
 
   // 3. Table 기능 ////////////////////////////////////////////////////
@@ -315,6 +314,7 @@ const StyledTable = styled.table`
   border-collapse: collapse;  /* 겹치지 않게 */
 
   th, td {
+    min-width: 50px;
     line-height: 30px;
     border: 1px solid ${COLOR_GRAY_MAINTEXT};
     text-align: center;

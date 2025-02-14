@@ -13,7 +13,6 @@ const COLOR_GRAY_SUB = "#919191";
 const MAX_WIDTH = 1440;
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 const Ranking = () => {
 

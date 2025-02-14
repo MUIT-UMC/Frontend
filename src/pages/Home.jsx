@@ -20,7 +20,6 @@ const SIDE_MARGIN = 100; // 좌우 마진
 const COLUMN_GAP = 20;   // column 간격
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 function Home() {
 

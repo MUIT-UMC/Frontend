@@ -162,7 +162,7 @@ function App() {
             <Route path="user" element={<AdminUser />} />
             <Route path="user/detail/:userId" element={<AdminUserDetail />} />
             <Route path="musical" element={<AdminMusical />} />
-            <Route path="musical/detail/:musicalName" element={<AdminMusicalDetail />} />
+            <Route path="musical/detail/:musicalId" element={<AdminMusicalDetail />} />
             <Route path="event" element={<AdminEvent />} />
             <Route path="event/detail/:musicalName" element={<AdminEventDetail />} />
             <Route path="vision" element={<AdminVision />} />
