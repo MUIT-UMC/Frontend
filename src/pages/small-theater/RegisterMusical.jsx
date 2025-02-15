@@ -1,39 +1,57 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import styled from "styled-components";
 import CameraIcon from '../../assets/icons/Camera.svg';
 import CastingPictureIcon from '../../assets/icons/CastingPicture.svg';
 import PlusIcon from '../../assets/icons/plus.svg'
+import { useNavigate } from "react-router-dom"; 
 
 const RegisterMusical = () => {
-    const [image, setImage] = useState(null);
-    const [formData, setFormData] = useState({
-      title:"",
-      place: "",
-      period: "",
-      time: "",
-      age: "",
-      cast: "",
-      price: "",
-      discount: "",
-      ticketCount: "",
-      hashtag: "",
-      synopsis: "",
-      scheduleInfo: "",
-      notice: "",
-      directorInfo: "",
-      account: "",
-      refundContact: "",
-    });
-
+  const navigate = useNavigate();
+  const [posterImage, setPosterImage] = useState(null);
+  const [castingImages, setCastingImages] = useState([]);
+  const [noticeImages, setNoticeImages] = useState([]);
+  const [summaryImage, setSummaryImage] = useState(null);
+  const [castings, setCastings] = useState([]);
+  const [staff, setStaff] = useState([]); 
+  const [ticketPrice, setTicketPrice] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    place: "",
+    schedule: "",
+    age: "",
+    starring: "",
+    totalTicket: 0,
+    timeInfo: "",
+    account: "",
+    contact: "",
+    hashtag: "",
+    runtime: "",
+    notice: {
+      imgUrls: [],
+      content: "",
+    },
+    summaries: {
+      imgUrl: "",
+      content: "",
+    },
+  });
+  const handleTicketPriceChange = (e) => {
+    setTicketPrice(e.target.value);
+  };
+  
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setImage(reader.result);
+        setPosterImage(file);
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleImageClick = () => {
+    document.getElementById("imageUploadInput").click();
   };
 
   const handleInputChange = (e) => {
@@ -41,46 +59,51 @@ const RegisterMusical = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleNextClick = () => {
+    navigate("/register-musical/check", {
+      state: {
+        formData,
+        posterImage,
+        castingImages,
+        noticeImages,
+        summaryImage,
+        castings,
+        staff,
+        ticketPrice, 
+      },
+    });
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/amateurs/enroll`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData, image }),
-      });
-
-      if (response.ok) {
-        alert("소극장 공연이 성공적으로 등록되었습니다!");
-      } else {
-        const errorData = await response.json();
-        alert(`등록 실패: ${errorData.message}`);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("오류가 발생했습니다. 다시 시도해주세요.");
-    }
   };
 
   return (
     <RegisterWrapper>
       <Title
        type="text" 
-       name="title"
+       name="name"
        placeholder="공연 이름을 입력하세요"
-       value={formData.title}
+       value={formData.name}
        onChange={handleInputChange}
        />
       <Form>
         <LeftSection>
-          <ImageUpload>
-            <Preview>
-            <img src={CameraIcon} alt="Camera Icon" />
-            </Preview>
-          </ImageUpload>
+
+        <ImageUpload onClick={handleImageClick}>
+        <Preview>
+        {posterImage ? (
+  <img src={URL.createObjectURL(posterImage)} alt="Uploaded" />
+) : (
+  <img src={CameraIcon} alt="Camera Icon" className="icon" />
+)}
+
+  </Preview>
+  <input
+    id="imageUploadInput"
+    type="file"
+    accept="image/*"
+    style={{ display: "none" }}
+    onChange={handleImageUpload}
+  />
+</ImageUpload>
         </LeftSection>
         <RightSection>
           <InputWrapper>
@@ -97,9 +120,9 @@ const RegisterMusical = () => {
             <Label>공연 기간</Label>
             <Input
               type="text"
-              name="period"
+              name="schedule"
               placeholder="공연 기간을 입력하세요"
-              value={formData.period}
+              value={formData.schedule}
               onChange={handleInputChange}
             />
           </InputWrapper>
@@ -107,9 +130,9 @@ const RegisterMusical = () => {
             <Label>공연 시간</Label>
             <Input
               type="text"
-              name="time"
+              name="runtime"
               placeholder="공연 시간을 입력하세요"
-              value={formData.time}
+              value={formData.runtime}
               onChange={handleInputChange}
             />
           </InputWrapper>
@@ -127,19 +150,20 @@ const RegisterMusical = () => {
             <Label>출연</Label>
             <Input
              type="text"
-             name="cast"
+             name="starring"
             placeholder="출연하는 배우의 이름을 입력하세요"
-            value={formData.cast}
+            value={formData.starring}
             onChange={handleInputChange} />
           </InputWrapper>
           <InputWrapper>
             <Label>가격</Label>
-            <Input 
-              type="text"
-              name="price"
-              placeholder="가격을 입력하세요"
-              value={formData.price}
-              onChange={handleInputChange} />
+            <Input
+  type="text"
+  name="ticketPrice"
+  placeholder="가격을 입력하세요"
+  value={ticketPrice}
+  onChange={handleTicketPriceChange}
+/>
           </InputWrapper>
           <InputWrapper>
             <Label>할인</Label>
@@ -147,20 +171,23 @@ const RegisterMusical = () => {
               type="text" 
               name="discount"
               placeholder="예) 지인 할인"
-              value={formData.discount}
+              value={formData.discount||""}
               onChange={handleInputChange} />
           </InputWrapper>
           <InputWrapper>
             <Label>티켓 수</Label>
             <Input
              type="text" 
-             name="ticketCount"
+             name="totalTicket"
              placeholder="총 입장할 수 있는 티켓 수를 입력하세요"
-             value={formData.ticketCount}
+             value={formData.totalTicket}
              onChange={handleInputChange}
               />
           </InputWrapper>
         </RightSection>
+        <NextButtonWrapper>
+    <NextButton onClick={handleNextClick} >다음</NextButton>
+  </NextButtonWrapper>
       </Form>
       <BottomSection>
       <Border></Border>
@@ -187,11 +214,16 @@ const RegisterMusical = () => {
     <InputWrapper2>
       <Label>줄거리</Label>
       <TextArea
-        name="synopsis"   
+         name="summaries.content"   
         placeholder={`공연의 줄거리를 입력하세요
 사진을 추가할 경우 미리보기 포스터로 올라갑니다`}
-        value={formData.synopsis}
-        onChange={handleInputChange}
+       value={formData.summaries.content}
+  onChange={(e) =>
+    setFormData((prev) => ({
+      ...prev,
+      summaries: { ...prev.summaries, content: e.target.value },
+    }))
+  }
       />
     </InputWrapper2>
   </Section>
@@ -201,10 +233,15 @@ const RegisterMusical = () => {
     <InputWrapper2>
       <Label>공연시간 정보</Label>
       <TextArea 
-        name="scheduleInfo"
+        name="notice.content"
         placeholder="예매 가능시간이나 공연시간에 대해 자유롭게 입력하세요"
-        value={formData.scheduleInfo}
-        onChange={handleInputChange} />
+        value={formData.notice.content}
+        onChange={(e) =>
+          setFormData((prev) => ({
+            ...prev,
+            notice: { ...prev.notice, content: e.target.value },
+          }))
+        } />
     </InputWrapper2>
     <InputWrapper2>
       <Label>공지사항</Label>
@@ -264,7 +301,7 @@ const RegisterMusical = () => {
       type="text"
       name="refundContact"
       placeholder="환불 문의에 쓰일 SNS 또는 전화번호를 입력하세요"
-      value={formData.refundContact}
+      value={formData.contact}
       onChange={handleInputChange} />
     </InputWrapper2>
   </Section>
@@ -310,7 +347,7 @@ outline: none;
 const Form = styled.div`
   display: flex;
   gap: 40px;
-  margin-bottom:60px;
+  margin-bottom: 60px;
 `;
 
 const LeftSection = styled.div`
@@ -328,11 +365,36 @@ const RightSection = styled.div`
   gap: 40px;
 `;
 
+const NextButtonWrapper = styled.div`
+  display: flex;
+margin-right:100px;
+`;
+
+const NextButton = styled.button`
+  width: 300px;
+height: 40px;
+flex-shrink: 0;
+border-radius: 3px;
+border: 1px solid var(--Gray-sub, #919191);
+background: var(--Gray-sub, #919191);
+color: #FFF;
+cursor: pointer;
+
+/* Body-bold */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+`;
+
+
 const ImageUpload = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
 `;
 
 const Preview = styled.div`
@@ -346,10 +408,15 @@ flex-shrink: 0;
 
   background-color: #F5F5F5;
 
-  img {
+  .icon {
     width: 24px;
 height: 24px;
 flex-shrink: 0;
+    object-fit: cover;
+  }
+  img{
+     width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 `;
@@ -383,7 +450,7 @@ const Input = styled.input`
   color:rgb(0, 0, 0);
   width: 300px;
   margin-left: auto; /* 요소를 오른쪽으로 최대한 밀어붙임 */
-  margin-right: 560px; /* 오른쪽에서 560px 떨어지게 함 */
+  margin-right:120px;/* 오른쪽에서 560px 떨어지게 함 */
  
   &::placeholder {
     color: #919191; /* 플레이스홀더 색상 */

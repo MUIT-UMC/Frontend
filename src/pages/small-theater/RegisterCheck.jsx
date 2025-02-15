@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';  // React Router의 useNavigate 사용
+import { useNavigate,useLocation  } from 'react-router-dom'; 
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN; 
+const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
+
 
 const RegisterCheck = () => {
   const [password, setPassword] = useState("");
@@ -8,7 +11,78 @@ const RegisterCheck = () => {
   const [message, setMessage] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
   const [isChecked, setIsChecked] = useState(false); // 체크박스 상태 추가
+  const location = useLocation();
   const navigate = useNavigate(); // useNavigate 훅 사용
+  const [isLoading, setIsLoading] = useState(false);
+  
+
+  // RegisterMusical에서 전달한 데이터 받기
+
+  const {
+    formData,
+    posterImage,
+    castingImages,
+    noticeImages,
+    summaryImage,
+    castings,
+    staff,
+    tickets,
+  } = location.state || {};
+  
+  const handleRegister = async () => {
+    const dataToSend = new FormData();
+  
+    const payload = {
+      data: {
+        ...formData,
+        castings,
+        staff,
+        tickets: [
+          {
+            ticketName: "일반석", // 예시
+            ticketType: "성인", // 예시
+            price: tickets.price, // 입력받은 단일 가격
+          },
+        ],
+      },
+    };
+  
+    dataToSend.append(
+      "request",
+      new Blob([JSON.stringify(payload)], { type: "application/json" })
+    );
+  
+    if (posterImage) dataToSend.append("posterImage", posterImage);
+    castingImages.forEach((image, index) =>
+      dataToSend.append(`castingImages`, image)
+    );
+    noticeImages.forEach((image, index) =>
+      dataToSend.append(`noticeImages`, image)
+    );
+    if (summaryImage) dataToSend.append("summaryImage", summaryImage);
+  
+    try {
+      const response = await fetch(`${serverUrl}/amateurs/enroll`, {
+        method: "POST",
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+        body: dataToSend,
+      });
+  
+      if (response.ok) {
+        setMessage("🎉 공연이 성공적으로 등록되었습니다!");
+        setIsRegistered(true);
+      } else {
+        const errorData = await response.json();
+        setMessage(errorData.message || "등록에 실패했습니다.");
+      }
+    } catch (error) {
+      setMessage("서버 오류가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -19,10 +93,6 @@ const RegisterCheck = () => {
     setIsChecked(e.target.checked); // 체크박스 상태 변경
   };
 
-  const handleRegister = () => {
-    setMessage("공연이 등록되었습니다."); /* 내가 작성한 공연 보러가기 미흡 */
-    setIsRegistered(true);
-  };
 
   const handleCancel = () => {
     navigate("/register-musical"); // "register-musical" 페이지로 돌아가기
