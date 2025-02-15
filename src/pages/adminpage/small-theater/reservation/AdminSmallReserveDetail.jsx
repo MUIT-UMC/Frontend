@@ -2,11 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios'; 
 
 import SearchIconBlack from "../../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../../assets/icons/AdminSearchRed.svg";
 import CheckBoxIcon from "../../../../assets/icons/AdminCheckbox.svg";
 import CheckBoxIconRed from "../../../../assets/icons/AdminCheckboxRed.svg";
+
+import SearchBar from '../../components/SearchBar';
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -14,8 +17,42 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-import SearchBar from '../../components/SearchBar';
-import {smallReserveData, colKeys, colLabels, checkBoxMap, checkBoxLabels} from "./AdminSmallReserve";
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const checkBoxLabels = ["소극장 공연 이름", "날짜/시간", "상태"];
+
+function mapStatusToKorean(reservationStatus) {
+  switch (reservationStatus) {
+    case "RESERVE_AWAIT":
+      return "예약 중";
+    case "RESERVED":
+      return "예약 완료";
+    case "EXPIRED":
+      return "사용 완료";
+    case "CANCEL_AWAIT":
+      return "취소 중";
+    case "CANCELED":
+      return "취소 완료";
+    default:
+      return reservationStatus || ""; 
+  }
+}
+function mapKoreanToStatus(koreanString) {
+  switch (koreanString) {
+    case "예약 중":
+      return "RESERVE_AWAIT";
+    case "예약 완료":
+      return "RESERVED";
+    case "사용 완료":
+      return "EXPIRED";
+    case "취소 중":
+      return "CANCEL_AWAIT";
+    case "취소 완료":
+      return "CANCELED";
+    default:
+      return ""; 
+  }
+}
 
 export default function AdminSmallReserveDetail() {
 
@@ -34,64 +71,69 @@ export default function AdminSmallReserveDetail() {
   const isAnyChecked = checkboxes.some((checked) => checked === true);
 
 
-  const { smallName } = useParams();  // URL 파라미터 (/adminpage/small-theater/reserve/detail/:smallName)
+  const { ticketId } = useParams();  // URL 파라미터 (/adminpage/small-theater/reserve/detail/:ticketId)
   const navigate = useNavigate();
   const [smallReserveInfo, setSmallReserveInfo] = useState(null);
-
+  const [editMode, setEditMode] = useState(false);
+  const [editStatus, setEditStatus] = useState("");
   useEffect(() => {
-    const found = smallReserveData.find((item) => item.name === smallName);
-    if (found) {
-      setSmallReserveInfo(found);
-    } else {
-      alert("해당 예약자를 찾지 못했습니다.");
+    if (ticketId) {
+      fetchReserveDetail(ticketId);
+    }
+  }, [ticketId]);
+  // 소극장 공연 예약 상세조회 API
+  const fetchReserveDetail = async (ticketId) => {
+    try {
+      const res = await axios.get(`${baseURL}/admin/member-tickets/${ticketId}`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`,
+        },
+      });
+      const detail = res.data.result || {};
+      const statusInKorean = mapStatusToKorean(detail.reservationStatus);
+      const refined = {
+        ticketId: detail.memberTicketId,
+        name: detail.memberName,
+        title: detail.amateurShowName,
+        schedule: detail.schedule,
+        place: detail.place,
+        num: detail.quantity + "매",
+        status: statusInKorean,
+      };
+      setSmallReserveInfo(refined);
+      setEditStatus(statusInKorean);
+    } catch (error) {
+      console.error("예약 상세 조회 실패:", error);
+      alert("해당 예약 내역을 조회할 수 없습니다.");
       navigate("/adminpage/small-theater/reserve");
     }
-  }, [smallName, navigate]);
-
-  // 2) 수정 관련 상태 ////////////////////////////////////////////
-  const [editMode, setEditMode] = useState(false);
-  const [editForm, setEditForm] = useState({
-    name: "",
-    title: "",
-    dateTime: "",
-    place: "",
-    num: "",
-    status: ""
-  });
-  useEffect(() => {
-    if (smallReserveInfo) {
-      setEditForm({
-        name: smallReserveInfo.name,
-        title: smallReserveInfo.title,
-        dateTime: smallReserveInfo.dateTime,
-        place: smallReserveInfo.place,
-        num: smallReserveInfo.num,
-        status: smallReserveInfo.status,
-      });
-    }
-  }, [smallReserveInfo]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 2) 수정 모드 ////////////////////////////////////////////
+  // 예약 상태 수정기능
   const handleEdit = () => {
     setEditMode(true);
   };
-  const handleApply = () => {
-    // 임시로 console.log
-    console.log("수정 완료:", editForm);
-
-    // API적용시 서버에 PATCH 요청 등으로 저장 후:
-    // fetch(`/api/users/${userId}`, { method:"PATCH", body: JSON.stringify(editForm) })
-    //   .then(...)
-    //   .catch(...)
-
-    // 수정 적용 
-    setSmallReserveInfo(editForm);
-    setEditMode(false);
+  const handleApply = async () => {
+    try {
+      const serverStatus = mapKoreanToStatus(editStatus);
+      if (!serverStatus) {
+        alert("유효하지 않은 상태입니다.");
+        return;
+      }
+      await axios.patch(
+        `${baseURL}/admin/member-tickets/${ticketId}/update?reservationStatus=${serverStatus}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token_admin}` },
+        }
+      );
+      setSmallReserveInfo((prev) => ({ ...prev, status: editStatus }));
+      setEditMode(false);
+      alert("상태가 성공적으로 수정되었습니다.");
+    } catch (error) {
+      console.error("예약 상태 수정 실패:", error);
+      alert("상태 수정 중 오류가 발생했습니다.");
+    }
   };
   if (!smallReserveInfo) return null; // 아직 로딩 or 없는경우
 
@@ -140,7 +182,7 @@ export default function AdminSmallReserveDetail() {
             </Tr>
             <Tr>
               <Th>날짜/시간</Th>
-              <Td>{smallReserveInfo.dateTime}</Td>
+              <Td>{smallReserveInfo.schedule}</Td>
             </Tr>
             <Tr>
               <Th>공연 장소</Th>
@@ -152,7 +194,9 @@ export default function AdminSmallReserveDetail() {
             </Tr>
             <Tr>
               <Th>상태</Th>
-              <Td style={{ color: smallReserveInfo.status === ("예약 중" || "취소 중") ? COLOR_MUIT_RED : COLOR_GRAY_MAINTEXT }}>
+              <Td style={{ color: 
+                (smallReserveInfo.status === "예약 중") || 
+                (smallReserveInfo.status === "취소 중") ? COLOR_MUIT_RED : COLOR_GRAY_MAINTEXT }}>
                 {smallReserveInfo.status}</Td>
             </Tr>
           </tbody>
@@ -163,62 +207,43 @@ export default function AdminSmallReserveDetail() {
           <tbody>
             <Tr>
               <Th>예약자명</Th>
-              <Td>
-                <Input
-                  name="name"
-                  value={editForm.name}
-                  onChange={handleChange}
-                />
-              </Td>
+              <Td>{smallReserveInfo.name}</Td> 
             </Tr>
             <Tr>
               <Th>소극장 공연 이름</Th>
-              <Td>
-                <Input
-                  name="title"
-                  value={editForm.title}
-                  onChange={handleChange}
-                />
-              </Td>
+              <Td>{smallReserveInfo.title}</Td>
             </Tr>
             <Tr>
               <Th>날짜/시간</Th>
-              <Td>
-                <Input
-                  name="dateTime"
-                  value={editForm.dateTime}
-                  onChange={handleChange}
-                />
-              </Td>
+              <Td>{smallReserveInfo.schedule}</Td>
             </Tr>
             <Tr>
               <Th>공연 장소</Th>
-              <Td>
-                <Input
-                  name="place"
-                  value={editForm.place}
-                  onChange={handleChange}
-                />
-              </Td>
+              <Td>{smallReserveInfo.place}</Td>
             </Tr>
             <Tr>
               <Th>매수</Th>
-              <Td>
-                <Input
-                  name="num"
-                  value={editForm.num}
-                  onChange={handleChange}
-                />
-              </Td>
+              <Td>{smallReserveInfo.num}</Td>
             </Tr>
             <Tr>
               <Th>상태</Th>
-              <Td style={{ color: smallReserveInfo.status === ("예약 중" || "취소 중") ? COLOR_MUIT_RED : COLOR_GRAY_MAINTEXT }}>
-                <Input
-                  name="status"
-                  value={editForm.status}
-                  onChange={handleChange}
-                />
+              <Td>
+                <Select
+                  value={editStatus}
+                  onChange={(e) => setEditStatus(e.target.value)}
+                  style={{
+                    color:
+                      (editStatus === "예약 중") || (editStatus === "취소 중")
+                        ? COLOR_MUIT_RED
+                        : COLOR_GRAY_MAINTEXT,
+                  }}
+                >
+                  <option value="예약 중">예약 중</option>
+                  <option value="예약 완료">예약 완료</option>
+                  <option value="사용 완료">사용 완료</option>
+                  <option value="취소 중">취소 중</option>
+                  <option value="취소 완료">취소 완료</option>
+                </Select>
               </Td>
             </Tr>
           </tbody>
@@ -323,7 +348,7 @@ const CheckSearchIcon = styled.div`
 `;
 
 const InfoTable = styled.table`
-  width:  609px;
+  width:  610px;
   margin-top: 149px;
   margin-left: 145px;
   border-collapse: collapse;
@@ -332,18 +357,26 @@ const InfoTable = styled.table`
 const Tr = styled.tr``;
 
 const Th = styled.th`
-  width: 150px;
-  text-align: left;
+  width: 130px;
+  text-align: center;
   padding: 8px;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  border-right: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: #8F8E94;
 `;
 const Td = styled.td`
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
-`;
-
-const Input = styled.input`
-  width: 300px;
+  width: 479px;
+  padding: 6px 20px 6px 20px;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: ${COLOR_GRAY_MAINTEXT};
 `;
 
 const RedButton = styled.button`
@@ -380,4 +413,16 @@ const GrayButton = styled.button`
   border: 1px solid #555555;
   border-radius: 8px;
   background-color: #555555;
+`;
+
+const Select = styled.select`
+  width: 120px;
+  height: 36px;
+  font-family: "Pretendard";
+  font-size: 14px;
+  border: 1px solid ${COLOR_GRAY_UNSELECTED};
+  outline: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding-left: 8px;
 `;

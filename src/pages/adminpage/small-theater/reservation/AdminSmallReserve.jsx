@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import styled from 'styled-components';
+import axios from 'axios';
 
 import SearchIconBlack from "../../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../../assets/icons/AdminSearchRed.svg";
@@ -19,134 +20,66 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-//소공연예약 Mock Data
-export const smallReserveData = [
-  {name: "전시연", title: "아스날", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 중"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "사용 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "취소 중"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "취소 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 중"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 중"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 중"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 중"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-  {name: "전시연", title: "실종", dateTime: "2024.01.18 / 14:00", place: "홍대", num: "1매", status: "예약 완료"},
-]
-export const colKeys = ["name", "title", "dateTime", "place", "num", "status"];
-export const colLabels = ["이름", "소극장 공연 이름", "날짜/시간", "공연 장소", "매수", "상태"];
-export const checkBoxMap = [1, 2, 5]; 
-export const checkBoxLabels = ["소극장 공연 이름", "날짜/시간", "상태"];
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const colKeys = ["name", "title", "schedule", "place", "num", "status"];
+const colLabels = ["이름", "소극장 공연 이름", "날짜/시간", "공연 장소", "매수", "상태"];
+const checkBoxMap = [1, 2, 5]; 
+const checkBoxLabels = ["소극장 공연 이름", "날짜/시간", "상태"];
 
 export default function AdminSmallReserve() {
+
+  // 소극장 공연 예약정보 API
+  const [smallReserveData, setSmallReserveData] = useState([]);
+  useEffect(() => {
+    fetchMemberTickets();
+  }, []);
+  const fetchMemberTickets = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/admin/member-tickets`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`,
+        },
+      });
+      const contentArr = response.data.result?.content || [];
+      const refined = contentArr.map((item) => {
+        let statusText = item.reservationStatus;
+        switch (statusText) {
+          case "RESERVE_AWAIT":
+            statusText = "예약 중";
+            break;
+          case "RESERVED":
+            statusText = "예약 완료";
+            break;
+          case "EXPIRED":
+            statusText = "사용 완료";
+            break;
+          case "CANCEL_AWAIT":
+            statusText = "취소 중";
+            break;
+          case "CANCELED":
+            statusText = "취소 완료";
+            break;
+          default:
+            break;
+        }
+        return {
+          ticketId: item.memberTicketId,
+          name: item.memberName,
+          title: item.amateurShowName, 
+          schedule: item.schedule,
+          place: item.place,
+          num: item.quantity + "매",
+          status: statusText  
+        };
+      });
+      setSmallReserveData(refined);
+    } catch (err) {
+      console.error("소극장 예약 목록 조회 실패:", err);
+      alert("소극장 예약 정보를 불러오는 중 오류가 발생했습니다.");
+      setSmallReserveData([]);
+    }
+  };
 
   // 1. 체크박스 기능 ////////////////////////////////////////////////
   const [checkboxes, setCheckboxes] = useState([false, false, false]);
@@ -228,18 +161,22 @@ export default function AdminSmallReserve() {
       goToPage(groupEnd + 1);
     }
   };
+  const location = useLocation();
 
   return (
     <Container>
       <Tilte>소극장 공연 관리</Tilte>
       <PageMenu>
-        <MenuLink $active={location.pathname === "/adminpage/small-theater/ticket"}
+        <MenuLink 
+        $active={location.pathname === "/adminpage/small-theater/ticket"}
         to="/adminpage/small-theater/ticket">
             소극장 티켓 관리</MenuLink>
-        <MenuLink $active={location.pathname === "/adminpage/small-theater/reserve"}
+        <MenuLink 
+        $active={location.pathname === "/adminpage/small-theater/reserve"}
         to="/adminpage/small-theater/reserve">
             예약 내역 관리</MenuLink>
-        <MenuLink $active={location.pathname === "/adminpage/small-theater/refund"}
+        <MenuLink 
+        $active={location.pathname === "/adminpage/small-theater/refund"}
         to="/adminpage/small-theater/refund">
             환불 내역 관리</MenuLink>
       </PageMenu>
@@ -283,7 +220,9 @@ export default function AdminSmallReserve() {
                       return (
                         <td
                           key={colKeys[i]}
-                          style={{ color: smallreserve.status === ("예약 중" || "취소 중") ? COLOR_MUIT_RED : COLOR_GRAY_MAINTEXT }}>
+                          style={{ color: 
+                          (smallreserve.status === "예약 중") || 
+                          (smallreserve.status === "취소 중") ? COLOR_MUIT_RED : COLOR_GRAY_MAINTEXT }}>
                           {smallreserve[colKeys[i]]}
                         </td>
                       );
@@ -295,7 +234,7 @@ export default function AdminSmallReserve() {
                   })}
                   {/* 상세페이지버튼 */}
                   <td>
-                    <DetailButton to={`/adminpage/small-theater/reserve/detail/${smallreserve.name}`}>상세</DetailButton>
+                    <DetailButton to={`/adminpage/small-theater/reserve/detail/${smallreserve.ticketId}`}>상세</DetailButton>
                   </td>
                 </tr>
               ))}

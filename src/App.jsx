@@ -171,9 +171,9 @@ function App() {
             <Route path="small-theater">
               <Route index element={<AdminSmallTheater />} />
               <Route path="ticket" element={<AdminSmallTicket />} />
-              <Route path="ticket/detail/:smallTitle" element={<AdminSmallTicketDetail />} />
+              <Route path="ticket/detail/:smallMusicalId" element={<AdminSmallTicketDetail />} />
               <Route path="reserve" element={<AdminSmallReserve />} />
-              <Route path="reserve/detail/:smallName" element={<AdminSmallReserveDetail />} />
+              <Route path="reserve/detail/:ticketId" element={<AdminSmallReserveDetail />} />
               <Route path="refund" element={<AdminSmallRefund />} />
               <Route path="refund/detail/:smallId" element={<AdminSmallRefundDetail />} />
             </Route>

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import styled from 'styled-components';
+import axios from 'axios';
 
 import SearchIconBlack from "../../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../../assets/icons/AdminSearchRed.svg";
@@ -19,141 +21,45 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-//소공연티켓 Mock Data
-export const smallTicketData = [
-  {title: "실종", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-  {title: "알라딘", dateTime: "2025-01-09 / 14:50", reserveStatus: "25/60"},
-]
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
 
-export const colKeys = ["title", "dateTime", "reserveStatus"];
-export const colLabels = ["소극장 공연 이름", "날짜/시간", "예약현황"];
+const colKeys = ["musicalName", "schedule", "reserveStatus"];
+const colLabels = ["소극장 공연 이름", "날짜/시간", "예약현황"];
 
 export default function AdminSmallTicket() {
+
+  // 소극장 공연 티켓정보 API
+  const [smallTicketData, setSmallTicketData] = useState([]);
+  useEffect(() => {
+    fetchAmateurTickets();
+  }, []);
+  const fetchAmateurTickets = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/admin/amateur-tickets`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`
+        }
+      });
+      const contentArr = response.data.result.content || [];
+      const refined = contentArr.map(item => {
+        const sold = item.soldTicket;
+        const total = item.totalTicket;
+        return {
+          musicalName: item.name,
+          schedule: item.schedule,
+          reserveStatus: `${sold}/${total}`,     
+          isFull: sold / total,
+          smallMusicalId: item.amateurShowId // amateurShowId
+        };
+      });
+      setSmallTicketData(refined);
+    } catch (error) {
+      console.error("소공연 티켓 조회 실패:", error);
+      alert("소공연 티켓 목록을 불러오는 중 오류가 발생했습니다.");
+      setSmallTicketData([]);  
+    }
+  };
 
   // 1. 체크박스 기능 ////////////////////////////////////////////////
     const [checkboxes, setCheckboxes] = useState([false, false, false]);
@@ -172,9 +78,8 @@ export default function AdminSmallTicket() {
     // 2. SearchBar 검색 기능 ////////////////////////////////////////////
     const [searchTerm, setSearchTerm] = useState("");
     const handleSearch = (inputValue) => {
-      // 검색버튼 누르면 SearchBar에서 넘어온 값
       setSearchTerm(inputValue);
-      setCurrentPage(1); // 검색 시 1페이지로
+      setCurrentPage(1); 
     };
   
     // 3. Table 기능 ////////////////////////////////////////////////////
@@ -189,7 +94,7 @@ export default function AdminSmallTicket() {
     }
   
     // 4. SearchBar 검색 로직 ////////////////////////////////////////////
-    let searchKey = "title"; // default
+    let searchKey = "musicalName"; // default 
     if (checkedIndex !== -1) {
       searchKey = colKeys[checkedIndex];
     }
@@ -235,18 +140,22 @@ export default function AdminSmallTicket() {
         goToPage(groupEnd + 1);
       }
     };
+  const location = useLocation();
 
   return (
     <Container>
       <Tilte>소극장 공연 관리</Tilte>
       <PageMenu>
-        <MenuLink $active={location.pathname === "/adminpage/small-theater/ticket"}
+        <MenuLink 
+        $active={location.pathname === "/adminpage/small-theater/ticket"}
         to="/adminpage/small-theater/ticket">
             소극장 티켓 관리</MenuLink>
-        <MenuLink $active={location.pathname === "/adminpage/small-theater/reserve"}
+        <MenuLink 
+        $active={location.pathname === "/adminpage/small-theater/reserve"}
         to="/adminpage/small-theater/reserve">
             예약 내역 관리</MenuLink>
-        <MenuLink $active={location.pathname === "/adminpage/small-theater/refund"}
+        <MenuLink 
+        $active={location.pathname === "/adminpage/small-theater/refund"}
         to="/adminpage/small-theater/refund">
             환불 내역 관리</MenuLink>
       </PageMenu>
@@ -285,12 +194,23 @@ export default function AdminSmallTicket() {
               {currentData.map((smalltheater, index) => (
                 <tr key={index}>
                   {/* 선택된 컬럼들만 td */}
-                  {displayedColIndexes.map((i) => (
-                    <td key={colKeys[i]}>{smalltheater[colKeys[i]]}</td>
-                  ))}
+                  {displayedColIndexes.map((i) => {
+                    const columnKey = colKeys[i];
+                    const columnValue = smalltheater[columnKey];
+                    const isReserveColumn = columnKey === "reserveStatus";
+                    const isSoldOut = smalltheater.isFull >= 1;
+                    const textColor = (isReserveColumn && isSoldOut)
+                      ? COLOR_GRAY_SUB
+                      : "inherit";
+                    return (
+                      <td key={columnKey} style={{ color: textColor }}>
+                        {columnValue}
+                      </td>
+                    );
+                  })}
                   {/* 상세페이지버튼 */}
                   <td>
-                    <DetailButton to={`/adminpage/small-theater/ticket/detail/${smalltheater.title}`}>상세</DetailButton>
+                    <DetailButton to={`/adminpage/small-theater/ticket/detail/${smalltheater.smallMusicalId}`}>상세</DetailButton>
                   </td>
                 </tr>
               ))}
