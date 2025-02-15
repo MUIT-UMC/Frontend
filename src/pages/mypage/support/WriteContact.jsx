@@ -3,7 +3,9 @@ import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("token");
+console.log(token);
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function WriteContact() {

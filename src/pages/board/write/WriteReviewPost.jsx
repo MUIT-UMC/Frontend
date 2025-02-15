@@ -4,7 +4,9 @@ import axios from "axios";
 import { InteractiveRatingStars } from "../../../components/detail/InteractiveRatingStars";
 import { useNavigate } from "react-router-dom";
 import MusicalIdSearchBar from "../../../components/post/MusicalIdSearchBar";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("token");
+console.log(token);
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function WriteReviewPost() {
