@@ -1,100 +1,164 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import CalendarIcon from "../../../assets/icons/Calendar.svg";
 import AddButton from "../../../assets/icons/AddButton.svg";
 import SearchIconBlack from "../../../assets/icons/AdminSearchBlack.svg";
+import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
 import CheckBoxIcon from "../../../assets/icons/AdminCheckbox.svg";
-import EventSample from "./eventlist-sample.svg";
+import CheckBoxIconRed from "../../../assets/icons/AdminCheckboxRed.svg";
+import EventContent from "../components/EventContent";
 
 import SearchBar from '../components/SearchBar';
 import Calendar from "../components/Calendar";
 
-import { eventData } from "./AdminEvent";
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
 const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_SUB = "#919191";
 
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const colLabels = ["이벤트 날짜", "이벤트명"];
+
 function AdminEventDetail() {
-  const { musicalName } = useParams();
+
+  // 1. 체크박스 //////////////////////////////////////////////////////////////////
+  const [checkboxes, setCheckboxes] = useState([false, false]);
+  const toggleCheck = (index) => {
+    setCheckboxes((prev) => {
+      if (prev[index]) { 
+        return [false, false];
+      }                 
+      const newState = [false, false];
+      newState[index] = true;
+      return newState;
+    });
+  };
+  const isAnyChecked = checkboxes.some((checked) => checked === true);
+
+  const { musicalId } = useParams();  // URL 파라미터 (/adminpage/event/detail/:musicalId)
   const navigate = useNavigate();
+  const [editMode, setEditMode] = useState(false); 
+  const [musicalInfo, setmusicalInfo] = useState(null);
+  const [eventList, setEventList] = useState([]);
+  useEffect(() => {
+    if (musicalId) {
+      fetchEventDetail(musicalId);
+    }
+  }, [musicalId]);
+  // 뮤지컬-이벤트 상세 조회 API
+  const fetchEventDetail = async (musicalId) => {
+    try {
+      const res = await axios.get(`${baseURL}/admin/events/${musicalId}`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`,
+        },
+      });
+      const data = res.data.result || {};
+      const refined = {
+        musicalId: data.musicalId,
+        musicalName: data.musicalName,
+        place: data.place,
+      };
+      const evList = data.events?.map(ev => ({
+        evFrom: ev.evFrom,
+        evTo: ev.evTo,
+        eventDuration: `${ev.evFrom} ~ ${ev.evTo}`,
+        eventName: ev.eventName
+      })) || [];
+      setmusicalInfo(refined);
+      setEventList(evList);
+    } catch (err) {
+      console.error("이벤트 정보 조회 실패:", err);
+      alert("해당 이벤트를 조회할 수 없습니다.");
+      navigate("/adminpage/event"); 
+    }
+  };
 
-  const eventInfo = eventData.find(item => item.musical === musicalName);
-
-  const [eventList, setEventList] = useState([
-    { dateRange: "2025.01.05~01.30", eventName: "티켓 오픈" },
-    { dateRange: "2025.01.16~01.17", eventName: "커튼콜 이벤트" },
-    { dateRange: "2025.01.17~01.19", eventName: "포토부스 이벤트" }
-  ]);
-
-  const [newEvent, setNewEvent] = useState({ dateRange: "", eventName: "" });
+  const [newEvent, setNewEvent] = useState({ eventDuration: "", eventName: "" });
   const [showEventInput, setShowEventInput] = useState(false);
-
   const [firstDate, setFirstDate] = useState(null);
   const [secondDate, setSecondDate] = useState(null);
   const [calendarMode, setCalendarMode] = useState(null); // "first" 또는 "second"
   const [showCalendar, setShowCalendar] = useState(false);
-
-  // 인풋에 포커스 잡기 위한 ref
-  const inputRef = useRef(null);
-  // EventTable 요소의 위치를 측정하기 위한 ref
-  const eventTableRef = useRef(null);
-  // CalendarContainer 위치를 저장할 state
-  const [calendarPos, setCalendarPos] = useState({ top: 0, left: 0 });
-
-  const formatDate = (date) => {
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-    return `${yyyy}.${mm}.${dd}`;
-  };
-
-  const formatMonthDay = (date) => {
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-    return `${mm}.${dd}`;
-  };
-
+  const calendarRef = useRef(null);
+  // 캘랜더 외부클릭
   useEffect(() => {
-    if (firstDate) {
-      if (secondDate) {
-        if (firstDate.getTime() === secondDate.getTime()) {
-          setNewEvent(prev => ({ ...prev, dateRange: formatDate(firstDate) }));
-        } else {
-          setNewEvent(prev => ({ ...prev, dateRange: `${formatDate(firstDate)}~${formatMonthDay(secondDate)}` }));
-        }
-      } else {
-        setNewEvent(prev => ({ ...prev, dateRange: formatDate(firstDate) }));
+    function handleClickOutside(e) {
+      if (calendarRef.current && !calendarRef.current.contains(e.target)) {
+        setShowCalendar(false);
       }
-    } else {
-      setNewEvent(prev => ({ ...prev, dateRange: "" }));
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  // 캘랜더 날짜
+  useEffect(() => {
+    if (firstDate && secondDate) {
+      const date1 = firstDate.toISOString().split("T")[0]; 
+      const date2 = secondDate.toISOString().split("T")[0];
+      setNewEvent(prev => ({ ...prev, eventDuration: `${date1} ~ ${date2}` }));
+    }
+    else if (firstDate && !secondDate) {
+      const date1 = firstDate.toISOString().split("T")[0];
+      setNewEvent(prev => ({ ...prev, eventDuration: date1 }));
+    }
+    else {
+      setNewEvent(prev => ({ ...prev, eventDuration: "" }));
     }
   }, [firstDate, secondDate]);
 
+  // 인풋 포커스
+  const inputRef = useRef(null);
   useEffect(() => {
     if (showEventInput && inputRef.current) {
       inputRef.current.focus();
     }
   }, [showEventInput]);
 
+  const handleEdit = () => {
+    setEditMode(true);
+  };
   const handlePlusClick = () => {
     setShowEventInput(true);
   };
-
   const handleEventNameChange = (e) => {
     setNewEvent(prev => ({ ...prev, eventName: e.target.value }));
   };
-
-  const handleApply = () => {
-    if (newEvent.dateRange && newEvent.eventName) {
-      setEventList(prev => [...prev, newEvent]);
-      setNewEvent({ dateRange: "", eventName: "" });
+  // 이벤트 추가 API
+  const handleApply = async () => {
+    if (newEvent.eventDuration && newEvent.eventName) {
+      const [date1, date2] = newEvent.eventDuration.split(" ~ ");
+      if (!date1) {
+        alert("날짜가 올바르지 않습니다.");
+        return;
+      }
+      const body = {
+        evFrom: date1,
+        evTo: date2 || date1, 
+        eventName: newEvent.eventName
+      };
+      try {
+        await axios.post(`${baseURL}/admin/events/${musicalId}`, body, {
+          headers: { Authorization: `Bearer ${token_admin}` },
+        });
+        await fetchEventDetail(musicalId);
+      } catch (error) {
+        console.error("이벤트 생성 실패:", error);
+        alert("이벤트 생성에 실패했습니다.");
+      }
+      setNewEvent({ eventDuration: "", eventName: "" });
       setFirstDate(null);
       setSecondDate(null);
       setShowEventInput(false);
+      setEditMode(false);
     } else {
       alert("새 이벤트의 날짜와 이름을 모두 입력해주세요.");
     }
@@ -104,20 +168,22 @@ function AdminEventDetail() {
     if (calendarMode === "first") {
       setFirstDate(date);
     } else if (calendarMode === "second") {
+      if (!firstDate) {
+        return;
+      }
+      if (date < firstDate) {
+        const date1 = firstDate.toISOString().split("T")[0];
+        alert(`${date1} 이전 날짜는 선택 불가능 합니다.`);
+        return; 
+      }
       setSecondDate(date);
     }
     setCalendarMode(null);
     setShowCalendar(false);
   };
 
-  // openCalendar 함수: EventTable의 하단 위치를 기준으로 캘린더 위치 설정
   const openCalendar = (mode) => {
     setCalendarMode(mode);
-    if (eventTableRef.current) {
-      const rect = eventTableRef.current.getBoundingClientRect();
-      // EventTable의 하단에 맞추기 위해 rect.bottom 사용, 좌측은 rect.left
-      setCalendarPos({ top: rect.bottom, left: rect.left });
-    }
     setShowCalendar(true);
   };
 
@@ -128,25 +194,33 @@ function AdminEventDetail() {
       <SearchSection>
         <SearchBar />
         <CheckBoxes>
-          {["이벤트 날짜", "이벤트명"].map((label) => (
+          {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>
-              <CheckBox onClick={() => { /* 토글 로직 추가 가능 */ }}>
-                <img src={CheckBoxIcon} alt="CheckBox Icon" />
+              <CheckBox onClick={() => toggleCheck(idx)}>
+                <img
+                  src={checkboxes[idx] ? CheckBoxIconRed : CheckBoxIcon}
+                  alt="CheckBox Icon"
+                />
               </CheckBox>
               <CheckText>{label}</CheckText>
             </CheckBoxWrapper>
           ))}
           <CheckSearchIcon>
-            <img src={SearchIconBlack} alt="Search Icon" />
+            <img src={isAnyChecked ? SearchIconRed : SearchIconBlack} alt="Search Icon" />
           </CheckSearchIcon>
         </CheckBoxes>
       </SearchSection>
 
-      <Subtitle>&lt; {musicalName} / {eventInfo ? eventInfo.place : "장소 미정"}</Subtitle>
+      <Subtitle>
+        <BackButton onClick={() => navigate(-1)}>
+          &lt;
+        </BackButton>
+        &nbsp; {musicalInfo?.musicalName} / {musicalInfo?.place}
+      </Subtitle>
 
       <MainSection>
         <LeftArea>
-          <EventTable ref={eventTableRef}>
+          <EventTable>
             <thead>
               <Tr>
                 <Th>이벤트 날짜</Th>
@@ -156,66 +230,81 @@ function AdminEventDetail() {
             <tbody>
               {eventList.map((ev, index) => (
                 <Tr key={index}>
-                  <Td>{ev.dateRange}</Td>
+                  <Td>{ev.eventDuration}</Td>
                   <Td>{ev.eventName}</Td>
                 </Tr>
               ))}
-              <Tr>
-                <Td>
-                  {firstDate ? (
-                    <DateDisplay>
-                      {newEvent.dateRange}
-                      {!secondDate && (
-                        <SmallIconButton onClick={() => openCalendar("second")}>
-                          <img src={CalendarIcon} alt="Calendar Icon" />
-                        </SmallIconButton>
-                      )}
-                    </DateDisplay>
-                  ) : (
-                    <IconButton onClick={() => openCalendar("first")}>
-                      <img src={CalendarIcon} alt="Calendar Icon" />
-                    </IconButton>
-                  )}
-                </Td>
-                <Td>
-                  {showEventInput ? (
-                    <EventInput
-                      type="text"
-                      value={newEvent.eventName}
-                      onChange={handleEventNameChange}
-                      onBlur={() => setShowEventInput(false)}
-                      placeholder="이벤트명 입력"
-                      ref={inputRef}
-                    />
-                  ) : (
-                    <IconButton onClick={handlePlusClick}>
-                      <img src={AddButton} alt="Add Button" />
-                    </IconButton>
-                  )}
-                </Td>
-              </Tr>
+              {editMode && (
+                <Tr>
+                  <Td>
+                    {firstDate ? (
+                      <DateDisplay>
+                        {newEvent.eventDuration}
+                        {!secondDate && (
+                          <SmallIconButton onClick={() => openCalendar("second")}>
+                            <img src={CalendarIcon} alt="Calendar Icon" />
+                          </SmallIconButton>
+                        )}
+                      </DateDisplay>
+                    ) : (
+                      <IconButton onClick={() => openCalendar("first")}>
+                        <img src={CalendarIcon} alt="Calendar Icon" />
+                      </IconButton>
+                    )}
+                  </Td>
+                  <Td>
+                    {showEventInput ? (
+                      <EventInput
+                        type="text"
+                        value={newEvent.eventName}
+                        onChange={handleEventNameChange}
+                        placeholder="이벤트명 입력"
+                        ref={inputRef}
+                      />
+                    ) : (
+                      <IconButton onClick={handlePlusClick}>
+                        <img src={AddButton} alt="Add Button" />
+                      </IconButton>
+                    )}
+                  </Td>
+                </Tr>
+              )}  
             </tbody>
           </EventTable>
+
+          {showCalendar && (
+            <CalendarWrapper ref={calendarRef}>
+              <Calendar
+                variant="compact"
+                onDateSelect={handleDateSelect}
+              />
+            </CalendarWrapper>
+          )}
+
         </LeftArea>
         <RightArea>
-          <Calendar variant="compact" />
-          <hr />
-          <Sampleimg><img src={EventSample} alt="Sample" /></Sampleimg>
+          <EventCalendar>
+            <Calendar variant="compact" />
+            <hr />
+            <EventsContainer>
+              {eventList.map((ev, index) => (
+                <EventContent
+                  key={index}
+                  content={ev.eventName}
+                  startAt={ev.evFrom}
+                  finishAt={ev.evTo}
+                />
+              ))}
+            </EventsContainer>
+          </EventCalendar>
+          {!editMode ? (
+            <RedButton onClick={handleEdit}>추가하기</RedButton> 
+          ) : (
+            <GrayButton onClick={handleApply}>적용하기</GrayButton>
+          )}
         </RightArea>
       </MainSection>
 
-      <GrayButton onClick={handleApply}>적용하기</GrayButton>
-
-      {showCalendar && (
-        <CalendarOverlay onClick={() => setShowCalendar(false)}>
-          <CalendarContainer
-            style={{ position: 'absolute', top: calendarPos.top-108, left: calendarPos.left-395 }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Calendar variant="compact" onDateSelect={handleDateSelect} />
-          </CalendarContainer>
-        </CalendarOverlay>
-      )}
     </Container>
   );
 }
@@ -295,22 +384,39 @@ const Subtitle = styled.div`
   margin-left: 0;
 `;
 
+const BackButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: "Pretendard";
+  font-size: 24px;
+  font-weight: 500;
+  color: ${COLOR_GRAY_MAINTEXT};
+`;
+
 const MainSection = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   margin-top: 33px;
 `;
 
 const LeftArea = styled.div`
-  width: 441px;
+  width: 480px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const RightArea = styled.div`
   width: 300px;
-  height: 516px;
-  max-height: 516px;
-  border: 1px solid #E6E6E6;
+  display: flex;
+  flex-direction: column;
   margin-right: 70px;
+`;
+
+const EventCalendar = styled.div`
+  width: 100%;
+  border: 1px solid #E6E6E6;
   
   hr {
     border: none;
@@ -320,14 +426,30 @@ const RightArea = styled.div`
   }
 `;
 
-const Sampleimg = styled.div`
-  margin-left: 16px;
-  margin-top: 20px;
+const EventsContainer = styled.div`
+  width: 100%;
+  max-height: 225px; /* 테이블 높이가 길어질 경우 스크롤되게 */
+  overflow-y: auto;
+`;
+
+const RedButton = styled.button`
+  align-self: flex-end;
+  margin-top: 40px;
+  width: 156px;
+  height: 38px;
+  font-family: "Pretendard";
+  font-size: 16px;
+  font-weight: 700;
+  color: ${COLOR_WHITE};
+  border: 1px solid ${COLOR_MUIT_RED};
+  border-radius: 8px;
+  background-color: ${COLOR_MUIT_RED};
+  cursor: pointer;
 `;
 
 const GrayButton = styled.button`
   align-self: flex-end;
-  margin-top: 70px;
+  margin-top: 40px;
   width: 156px;
   height: 38px;
   font-family: "Pretendard";
@@ -349,15 +471,27 @@ const EventTable = styled.table`
 const Tr = styled.tr``;
 
 const Th = styled.th`
+  width: 240px;
   text-align: left;
   padding: 8px;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: #8F8E94;
 `;
 
 const Td = styled.td`
+  width: 240px;
   text-align: left;
   padding: 8px;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: ${COLOR_GRAY_MAINTEXT};
 `;
 
 const IconButton = styled.div`
@@ -365,6 +499,7 @@ const IconButton = styled.div`
   background-color: transparent;
   cursor: pointer;
   position: relative;
+  width: 20px;
 `;
 
 const EventInput = styled.input`
@@ -377,26 +512,6 @@ const EventInput = styled.input`
   text-align: left;
 `;
 
-const CalendarOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const CalendarContainer = styled.div`
-  background-color: ${COLOR_WHITE};
-  padding: 10px;
-  border: 1px solid ${COLOR_GRAY_MAINTEXT};
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
 const DateDisplay = styled.div`
   display: flex;
   align-items: center;
@@ -407,4 +522,11 @@ const SmallIconButton = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
+`;
+
+const CalendarWrapper = styled.div`
+  width: 300px;
+  margin-top: 10px; 
+  border: 1px solid ${COLOR_GRAY_MAINTEXT};
+  padding: 10px;
 `;

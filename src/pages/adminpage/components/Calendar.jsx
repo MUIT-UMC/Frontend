@@ -37,7 +37,7 @@ const Calendar = ({ variant = "default", onDateSelect }) => {
   // Handle date selection
   const handleDateClick = (day) => {
     if (day) {
-        const selected = new Date(year, month, day);
+        const selected = new Date(year, month, day, 12);  // UTC + 9 시차 문제 
         setSelectedDate(selected);
         if (onDateSelect) {
           onDateSelect(selected);
@@ -148,8 +148,8 @@ const Day = styled.div`
   height: ${({ variant }) => (variant === "compact" ? "24px" : "30px")};
   margin-bottom: ${({ variant }) => (variant === "compact" ? "3px" : "32px")};
 
-  background: ${({ isSelected }) => (isSelected ? "#A00000" : "white")};
-  color: ${({ isSelected }) => (isSelected ? "#FFF" : "#000")};
+  background: white;
+  color: #000000;
 
   cursor: pointer;
   font-size: ${({ variant }) => (variant === "compact" ? "14px" : "24px")};

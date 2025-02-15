@@ -164,7 +164,7 @@ function App() {
             <Route path="musical" element={<AdminMusical />} />
             <Route path="musical/detail/:musicalId" element={<AdminMusicalDetail />} />
             <Route path="event" element={<AdminEvent />} />
-            <Route path="event/detail/:musicalName" element={<AdminEventDetail />} />
+            <Route path="event/detail/:musicalId" element={<AdminEventDetail />} />
             <Route path="vision" element={<AdminVision />} />
             <Route path="query" element={<AdminQuery />} />
             <Route path="mypage" element={<AdminMypage />} />
