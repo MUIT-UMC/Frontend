@@ -30,7 +30,7 @@ const colLabels = ["아이디", "이름", "E-mail", "번호", "성별"];
 export default function AdminUser() {
 
   // 사용자 데이터 API
-  const [userList, setUserList] = useState([]);
+  const [userData, setuserData] = useState([]);
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -50,12 +50,12 @@ export default function AdminUser() {
         phone: item.phone,
         gender: item.gender === "MALE" ? "남" : "여"
       }));
-      setUserList(refined);
+      setuserData(refined);
 
     } catch (err) {
       console.error("사용자 조회 실패:", err);
       alert("사용자 목록을 불러오는 중 오류가 발생했습니다.");
-      setUserList([]); 
+      setuserData([]); 
     }
   };
 
@@ -96,7 +96,7 @@ export default function AdminUser() {
   if (checkedIndex !== -1) {
     searchKey = colKeys[checkedIndex];
   }
-  const filteredData = userList.filter((user) => {
+  const filteredData = userData.filter((user) => {
     if (!searchTerm) return true; // 아무것도 안쳤다면 전체
     const fieldValue = (user[searchKey] ?? "").toString().toLowerCase();
     return fieldValue.includes(searchTerm.toLowerCase());
