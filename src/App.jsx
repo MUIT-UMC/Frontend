@@ -143,9 +143,9 @@ function App() {
         <Route path="/mypage/account-deletion/complete" element={<AccountDeletionComplete />} />
 
        {/* 티켓 상세페이지 */}
-        <Route path="ticket/:number" element={<TicketDetailPage />} />
-        <Route path="ticket/:number/cancel" element={<CancelTicket />} />
-        <Route path="ticket/:number/cancel/complete" element={<CancelComplete />}  />
+        <Route path="ticket/:memberTicketId" element={<TicketDetailPage />} />
+        <Route path="ticket/:memberTicketId/cancel" element={<CancelTicket />} />
+        <Route path="ticket/:memberTicketId/cancel/complete" element={<CancelComplete />}  />
         {/* 검색 */}
         <Route path="/search" element={<Search />} />
         {/* 랭킹 */}

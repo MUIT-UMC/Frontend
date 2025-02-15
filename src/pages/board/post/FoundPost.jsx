@@ -8,7 +8,10 @@ import Info from "../../../components/detail/Info";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import PostMenu from "../../../components/post/PostMenu";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("token");
+console.log(token);
 
 function FoundPost() {
 
@@ -55,7 +58,7 @@ function FoundPost() {
   const date = d.createdAt.split('T')[0];
   const image = d?.imgUrls;
   const commentCount = d?.commentCount;
-
+  const isMyPost = d?.isMyPost;
   const listSize = comment?.result?.listSize;
   // console.log('image', image);
     const details = [
@@ -78,7 +81,7 @@ function FoundPost() {
           <TitleWrapper>
             <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
           </TitleWrapper>
-          <PostMenu />
+          <PostMenu isMyPost={isMyPost}/>
         
         </TopWrapper>
         <SubTitleWrapper>

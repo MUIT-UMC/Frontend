@@ -3,34 +3,81 @@ import React from "react";
 import styled from "styled-components";
 import ChevronRight from "../../../assets/icons/ChevronRight.svg";
 import { useNavigate } from "react-router-dom";
-const TicketContainer = ({ image, width, height, alt, details, valueWidth }) => {
+const TicketContainer = ({ alt, details, isDisabled }) => {
 
+  const { 
+    amateurShowName, 
+    memberTicketId,
+    place,
+    posterImgUrl,
+    quantity, 
+    reservationDate,
+    reservationStatus,
+    schedule,
+ } = details || {};
+
+ const korStatus = {
+  RESERVE_AWAIT: "입금 대기중",
+  RESERVED: "예매 완료",
+  EXPIRED: "예매 기한 만료",
+  CANCEL_AWAIT: "취소 대기중",
+  CANCELED: "취소 완료",
+
+ }
   const navigate = useNavigate();
   
   const handleClick = (ticketNumber) => {
     navigate(`/ticket/${ticketNumber}`);
   };
 
+  
+ const date = new Date(schedule?.split(' ')[0]);
+ const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+ const dayOfWeek = daysOfWeek[date.getDay()];
+
+ console.log(dayOfWeek); // 예: 수
+
   return (
-    <Wrapper onClick={() => handleClick(details[0].value)}>
+    <Wrapper >
       <InfoImage>
-        <img alt={alt} src={image}/>
+        <img alt={alt} src={posterImgUrl}/>
       </InfoImage>
       <InfoDetail>
-        <div>
-          <span>미아 파밀리아 (Mia Famiglia)</span><span>2매</span>
+        <div style={{marginBottom:'18px'}}>
+          <span>{amateurShowName}</span><span style={{marginLeft: '8px'}}>{quantity}매</span>
         </div>
-        {details.map(({ label, value, extra }, index) => (
-          <Item key={index}>
-            <Label>{label}</Label>
-            <Value 
-              width={valueWidth} 
-              color={label === "취소가능일시" ? "#A00000" : undefined}
-            >{value}</Value>
+          <Item>
+            <Label>예매일</Label>
+            <Value  
+              // color={label === "취소가능일시" ? "#A00000" : undefined}
+            >{reservationDate?.split('T')[0]}</Value>
           </Item>
-        ))}
+          <Item>
+            <Label>장소</Label>
+            <Value  
+              // color={label === "취소가능일시" ? "#A00000" : undefined}
+            >{place}</Value>
+          </Item>
+          <Item>
+            <Label>관람일시</Label>
+            <Value  
+              // color={label === "취소가능일시" ? "#A00000" : undefined}
+            >{schedule?.split(' ')[0]} ({dayOfWeek}) {schedule?.split(' ')[1]}</Value>
+          </Item>
+          <Item>
+            <Label>취소가능일시</Label>
+            <Value  
+              // color={label === "취소가능일시" ? "#A00000" : undefined}
+            ></Value>
+          </Item>
+          <Item>
+            <Label>상태</Label>
+            <Value  
+              // color={label === "취소가능일시" ? "#A00000" : undefined}
+            >{korStatus[reservationStatus]}</Value>
+          </Item>
       </InfoDetail>
-      <ChevronWrapper>
+      <ChevronWrapper onClick={() => handleClick(memberTicketId)}>
       <img src={ChevronRight} />
       </ChevronWrapper>
       

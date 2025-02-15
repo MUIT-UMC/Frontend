@@ -11,7 +11,9 @@ import ChevronLeft from "../../../assets/icons/ChevronLeft.svg";
 import useFetch from "../../../hooks/useFetch";
 import { useState } from "react";
 
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("token");
+console.log(token);
 
 function ContactPost() {
 

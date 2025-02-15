@@ -4,9 +4,9 @@ import axios from "axios";
 import styled from "styled-components";
 
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-
-const PostMenu = () => {
+const token = localStorage.getItem("token");
+console.log(token);
+const PostMenu = ({isMyPost}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,12 +34,45 @@ const PostMenu = () => {
     }
   };
 
+  const handleReport = async () => {
+    if (window.confirm("게시글을 신고하시겠습니까?")) {
+      try {
+        const response = await axios.post(`${muit_server}/reports/${postId}`, 
+          {},
+          {
+          headers: { 
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        });
+  
+        if (response.data.isSuccess) {
+          alert("정상적으로 신고 처리 되었습니다.");
+        } else {
+          alert("신고 실패: " + response.data.message);
+        }
+      } catch (error) {
+        console.error("신고 오류:", error);
+        alert("신고 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  
   return (
     <Wrapper>
-      <BsThreeDotsVertical onClick={() => console.log("Menu clicked")} />
+      <IconWrapper onClick={() => console.log("Menu clicked")}>
+      <BsThreeDotsVertical  />
+      </IconWrapper>
+      
       <MenuWrapper>
-        <div onClick={() =>  navigate(`${location.pathname}/edit`)}>수정</div>
-        <div onClick={() => handleDelete()}>삭제</div>
+        {isMyPost ?  <>
+          <div onClick={() =>  navigate(`${location.pathname}/edit`)}>수정</div>
+          <div onClick={() => handleDelete()}>삭제</div>
+        </> :
+        <OneMenu onClick={() => handleReport()}>신고</OneMenu>
+        }
+        
+       
       </MenuWrapper>
     </Wrapper>
   );
@@ -52,10 +85,15 @@ const Wrapper = styled.div`
   display: inline-block; /* 아이콘을 inline-block으로 설정하여 수평으로 배치 */
 `;
 
+const IconWrapper = styled.div`
+  width: 50px;
+  display: flex;
+  justify-content: flex-end;
+`
 const MenuWrapper = styled.div`
   position: absolute;
   top: 40%; /* 아이콘 바로 아래에 위치 */
-  right: 0; /* 아이콘 오른쪽에 정렬 */
+  right: 0%; /* 아이콘 오른쪽에 정렬 */
   background-color: white;
   width: 100px;
   display: none; /* 초기에는 메뉴 숨김 */
@@ -72,6 +110,7 @@ const MenuWrapper = styled.div`
     padding: 6px;
     cursor: pointer;
     text-align: center;
+    background: #FFF;
     &:hover {
       background-color: #f0f0f0;
     }
@@ -93,3 +132,8 @@ const MenuWrapper = styled.div`
     display: block;
   }
 `;
+
+const OneMenu = styled.div`
+border-radius: 4px !important;
+border-bottom: 1px solid #C1C1C1  !important;
+`

@@ -4,21 +4,47 @@ import { useParams } from "react-router-dom";
 import TicketContainer from "../../../../components/mypage/myticket/TicketContainer";
 import posterImg from "../../../../assets/images/miafamiglia-poster.png";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useFetch from "../../../../hooks/useFetch";
+
+const token = localStorage.getItem("token");
+
 function CancelComplete() {
 
-  const [isChecked, setIsChecked] = useState(false);
+  const {memberTicketId} = useParams();
+
+  const navigate = useNavigate();
+
+  const url = `/tickets/myTickets/${memberTicketId}`;
+
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  },);
+
+  const { 
+    amateurShowName, 
+    place,
+    posterImgUrl,
+    quantity, 
+    reservationDate,
+    reservationStatus,
+    schedule,
+ } = data?.result || {};
+
   return (
     <Wrapper>
       <Content>
       <Title>예매 취소가 정상적으로 접수되었습니다</Title>
       <div>
-        <Text mb='12px'>미아 파밀리아 2매 예매 취소가 완료되었습니다.</Text>
+        <Text mb='12px'>{amateurShowName} {quantity}매 예매 취소가 완료되었습니다.</Text>
         <Text  mb='12px'>취소 내역 확인 버튼을 선택하시면 취소 내역 페이지로 이동합니다. <br />
         취소가 완료되면 취소 완료 SMS가 발송됩니다.</Text>
         <Text  mb='60px'>SMS 미수신 시, 꼭 마이페이지- 내 티켓에서 취소 여부를 확인해주세요. <br />
         감사합니다.</Text>
       </div>
-      <Button>취소 내역 확인하기</Button>
+      <Button onClick={() => navigate(`/ticket/${memberTicketId}`)}>취소 내역 확인하기</Button>
       </Content>
       
     </Wrapper>
