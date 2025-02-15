@@ -1,12 +1,28 @@
-import React,{ useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
+import useFetch from "../../hooks/useFetch";
+import { useParams } from 'react-router-dom';
+
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 // Step2 - 할인 선택
 const Step2 = () => {
 
-    const navigate = useNavigate();  // useNavigate 훅 사용
-  
+  const {amateurId} = useParams();
+  const navigate = useNavigate();
+    
+  const url = `/tickets/${amateurId}/ticketInfo`;
+  const { data, error, loading } = useFetch(url, {
+      headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+      },
+  });
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
+  if (!data || !data.result) return <div>데이터가 없습니다.</div>;
+
+  const ticketInfo = data.result;
 
     return (
         <Container>
@@ -18,9 +34,9 @@ const Step2 = () => {
         </Sidebar>
         <Content>
             <LeftContent>
-          <Title>실종</Title>
-          <Subtitle>홍익대학교 학생회관 3층 소극장</Subtitle>
-          <DateRange>2024.10.03~2024.10.05</DateRange>
+          <Title>{ticketInfo.name}</Title>
+          <Subtitle>{ticketInfo.place}</Subtitle>
+          <DateRange>{ticketInfo.schedule}</DateRange>
           <DiscountBox>
             <DiscountTitle>할인 선택</DiscountTitle>
             <Options>
@@ -39,7 +55,7 @@ const Step2 = () => {
           <Summary>
             <Row>
               <Label>일시</Label>
-              <Value>2024.10.03 (목) 19:00</Value>
+              <Value>{ticketInfo.schedule.split(' ')[0]}</Value>
             </Row>
             <Row>
               <Label>인원</Label>
@@ -47,7 +63,7 @@ const Step2 = () => {
             </Row>
             <Row>
               <Label>티켓 금액</Label>
-              <Value>10,000원</Value>
+              <Value>{ticketInfo.tickets.price}</Value>
             </Row>
             <Row>
               <Label>할인</Label>
@@ -59,7 +75,7 @@ const Step2 = () => {
             </Row>
             <TotalRow>
             <TotalLabel>총 결제 금액</TotalLabel>
-            <TotalValue>10,000원</TotalValue>
+            <TotalValue>{ticketInfo.tickets.price}</TotalValue>
           </TotalRow>
           <Button onClick={() => navigate('../step3')} active>다음</Button>  {/* 이전 페이지로 이동 */}
         <Button onClick={() => navigate('..')}>이전</Button>  {/* 다음 페이지로 이동 */}

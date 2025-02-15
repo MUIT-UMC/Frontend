@@ -138,6 +138,7 @@ const MusicalItem = styled.div`
   text-align: left;
   font-family: Pretendard;
   margin-bottom: -25px;
+  cursor:pointer;
  
   img {
     height: 320px;

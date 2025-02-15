@@ -9,7 +9,7 @@ import Step5 from '../../components/buy/Step5';
 const BuyTicket = () => {
     return (
       <Routes>
-        <Route path="/" element={<Step1 />} />
+        <Route index element={<Step1 />} />
         <Route path="step2" element={<Step2 />} />
         <Route path="step3" element={<Step3 />} />
         <Route path="step4" element={<Step4 />} />

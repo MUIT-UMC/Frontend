@@ -15,6 +15,7 @@ const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 function SmallDetail() {
   const navigate = useNavigate();
   const { amateurId } = useParams();  // amateurId를 URL 파라미터에서 가져옵니다.
+
   console.log(amateurId);
   const url = `/amateurs/${amateurId}`;
 
@@ -90,7 +91,7 @@ function SmallDetail() {
         </LeftSection>
 
         <RightSection>
-        <PurchaseButton onClick={() => navigate("/small-detail/buy")}>
+        <PurchaseButton onClick={() => navigate(`/small-detail/buy/${amateurId}`)}>
               예매하러 가기
             </PurchaseButton>
         </RightSection>
