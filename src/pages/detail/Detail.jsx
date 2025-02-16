@@ -6,12 +6,21 @@ import { useParams } from 'react-router-dom';
 import { useState } from "react";
 import useMoveScroll from "../../hooks/useMoveScroll";
 import MainContent from "./MainContent";
+
+const token = localStorage.getItem("token");
+
+
 function Detail() {
 
   const {musicalId} = useParams();
   const url = `/musicals/${musicalId}`;
 
-  const { data, error, loading } = useFetch(url);
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  },);
+
   console.log(data);
 
   if (loading) return <div>Loading...</div>;

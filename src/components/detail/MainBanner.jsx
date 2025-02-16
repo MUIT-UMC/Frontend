@@ -5,20 +5,27 @@ import pic from "../../assets/images/miafamiglia-pic.png";
 import ChevronDown from '../../assets/icons/ChevronDown.svg';
 
     function MainBanner({ 
-      data
+      data, onMoveToElement
     }) {
       console.log("배경이미지",data.desImgUrl[0]);
+      // 줄바꿈 기준으로 p태그로 분리해줌
+      const formattedDescription = data.storyDescription.split('\n\n').map((line, index) => (
+        <p key={index}>{line}</p>
+      ));
       return (
         <BannerContainer backgroundImage={data.desImgUrl[0]}>
           <EngHeader className="candlescript-text">{data.fancyTitle}</EngHeader>
           <Header>{data.name}</Header>
           <TagWrapper>
+          <Tag>데이터</Tag>
+          <Tag>나중에</Tag>
+          <Tag>고치삼</Tag>
             {/*data.tags.map((tag, index) => (
               <Tag key={index}>{data.tag}</Tag>
             ))*/}
           </TagWrapper>
           <Quote>{data.quote}</Quote>
-          <Description>{data.description}</Description>
+          <Description dangerouslySetInnerHTML={{ __html: data.storyDescription.replace(/\n/g, '<br />') }} />
           <ChevronWrapper>
             <img src={ChevronDown} alt="Scroll Down" />
           </ChevronWrapper>
@@ -85,12 +92,28 @@ const Quote = styled.blockquote`
 
 const Description = styled.div`
   color: #FFF;
-  width: 870px;
+  width: 740px;
+  height: 400px;
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
-  line-height: 30px; /* 156.25% */
-`
+  line-height: 24px; /* 156.25% */
+  margin: 12px 0px 12px 0px;
+  overflow-y: auto;
+ position: relative;
+
+  /* 스크롤바 숨기기 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  /* 하단 흐려지는 효과 */
+-webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 0) 100%);
+`;
+
 const Tag = styled.li`
   display: flex;
   width: 120px;

@@ -8,7 +8,7 @@ import { useState } from "react";
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 const token = localStorage.getItem("token");
 console.log(token);
-const HeartButton = ({liked, setLiked}) => {
+const HeartButton = ({liked, setLiked, musicalId}) => {
 
   const [isClicked, setIsClicked] = useState(false);
   
@@ -20,12 +20,62 @@ const HeartButton = ({liked, setLiked}) => {
     }, 200);  // 0.3초 후
   };
 
+  const handleLike = async () => {
+
+    try {
+      const response = await axios.post(
+        `${muit_server}/musicals/${musicalId}/likes`,
+        {}, 
+        {
+          headers: {
+            "Authorization": token ? `Bearer ${token}` : "",
+            "Content-Type": "application/json", // JSON으로 전송
+          },
+        }
+      );
+      alert("좋아요를 눌렀습니다");
+      console.log(response.data);
+    } catch (error) {
+      alert("좋아요 오류");
+      console.error(error);
+    }
+  };
+
+  const handleUnlike  = async () => {
+
+    try {
+      const response = await axios.delete(
+        `${muit_server}/musicals/${musicalId}/likesCancel`,
+        {
+          headers: {
+            "Authorization": token ? `Bearer ${token}` : "",
+            "Content-Type": "application/json", // JSON으로 전송
+          },
+        }
+      );
+      alert("좋아요를 취소했습니다.");
+      console.log(response.data);
+    } catch (error) {
+      alert("좋아요 취소 오류.");
+      console.error(error);
+    }
+  };
+
+
   return (
     <Img
       src={liked ? HeartFull : HeartLine}
       alt="하트 아이콘"
       isClicked={isClicked}
-      onClick={() => {setLiked(!liked); handleClick()}}
+      onClick={() => {
+        setLiked(!liked); 
+        // handleClick();
+        if (liked) {
+          handleUnlike(); // 함수 실행
+        } else {
+          handleLike(); // 함수 실행
+        }
+      }}
       style={{ cursor: "pointer" }}
     />
   );
