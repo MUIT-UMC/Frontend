@@ -1,9 +1,10 @@
 import React from "react";
 import BoardMenu from "../../../components/board/BoardMenu";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Heart from "../../../assets/icons/heart-full.svg"
-
+import useFetch from "../../../hooks/useFetch";
+const token = localStorage.getItem("token");
 
 const mockData = [
   {
@@ -47,21 +48,35 @@ const mockData = [
   },
 ];
 
+
+
 function LikedMusical() {
+
+  const navigate = useNavigate();
+  const url = `/member/likeMusicals`;
+
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  },);
+  console.log(data);
+
+  
   return (
     <Container>
       <MusicalList>
-        {mockData.map((musical) => (
-          <Card key={musical.id}>
-            <Image src={musical.image} alt={musical.name} />
+        {data?.result?.map((musical) => (
+          <Card key={musical.id} onClick={() => navigate(`/detail/${musical.id}`)}>
+            <Image src={musical.posterUrl} alt={musical.name} />
             <CardHeader>
               <CardTitle>{musical.name}</CardTitle>
               <LikeButton>
                 <img src={Heart} alt="Like" width={24} height={24}/>
               </LikeButton>
             </CardHeader>
-            <Theater>{musical.location}</Theater>
-            <Period>{musical.during}</Period>
+            <Theater>{musical.place}</Theater>
+            <Period>{musical.duration}</Period>
           </Card>
         ))}
       </MusicalList>
