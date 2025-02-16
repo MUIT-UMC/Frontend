@@ -13,6 +13,8 @@ const COLOR_GRAY_SUB = "#919191";
 const MAX_WIDTH = 1440;
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+// const token = localStorage.getItem("token"); 로그인 구현되면 이렇게
+// 그전 까지 임시
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 const Ranking = () => {
@@ -24,7 +26,11 @@ const Ranking = () => {
   // 랭킹 API연결
   const fetchRankingData = async () => {
     try {
-      const response = await axios.get(`${baseURL}/musicals/rank/all?page=1`);
+      const response = await axios.get(`${baseURL}/musicals/rank/all?page=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       const list = response.data.result.content || [];
       const refined = list.map((item, idx) => ({
         poster: item.posterUrl,

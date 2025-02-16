@@ -20,6 +20,8 @@ const SIDE_MARGIN = 100; // 좌우 마진
 const COLUMN_GAP = 20;   // column 간격
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+// const token = localStorage.getItem("token"); 로그인 구현되면 이렇게
+// 그전 까지 임시
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 function Home() {
@@ -41,7 +43,11 @@ function Home() {
   //Hot Now
   const fetchHotNow = async () => {
     try {
-      const response = await axios.get(`${baseURL}/musicals/hot`);
+      const response = await axios.get(`${baseURL}/musicals/hot`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       const dataArr = response.data.result.musicalHomeList; 
       const refined = dataArr.map(item => ({
         poster: item.posterUrl,
@@ -57,7 +63,11 @@ function Home() {
   // 오픈예정 
   const fetchTicketOpen = async () => {
     try {
-      const response = await axios.get(`${baseURL}/musicals/open`);
+      const response = await axios.get(`${baseURL}/musicals/open`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       const dataArr = response.data.result;
       const refined = dataArr.map(item => ({
         poster: item.posterUrl,
@@ -74,7 +84,11 @@ function Home() {
   // 랭킹5
   const fetchRanking = async () => {
     try {
-      const response = await axios.get(`${baseURL}/musicals/rank`);
+      const response = await axios.get(`${baseURL}/musicals/rank`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       const dataArr = response.data.result.musicalHomeList; 
       const refined = dataArr.map((item, idx) => ({
         poster: item.posterUrl,

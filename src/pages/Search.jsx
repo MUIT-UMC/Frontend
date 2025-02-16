@@ -16,6 +16,8 @@ const COLOR_GRAY_SUB = "#919191";
 const MAX_WIDTH = 1440;
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+// const token = localStorage.getItem("token"); 로그인 구현되면 이렇게
+// 그전 까지 임시
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 export default function Search() {
@@ -47,7 +49,11 @@ export default function Search() {
   //Hot 10 API
   const fetchHotMusicals = async () => {
     try {
-      const response = await axios.get(`${baseURL}/musicals/hot/all?page=1`);
+      const response = await axios.get(`${baseURL}/musicals/hot/all?page=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       const dataArr = response.data.result.content;
       const topTen = dataArr.slice(0, 10);
       const refined = topTen.map((item, idx) => ({
@@ -74,9 +80,14 @@ export default function Search() {
   }, [searchInput]);
 
    // 검색 API
-   const fetchSearchData = async (keyword) => {
+  const fetchSearchData = async (keyword) => {
     try {
-      const res = await axios.get(`${baseURL}/musicals`, {params: { musicalName: keyword } });
+      const res = await axios.get(`${baseURL}/musicals/search`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: { musicalName: keyword }
+      });
       const list = res.data.result.musicalHomeList || [];
       const refined = list.map((item) => ({
         poster: item.posterUrl,
