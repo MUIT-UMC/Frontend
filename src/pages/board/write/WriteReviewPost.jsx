@@ -128,7 +128,6 @@ function WriteReviewPost() {
           <Div>
             <label>평점</label>
             <InteractiveRatingStars
-              starSize={36}
               value={rating}
               onRatingChange={setRating}
             />

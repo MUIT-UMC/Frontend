@@ -59,7 +59,7 @@ function MainContent({data,loading, error}) {
         <div>반별 test용으로 별점을 4.6 고정으로 해둠</div>
         <RatingWrapper>
           
-          <RatingStars rating={4.6} starSize={36}/>
+          <RatingStars rating={score} />
           <Rating>{score}</Rating>
         </RatingWrapper>
         
