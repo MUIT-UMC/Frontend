@@ -50,6 +50,7 @@ function Home() {
       });
       const dataArr = response.data.result.musicalHomeList; 
       const refined = dataArr.map(item => ({
+        musicalId: item.id,
         poster: item.posterUrl,
         title: item.name,
         locate: item.place,
@@ -70,6 +71,7 @@ function Home() {
       });
       const dataArr = response.data.result;
       const refined = dataArr.map(item => ({
+        musicalId: item.id,
         poster: item.posterUrl,
         title: item.name,
         locate: item.place,
@@ -91,6 +93,7 @@ function Home() {
       });
       const dataArr = response.data.result.musicalHomeList; 
       const refined = dataArr.map((item, idx) => ({
+        musicalId: item.id,
         poster: item.posterUrl,
         title: item.name,
         locate: item.place,
@@ -125,6 +128,14 @@ function Home() {
   useEffect(() => {
     setCurrentSlide(0);
   }, [selectedOption]);
+
+  // 자동으로 슬라이드 전환
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % slidesData.length); // 다음 슬라이드로 전환
+    }, 5000); // 5초
+    return () => clearInterval(interval); 
+  }, [slidesData.length]); 
 
   // 포스터카드 좌우 버튼 핸들러
   const handlePrev = () => {
@@ -218,7 +229,9 @@ function Home() {
                 <ArrowIcon><img src={ArrowPrevIcon} alt="Arrow Icon" /></ArrowIcon>
               </ArrowButton>
               <CardBox>
-                <PosterImage src={slide?.poster} alt="포스터 이미지" />
+                <PosterImage to={slide ? `/detail/${slide.musicalId}` : "#"}>
+                  <img style={{ width: '416px', height: '584px' }} src={slide?.poster} alt="포스터 이미지" />
+                </PosterImage>
                 {/* 점(인디케이터) */}
                 <DotWrapper>
                   {slidesData.map((_, i) => (
@@ -427,10 +440,11 @@ const CardBox = styled.div`
   justify-content: center;
 `;
 
-const PosterImage = styled.img`
+const PosterImage = styled(Link)`
   width: 416px;
   height: 584px;
   object-fit: cover;
+  cursor: pointer;
 `;
 
 const DotWrapper = styled.div`
@@ -438,7 +452,8 @@ const DotWrapper = styled.div`
   bottom: -28px;
   width: 136px; 
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 24px;
   align-items: center;
 `;
 
