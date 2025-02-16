@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FormattedDate from "../components/date/FormattedDate";
-//import axios from "axios";
+
 
 // Mock 데이터
 const mockTodayMusical = [

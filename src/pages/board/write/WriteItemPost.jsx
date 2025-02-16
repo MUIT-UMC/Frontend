@@ -3,7 +3,9 @@ import styled from "styled-components";
 import Camera from "../../../assets/icons/Camera.svg";
 import axios from "axios"; // axios 추가
 import { useNavigate } from "react-router-dom";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("token");
+console.log(token);
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function WriteItemPost({category}) {

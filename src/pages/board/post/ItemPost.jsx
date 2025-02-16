@@ -10,7 +10,11 @@ import useFetch from "../../../hooks/useFetch";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("token");
+console.log(token);
+
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -66,6 +70,7 @@ function ItemPost() {
   const image = d?.imgUrls[0];
   const commentCount = d?.commentCount;
   const listSize = comment?.result?.listSize;
+  const isMyPost = d?.isMyPost;
   // console.log('image', image);
     const details = [
       { label: "뮤지컬명", value: d.musicalName},
@@ -87,7 +92,7 @@ function ItemPost() {
           <TitleWrapper>
             <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
           </TitleWrapper>
-        <PostMenu />
+          <PostMenu isMyPost={isMyPost}/>
         </TopWrapper>
         
        

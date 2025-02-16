@@ -6,44 +6,19 @@ import { useState } from "react";
 import TicketContainer from "../../../components/mypage/myticket/TicketContainer";
 import posterImg from "../../../assets/images/miafamiglia-poster.png";
 import TicketDetail from "../../../components/mypage/myticket/TicketDetail";
+import TicketList from "./ticket/TicketList";
+import useFetch from "../../../hooks/useFetch";
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("token");
+console.log(token);
+
+
 function Tickets() {
   const [activeTab, setActiveTab] = useState("전체보기"); // 기본 활성화 탭
   const poster = posterImg;
-  const details = [ [
-    { label: "예매번호", value: "T0000000000" },
-    { label: "예매일", value: "2025-01-15" },
-    { label: "장소", value: "링크아트센터드림 드림1관" },
-    { label: "관람일시", value: "2025-03-21 (금) 14:30 1회" },
-    { label: "취소가능일시", value: "2025-03-20 (목) 17:00 까지" },
-    { label: "상태", value: "예매완료 (무통장 미입금)" },
-  ],
-  [
-    { label: "예매번호", value: "T0000000001" },
-    { label: "예매일", value: "2025-02-05" },
-    { label: "장소", value: "서울시립미술관" },
-    { label: "관람일시", value: "2025-04-10 (목) 15:00 1회" },
-    { label: "취소가능일시", value: "2025-04-09 (수) 17:00 까지" },
-    { label: "상태", value: "예매완료 (무통장 미입금)" },
-  ],
-  ];
 
-  const details2 = [
-    { label: "예매번호", value: "T0000000000", },
-    { label: "예매일", value: "2025-01-15" },
-    { label: "장소", value: "링크아트센터드림 드림1관" },
-    { label: "관람일시", value: "2025-03-21 (금) 14:30 1회" },
-    { label: "상태", value: "예매완료 (무통장 미입금)" },
-    { label: "취소가능일시", value: "2025-03-20 (목) 17:00 까지" ,  
-      extra: [
-        {date: "2025.01.15 ~ 2025.01.22", cancelfee:'없음'},
-        {date: "2025.01.15 ~ 2025.01.22", cancelfee:'없음'},
-        {date: "2025.01.15 ~ 2025.01.22", cancelfee:'없음'},
-        {date: "2025.01.15 ~ 2025.01.22", cancelfee:'없음'},
-  ]},
-    
-  ];
+  const url = `/tickets/myTickets`;
 
-  
   return (
     <>
       <Wrapper>
@@ -55,16 +30,13 @@ function Tickets() {
 
       <ContentWrapper>
         {activeTab === "전체보기" && (
-          <TicketWrapper>
-            {details.map((details, index) => (
-                <TicketContainer key={index} image={posterImg} details={details} />
-              ))}
-          </TicketWrapper>
+          <TicketList />
         )}
 
         {activeTab === "예매완료" && (
           <>
             <h2>예매완료</h2>
+            <TicketList status="RESERVED"/>
           </>
         )}
 
@@ -72,6 +44,7 @@ function Tickets() {
           <>
             <h2>예매취소</h2>
             <p>예매 취소의 경우 티켓컨테이너가 회색으로 보인다.</p>
+            <TicketList status="CANCELED"/>
           </>
         )}
       </ContentWrapper>
@@ -115,8 +88,3 @@ const ContentWrapper = styled.div`
   flex-direction: column;
 `;
 
-const TicketWrapper = styled.div`
-display: flex;
-flex-direction: column;
-gap: 16px;
-`

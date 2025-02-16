@@ -1,64 +1,71 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
-import posterImg from "../../assets/images/lost-pic.png";
+import useFetch from "../../hooks/useFetch";
+import { useParams } from 'react-router-dom';
+
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 const Step1 = () => {
-    const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지 이동 처리
-    const [peopleCount, setPeopleCount] = useState(1); // 인원 수 상태 관리
+   const {amateurId} = useParams();
+    const navigate = useNavigate();
+    const [peopleCount, setPeopleCount] = useState(1);
+    
+    const url = `/tickets/${amateurId}/ticketInfo`;
+    const { data, error, loading } = useFetch(url, {
+        headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+        },
+    });
 
-    const poster = posterImg;
-    const data = {
-        title: "실종",
-        location: "홍익대학교 학생회관 3층 소극장",
-        duration: "2024.10.03 ~ 2024.10.05",
-        date: "2024.10.03 (목)",
-        time: "19:00",
-    };
+    if (loading) return <div>로딩 중...</div>;
+    if (error) return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
+    if (!data || !data.result) return <div>데이터가 없습니다.</div>;
+
+    const ticketInfo = data.result;
 
     const handlePeopleChange = (event) => {
-        setPeopleCount(event.target.value); // 선택된 인원 수 업데이트
+        setPeopleCount(event.target.value);
     };
 
     return (
       <Container>
         <LeftSection>
-        <Image src={poster} alt="뮤지컬 포스터" />
+          <Image src={ticketInfo.posterImgUrl} alt="뮤지컬 포스터" />
         </LeftSection>
         <RightSection>
-          <Header>{data.title}</Header>
-          <Location>{data.location}</Location>
-          <Duration>{data.duration}</Duration>
+          <Header>{ticketInfo.name}</Header>
+          <Location>{ticketInfo.place}</Location>
+          <Duration>{ticketInfo.schedule}</Duration>
           <Border/>
           <Info>
             <TicketDetails>
-                <TicketRow>
-              <Label>공연 날짜</Label>
-              <Text>{data.date}</Text>
+              <TicketRow>
+                <Label>공연 날짜</Label>
+                <Text>{ticketInfo.schedule.split(' ')[0]}</Text>
               </TicketRow>
               <TicketRow>
-              <Label>공연 시간</Label>
-              <Text>{data.time}</Text>
+                <Label>공연 시간</Label>
+                <Text>{ticketInfo.schedule.split(' ')[1]}</Text>
               </TicketRow>
               <TicketRow>
-              <Label>인원</Label>
-              <Select value={peopleCount} onChange={handlePeopleChange}>
-                                {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
-                                    <Option key={count} value={count}>
-                                        {count}
-                                    </Option>
-                                ))}
-                            </Select>
+                <Label>인원</Label>
+                <Select value={peopleCount} onChange={handlePeopleChange}>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
+                    <Option key={count} value={count}>{count}</Option>
+                  ))}
+                </Select>
               </TicketRow>
             </TicketDetails>
           </Info>
-          <Button onClick={() => navigate('./step2')}>예약하기</Button>  {/* 페이지 전환 */}
+          <Button onClick={() => navigate("./step2")}>예약하기</Button>
         </RightSection>
       </Container>
     );
-  };
+};
 
-  export default Step1;
+export default Step1;
+
 
   // 스타일 컴포넌트
   const Container = styled.div`
