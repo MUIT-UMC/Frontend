@@ -12,7 +12,7 @@ import SingleLeftIcon from "../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../assets/icons/DoubleRight.svg";
 
-import SearchBarShort1 from "../components/SearchBarShort1";
+import SearchBarShort from "../components/SearchBarShort";
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -21,7 +21,7 @@ const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const token_admin = localStorage.getItem("adminToken");
 
 const colKeys = ["username", "name", "email", "phone", "queryTime", "progress"];
 const colLabels = ["아이디", "이름", "E-mail", "번호", "날짜/시간(최신순)", "진행도"];
@@ -150,7 +150,7 @@ const formatDate = (dateString) => {
     <Container>
       <Title>문의</Title>
       <SearchSection>
-        <SearchBarShort1 onSearch={handleSearch}/>
+        <SearchBarShort onSearch={handleSearch}/>
         <CheckBoxes>
           {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>

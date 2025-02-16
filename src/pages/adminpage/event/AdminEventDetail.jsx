@@ -12,7 +12,7 @@ import CheckBoxIcon from "../../../assets/icons/AdminCheckbox.svg";
 import CheckBoxIconRed from "../../../assets/icons/AdminCheckboxRed.svg";
 import EventContent from "../components/EventContent";
 
-import SearchBar from '../components/SearchBar';
+import SearchBar_Mock from '../components/SearchBar_Mock';
 import Calendar from "../components/Calendar";
 
 
@@ -22,7 +22,7 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_SUB = "#919191";
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const token_admin = localStorage.getItem("adminToken");
 const colLabels = ["이벤트 날짜", "이벤트명"];
 
 function AdminEventDetail() {
@@ -192,7 +192,7 @@ function AdminEventDetail() {
       <Tilte>이벤트 관리</Tilte>
 
       <SearchSection>
-        <SearchBar />
+        <SearchBar_Mock />
         <CheckBoxes>
           {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>

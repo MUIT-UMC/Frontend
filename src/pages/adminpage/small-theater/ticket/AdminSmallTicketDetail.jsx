@@ -9,7 +9,7 @@ import SearchIconRed from "../../../../assets/icons/AdminSearchRed.svg";
 import CheckBoxIcon from "../../../../assets/icons/AdminCheckbox.svg";
 import CheckBoxIconRed from "../../../../assets/icons/AdminCheckboxRed.svg";
 
-import SearchBar from '../../components/SearchBar';
+import SearchBar_Mock from '../../components/SearchBar_Mock';
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -18,7 +18,7 @@ const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const token_admin = localStorage.getItem("adminToken");
 const colLabels = ["소극장 공연 이름", "날짜/시간", "예약현황"];
 
 export default function AdminSmallTicketDetail() {
@@ -145,12 +145,12 @@ export default function AdminSmallTicketDetail() {
         <MenuLink $active={location.pathname.startsWith("/adminpage/small-theater/reserve")}
         to="/adminpage/small-theater/reserve">
             예약 내역 관리</MenuLink>
-        <MenuLink $active={location.pathname.startsWith("/adminpage/small-theater/refund")}
+        {/* <MenuLink $active={location.pathname.startsWith("/adminpage/small-theater/refund")}
         to="/adminpage/small-theater/refund">
-            환불 내역 관리</MenuLink>
+            환불 내역 관리</MenuLink> */} {/* 데모데이 이후 구현 */}
       </PageMenu>
       <SearchSection>
-        <SearchBar/>
+        <SearchBar_Mock/>
         <CheckBoxes>
           {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>

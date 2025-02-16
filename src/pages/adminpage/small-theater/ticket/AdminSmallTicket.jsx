@@ -13,7 +13,7 @@ import SingleLeftIcon from "../../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../../assets/icons/DoubleRight.svg";
 
-import SearchBar1 from "../../components/SearchBar1";
+import SearchBar from "../../components/SearchBar";
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -22,7 +22,7 @@ const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const token_admin = localStorage.getItem("adminToken");
 
 const colKeys = ["musicalName", "schedule", "reserveStatus"];
 const colLabels = ["소극장 공연 이름", "날짜/시간", "예약현황"];
@@ -160,7 +160,7 @@ export default function AdminSmallTicket() {
             환불 내역 관리</MenuLink> */} {/* 데모데이 이후 구현 */}
       </PageMenu>
       <SearchSection>
-        <SearchBar1 onSearch={handleSearch}/>
+        <SearchBar onSearch={handleSearch}/>
         <CheckBoxes>
           {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>

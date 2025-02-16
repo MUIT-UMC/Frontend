@@ -9,7 +9,7 @@ import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
 import CheckBoxIcon from "../../../assets/icons/AdminCheckbox.svg";
 import CheckBoxIconRed from "../../../assets/icons/AdminCheckboxRed.svg";
 
-import SearchBar from '../components/SearchBar';
+import SearchBar_Mock from '../components/SearchBar_Mock';
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -18,7 +18,7 @@ const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const token_admin = localStorage.getItem("adminToken");
 const colLabels = ["뮤지컬", "기간", "가격"];
 
 export default function AdminMusicalDetail() {
@@ -111,7 +111,7 @@ export default function AdminMusicalDetail() {
     <Container>
       <Tilte>뮤지컬 관리</Tilte>
       <SearchSection>
-        <SearchBar/>
+        <SearchBar_Mock/>
         <CheckBoxes>
           {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>

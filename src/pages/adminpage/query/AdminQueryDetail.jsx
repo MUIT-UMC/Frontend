@@ -9,7 +9,7 @@ import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
 import CheckBoxIcon from "../../../assets/icons/AdminCheckbox.svg";
 import CheckBoxIconRed from "../../../assets/icons/AdminCheckboxRed.svg";
 
-import SearchBarShort from "../components/SearchBarShort";
+import SearchBarShort_Mock from "../components/SearchBarShort_Mock";
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -18,7 +18,7 @@ const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const token_admin = localStorage.getItem("adminToken");
 const colLabels = ["아이디", "이름", "E-mail", "번호", "날짜/시간(최신순)", "진행도"];
 
 export default function AdminQueryDetail() {
@@ -125,7 +125,7 @@ const formatDate = (dateString) => {
     <Container>
       <Tilte>문의</Tilte>
       <SearchSection>
-        <SearchBarShort/>
+        <SearchBarShort_Mock/>
         <CheckBoxes>
           {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>

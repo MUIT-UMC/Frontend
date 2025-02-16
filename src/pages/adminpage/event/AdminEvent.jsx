@@ -13,7 +13,7 @@ import SingleLeftIcon from "../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../assets/icons/DoubleRight.svg";
 
-import SearchBar1 from "../components/SearchBar1";
+import SearchBar from "../components/SearchBar";
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -22,7 +22,7 @@ const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+const token_admin = localStorage.getItem("adminToken");
 
 const colKeys = ["musicalName", "place"];
 const colLabels = ["뮤지컬", "장소"];
@@ -140,7 +140,7 @@ export default function AdminEvent() {
     <Container>
       <Tilte>이벤트 관리</Tilte>
       <SearchSection>
-        <SearchBar1 onSearch={handleSearch}/>
+        <SearchBar onSearch={handleSearch}/>
         <CheckBoxes>
           <CheckBoxWrapper>
             <CheckBox onClick={() => toggleCheck(0)}>

@@ -7,7 +7,7 @@ import SingleLeftIcon from "../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../assets/icons/DoubleRight.svg";
 
-import SearchBar1 from "../components/SearchBar1";
+import SearchBar from "../components/SearchBar";
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -196,7 +196,7 @@ export default function AdminVision() {
     <Container>
       <Tilte>시야 관리</Tilte>
       <SearchSection>
-        <SearchBar1 onSearch={handleSearch}/>
+        <SearchBar onSearch={handleSearch}/>
       </SearchSection>
 
       <AddMusical>

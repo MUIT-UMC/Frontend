@@ -11,8 +11,7 @@ import SingleLeftIcon from "../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../assets/icons/DoubleRight.svg";
 
-// 기존 SearchBar1 (혹은 SearchBar) 컴포넌트 import
-import SearchBar1 from "../components/SearchBar1";
+import SearchBar from "../components/SearchBar";
 
 // 색상 상수
 const COLOR_WHITE = "#FFFFFF";
@@ -243,7 +242,7 @@ export default function AdminSmallTheater() {
       <Title>소극장 공연 관리</Title>
       
       <SearchSection>
-        <SearchBar1 onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} />
 
         <CheckBoxes>
           {colLabels.map((label, idx) => (
