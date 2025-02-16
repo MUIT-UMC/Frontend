@@ -30,7 +30,7 @@ const colLabels = ["아이디", "이름", "E-mail", "번호", "성별"];
 export default function AdminUser() {
 
   // 사용자 데이터 API
-  const [userData, setuserData] = useState([]);
+  const [userData, setUserData] = useState([]);
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -50,12 +50,12 @@ export default function AdminUser() {
         phone: item.phone,
         gender: item.gender === "MALE" ? "남" : "여"
       }));
-      setuserData(refined);
+      setUserData(refined);
 
     } catch (err) {
       console.error("사용자 조회 실패:", err);
       alert("사용자 목록을 불러오는 중 오류가 발생했습니다.");
-      setuserData([]); 
+      setUserData([]); 
     }
   };
 
