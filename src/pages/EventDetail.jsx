@@ -4,15 +4,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import EventContent from "../components/eventcheck/EventContent";
 import Calendar from "../components/Calendar2";
 import ChevronRight from '../assets/icons/ChevronRight.svg';
-import useFetch from "../hooks/useFetch";
+import useCustomFetch from "../hooks/fetchWithAxios";
 import formatDate from "../utils/formatDate";
 
 function EventDetail() {
   const { musicalId } = useParams();
   const [selectedDate, setSelectedDate] = useState(null);
 
-  const { data: musicalEvents } = useFetch(`/events/${musicalId}`);
-  const { data: musicals } = useFetch(`/musicals/${musicalId}`);
+  const { data: musicalEvents } = useCustomFetch(`/events/${musicalId}`);
+  const { data: musicals } = useCustomFetch(`/musicals/${musicalId}`);
 
   const handleDateSelect = (date) => {
       setSelectedDate(date);
