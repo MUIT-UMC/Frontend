@@ -154,10 +154,10 @@ export default function AdminSmallTicket() {
         $active={location.pathname === "/adminpage/small-theater/reserve"}
         to="/adminpage/small-theater/reserve">
             예약 내역 관리</MenuLink>
-        <MenuLink 
+        {/* <MenuLink 
         $active={location.pathname === "/adminpage/small-theater/refund"}
         to="/adminpage/small-theater/refund">
-            환불 내역 관리</MenuLink>
+            환불 내역 관리</MenuLink> */} {/* 데모데이 이후 구현 */}
       </PageMenu>
       <SearchSection>
         <SearchBar1 onSearch={handleSearch}/>

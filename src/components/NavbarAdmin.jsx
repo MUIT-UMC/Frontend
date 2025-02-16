@@ -72,9 +72,9 @@ const NavbarAdmin = () => {
             <SubMenuBox $active={location.pathname.startsWith("/adminpage/small-theater/reserve")}>
               <SubMenuLink to="/adminpage/small-theater/reserve">예약 내역 관리</SubMenuLink>
             </SubMenuBox>
-            <SubMenuBox $active={location.pathname.startsWith("/adminpage/small-theater/refund")}>
+            {/* <SubMenuBox $active={location.pathname.startsWith("/adminpage/small-theater/refund")}>
               <SubMenuLink to="/adminpage/small-theater/refund">환불 내역 관리</SubMenuLink>
-            </SubMenuBox>
+            </SubMenuBox> */}  {/* 데모데이 이후 구현 */}
           </SideMenuSub>
           )}
   
