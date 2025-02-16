@@ -33,10 +33,10 @@ const HeartButton = ({liked, setLiked, musicalId}) => {
           },
         }
       );
-      alert("좋아요를 눌렀습니다");
+      // alert("좋아요를 눌렀습니다");
       console.log(response.data);
     } catch (error) {
-      alert("좋아요 오류");
+     // alert("좋아요 오류");
       console.error(error);
     }
   };
@@ -53,10 +53,10 @@ const HeartButton = ({liked, setLiked, musicalId}) => {
           },
         }
       );
-      alert("좋아요를 취소했습니다.");
+      // alert("좋아요를 취소했습니다.");
       console.log(response.data);
     } catch (error) {
-      alert("좋아요 취소 오류.");
+     // alert("좋아요 취소 오류.");
       console.error(error);
     }
   };
@@ -69,7 +69,7 @@ const HeartButton = ({liked, setLiked, musicalId}) => {
       isClicked={isClicked}
       onClick={() => {
         setLiked(!liked); 
-        // handleClick();
+        handleClick();
         if (liked) {
           handleUnlike(); // 함수 실행
         } else {

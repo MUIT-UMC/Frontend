@@ -9,7 +9,8 @@ import { useState } from "react";
 import HeartButton from "../../components/HeartButton";
 import useMoveScroll from "../../hooks/useMoveScroll";
 function MainContent({data,loading, error}) {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(data?.result?.isLike);
+  console.log(data?.result?.isLike);
   
 
   if (loading) return <div>Loading...</div>;
