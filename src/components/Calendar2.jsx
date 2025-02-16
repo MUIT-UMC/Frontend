@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NextMonth from "../assets/icons/NextMonth.svg";
 import PrevMonth from "../assets/icons/PrevMonth.svg";
-import useFetch from "../hooks/useFetch";
+import useCustomFetch from "../hooks/fetchWithAxios";
 import { useParams } from "react-router-dom";
 
 const Calendar = ({ variant = "default", onDateSelect }) => {
@@ -11,7 +11,7 @@ const Calendar = ({ variant = "default", onDateSelect }) => {
     const [events, setEvents] = useState([]);
 
     const { musicalId } = useParams();
-    const { data } = useFetch(`/events/${musicalId}`);
+    const { data } = useCustomFetch(`/events/${musicalId}`);
 
     useEffect(() => {
         if (data?.isSuccess) {
@@ -37,7 +37,7 @@ const Calendar = ({ variant = "default", onDateSelect }) => {
         if (day) {
             const newSelectedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
             setSelectedDate(newSelectedDate);
-            onDateSelect(newSelectedDate); // 🔥 부모 컴포넌트에 전달
+            onDateSelect(newSelectedDate); 
         }
     };
 

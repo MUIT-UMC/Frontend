@@ -114,6 +114,7 @@ function Info() {
         const name = watch('name');
         const username = watch('id');
         const pw = watch('password');
+        
         const pw_check = watch('confirmPassword');
         const email = watch('email');
         const gender = watch('gender');

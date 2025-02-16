@@ -1,19 +1,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import useCustomFetch from "../../../hooks/fetchWithAxios";
 
 function Authenticate({ setIsAuthenticated }) {
+    const { fetchData } = useCustomFetch();
     const [password, setPassword] = useState("");
-    const handleAuthentication = () => {
-        // 실제 API 호출로 변경 필요
-        setIsAuthenticated(true);
+    const memberId = localStorage.getItem("userId");
+
+    const handleAuthentication = async () => {
+      try {
+        if (!password) {
+          alert('비밀번호를 입력해주세요.');
+          return;
+        }
+        const response = await fetchData(`/member/${memberId}/checkPassword`, 'POST', { password });
+        if (response?.isSuccess){
+          setIsAuthenticated(true);
+        } else {
+          alert('비밀번호가 일치하지 않습니다.');
+        }
+      } catch (error) {
+        alert('비밀번호가 일치하지 않습니다.');
+        console.log(error);
+      }
     };
 
     const navigate = useNavigate();
     const GoBack = () => {
-        navigate(-1);
+      navigate(-1);
     };
-    
+
     return (
         <AuthArea>
           <p className="Title">정보를 안전하게 보호하기 위해 <span className="colored">비밀번호를 다시 한 번 확인</span>합니다.</p>

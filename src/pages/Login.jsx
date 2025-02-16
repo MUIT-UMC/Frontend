@@ -54,11 +54,13 @@ function Login() {
             const pw = watch('password');
             const response = await fetchData("/member/email/login", 'POST', { email, pw });
             console.log("응답:", response);
-            localStorage.setItem("token", response?.result?.accessToken);
-            localStorage.setItem("userName", response?.result?.userName);
+            localStorage.setItem("accessToken", response?.result?.accessToken);
+            localStorage.setItem("refreshToken", response?.result?.refreshToken);
+            localStorage.setItem("userName", response?.result?.username);
+            localStorage.setItem("userId", response?.result?.id);
             navigate("/", {});
         } catch (error) {
-            console.error("이메일 인증 실패:", error);
+            console.error("로그인 실패:", error);
             alert("로그인에 실패했습니다.");
         }
     };

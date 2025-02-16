@@ -52,8 +52,11 @@ const View = styled.div`
     }
 `
 const ImageContainer = styled.div`
-    width: 400px;
-    height: 250px;  // 원하는 크기로 조정
+    img{
+        width: 400px;
+        height: 250px;
+        object-fit: cover;
+    }
     display: flex;
     align-items: center;
     justify-content: center;
