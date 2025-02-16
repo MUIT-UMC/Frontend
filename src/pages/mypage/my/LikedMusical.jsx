@@ -1,67 +1,39 @@
 import React from "react";
 import BoardMenu from "../../../components/board/BoardMenu";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Heart from "../../../assets/icons/heart-full.svg"
+import useFetch from "../../../hooks/useFetch";
+const token = localStorage.getItem("token");
 
-
-const mockData = [
-  {
-    id: 1,
-    name: "종의 기원",
-    image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
-    during: "2024.12.19 ~2025.03.23",
-    location: "링크아트센터드림 드림1관",
-   info: "일반예매",
-  },
-  {
-    id: 2,
-    name: "페인터즈",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-    during: "2024.12.19 ~2025.03.23",
-    location: "링크아트센터드림 드림1관",
-   extraInfo: "서대문 전용관",
-  },
-  {
-    id: 3,
-    name: "페인터즈",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-    during: "2024.12.19 ~2025.03.23",
-    location: "링크아트센터드림 드림1관",
-   extraInfo: "광화문 전용관",
-  },
-  {
-    id: 4,
-    name: "여신님이 보고계셔",
-    image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
-    during: "2024.12.19 ~2025.03.23",
-    location: "링크아트센터드림 드림1관",
-    
-  },
-  {
-    id: 5,
-    name: "종의 기원",
-    image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
-    during: "2024.12.19 ~2025.03.23",
-    location: "링크아트센터드림 드림1관",
-  },
-];
 
 function LikedMusical() {
+
+  const navigate = useNavigate();
+  const url = `/member/likeMusicals`;
+
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  },);
+  console.log(data);
+
+  
   return (
     <Container>
       <MusicalList>
-        {mockData.map((musical) => (
-          <Card key={musical.id}>
-            <Image src={musical.image} alt={musical.name} />
+        {data?.result?.map((musical) => (
+          <Card key={musical.id} onClick={() => navigate(`/detail/${musical.id}`)}>
+            <Image src={musical.posterUrl} alt={musical.name} />
             <CardHeader>
               <CardTitle>{musical.name}</CardTitle>
               <LikeButton>
                 <img src={Heart} alt="Like" width={24} height={24}/>
               </LikeButton>
             </CardHeader>
-            <Theater>{musical.location}</Theater>
-            <Period>{musical.during}</Period>
+            <Theater>{musical.place}</Theater>
+            <Period>{musical.duration}</Period>
           </Card>
         ))}
       </MusicalList>
@@ -91,6 +63,7 @@ const MusicalList = styled.div`
 const Card = styled.div`
   padding: 16px;
   text-align: center;
+  
 `;
 
 const CardHeader = styled.div`
@@ -108,6 +81,10 @@ flex-direction: column;
 align-items: flex-start;
 gap: 8px;
 flex-shrink: 0;
+&:hover {
+  transform: scale(1.04);
+  transition: transform 0.2s ease;
+}
 `;
 
 const CardTitle = styled.h3`
@@ -116,13 +93,16 @@ text-align: left;
  margin-left: 20px;
  margin-top: 6px;
 
-
 /* Title-semibo */
 font-family: Pretendard;
 font-size: 24px;
 font-style: normal;
 font-weight: 700;
 line-height: normal;
+ overflow: hidden;
+  white-space: nowrap; /* 한 줄로 표시 */
+  text-overflow: ellipsis; /* 말줄임(...) 적용 */
+  max-width: 180px; /* 최대 너비 설정 (적절히 조절) */
 `;
 
 const Theater = styled.p`
@@ -137,6 +117,10 @@ font-size: 16px;
 font-style: normal;
 font-weight: 500;
 line-height: 25px; /* 156.25% */
+ overflow: hidden;
+  white-space: nowrap; /* 한 줄로 표시 */
+  text-overflow: ellipsis; /* 말줄임(...) 적용 */
+  max-width: 226px; /* 최대 너비 설정 (적절히 조절) */
 `;
 
 const Period = styled.p`

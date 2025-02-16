@@ -58,7 +58,7 @@ function ReviewPost() {
   const details = [
     { label: "뮤지컬명", value: musicalName},
     { label: "장소", value: location },
-    { label: "평점", value: <RatingStars rating={rating} starSize={36}/> },
+    { label: "평점", value: <RatingStars rating={rating}/> },
     { label: "특징", value: content},
   ];
 
