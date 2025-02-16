@@ -2,160 +2,73 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FormattedDate from "../components/date/FormattedDate";
+import useFetch from "../hooks/useFetch";
 
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
-// Mock 데이터
-const mockTodayMusical = [
-  {
-    id: 1,
-    name: "베르테르",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhu1LYwXx-Eq6-QrtTz-JYHNhuO_o6fZarhQ&s",
-    time: "11:00",
-   extraInfo: "25주년 공연"
-  },
-  {
-    id: 2,
-    name: "미아 파밀리아",
-    image: "https://image.yes24.com/themusical/fileStorage/ThemusicalAdmin/Play/Image/20200401094018e1ae4d9f808343ea8365cc3c662d59e3.jpg",
-    time: "11:00",
-  },
-];
-
-
-const mockTicketListMusicals = [
-  {
-    id: 1,
-    name: "종의 기원",
-    image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
-    date: "2025-01-20",
-    time: "11:00",
-   info: "일반예매",
-  },
-  {
-    id: 2,
-    name: "페인터즈",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-    date: "2025-01-20",
-    time: "14:00",
-   info: "일반예매",
-   extraInfo: "서대문 전용관",
-  },
-  {
-    id: 3,
-    name: "페인터즈",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-    date: "2025-01-25",
-    time: "14:00",
-   info: "일반예매",
-   extraInfo: "광화문 전용관",
-  },
-  {
-    id: 4,
-    name: "여신님이 보고계셔",
-    image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
-    date: "2025-01-30",
-    time: "16:00",
-   info: "4차 티켓 오픈",
-    
-  },
-  {
-    id: 5,
-    name: "종의 기원",
-    image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
-    date: "2025-01-20",
-    time: "11:00",
-    info: "일반예매",
-  },
-  {
-    id: 6,
-    name: "페인터즈",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-    date: "2025-01-20",
-    time: "14:00",
-    info: "일반예매",
-    extraInfo: "서대문 전용관",
-  },
-  {
-    id: 7,
-    name: "페인터즈",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-    date: "2025-01-25",
-    time: "14:00",
-    info: "일반예매",
-    extraInfo: "광화문 전용관",
-  },
-  {
-    id: 8,
-    name: "여신님이 보고계셔",
-    image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
-    date: "2025-01-30",
-    time: "16:00",
-   info: "4차 티켓 오픈",
-  },
-  {
-    id: 9,
-    name: "종의 기원",
-    image: "https://ticketimage.interpark.com/Play/image/large/24/24016611_p.gif",
-    date: "2025-01-20",
-    time: "11:00",
-    info: "일반예매",
-  },
-  {
-    id: 10,
-    name: "페인터즈",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-    date: "2025-01-20",
-    time: "14:00",
-    info: "일반예매",
-    extraInfo: "서대문 전용관",
-  },
-  {
-    id: 11,
-    name: "페인터즈",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGxX1Z8cUHHnvtIe87AtR0rFGbi8Q2PRd9Q&s",
-    date: "2025-01-25",
-    time: "14:00",
-   info: "일반예매",
-   extraInfo: "광화문 전용관",
-  },
-  {
-    id: 12,
-    name: "여신님이 보고계셔",
-    image: "https://ticketimage.interpark.com/Play/image/large/24/24014618_p.gif",
-    date: "2025-01-30",
-    time: "16:00",
-   info: "4차 티켓 오픈",
-  },
-];
 
 const Upcoming = () => {
-  const [todayMusicals, setTodayMusicals] = useState([]);
-  const [TicketListMusicals, setTicketListMusicals] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0); // 현재 표시 중인 뮤지컬 인덱스
+  const [todayMusicals, setTodayMusicals] = useState([]);
+  const [ticketListMusicals, setTicketListMusicals] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const todayUrl = "/musicals/open/today";
+  const allUrl = "/musicals/open/all";
+
+  const { data: todayData, error: todayError, loading: todayLoading } = useFetch(todayUrl, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  });
+
+  const { data: allData, error: allError, loading: allLoading } = useFetch(allUrl, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  });
 
   useEffect(() => {
-    const fetchMusicals = async () => {
-      try {
-        // const response = await axios.get("/api/musicals");
-        // setMusicals(response.data);
+    if (todayData && todayData.result) {
+      const formattedTodayMusicals = todayData.result.map((musical) => ({
+        id: musical.id,
+        name: musical.name,
+        image: musical.posterUrl,
+        time: musical.openTime,
+        extraInfo: musical.openInfo,
+      }));
+      setTodayMusicals(formattedTodayMusicals);
+    }
+  }, [todayData]);
 
-        //Mock 데이터
-        setTodayMusicals(mockTodayMusical);
-        setTicketListMusicals(mockTicketListMusicals);
-      } catch (error) {
-        console.error("Error fetching musicals:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useEffect(() => {
+    if (allData && allData.result && allData.result.content) {
+      const formattedTicketListMusicals = allData.result.content.map((musical) => ({
+        id: musical.id,
+        name: musical.name,
+        image: musical.posterUrl,
+        date: musical.openDate,
+        info: musical.openInfo,
+        extraInfo: musical.place,
+      }));
+      setTicketListMusicals(formattedTicketListMusicals);
+    }
+  }, [allData]);
 
-    fetchMusicals();
-  }, []);
+  useEffect(() => {
+    if (!todayLoading && !allLoading) {
+      setLoading(false);
+    }
+  }, [todayLoading, allLoading]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  if (todayError || allError) {
+    return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
+  }
+
 
   const handleMusicalClick = (index) => {
     setActiveIndex(index); // 클릭한 뮤지컬의 인덱스를 저장
@@ -187,7 +100,7 @@ const Upcoming = () => {
                      {musical.extraInfo&&(<span className="extra-info">{musical.extraInfo}</span>)}
                   </div>
                   <div className="datetime">오늘 {musical.time}</div>
-                  <div className="info">2차 티켓 오픈</div>
+                  <div className="info">{musical.extraInfo}</div>
                 </div>
               )}
             </div>
@@ -199,7 +112,7 @@ const Upcoming = () => {
       <TicketListWrapper>
         <TicketListTitle>티켓 오픈 예정
         <TicketList>
-          {TicketListMusicals.map((musical) => (
+          {ticketListMusicals.map((musical) => (
            <MusicalItem key={musical.id}>
               <img src={musical.image} alt={musical.name} />
               <div className="details">
@@ -207,9 +120,7 @@ const Upcoming = () => {
                 {musical.name}
                 {musical.extraInfo&&(<span className="extra-info">{musical.extraInfo}</span>)}
                 </div>
-               <div className="datetime">
-                 <FormattedDate date={musical.date}/> {musical.time}
-               </div>
+               <div className="datetime">{musical.date}</div>
                <div className="info">{musical.info}</div>
               </div>
           </MusicalItem>
