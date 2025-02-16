@@ -57,6 +57,7 @@ import AdminMusicalDetail from "./pages/adminpage/musical/AdminMusicalDetail";
 import AdminEvent from "./pages/adminpage/event/AdminEvent";
 import AdminEventDetail from "./pages/adminpage/event/AdminEventDetail";
 import AdminVision from "./pages/adminpage/vision/AdminVision";
+import AdminVisionDetail from "./pages/adminpage/vision/AdminVisionDetail";
 import AdminQuery from "./pages/adminpage/query/AdminQuery";
 import AdminQueryDetail from "./pages/adminpage/query/AdminQueryDetail";
 import AdminMypage from "./pages/adminpage/mypage/AdminMypage";
@@ -167,6 +168,7 @@ function App() {
             <Route path="event" element={<AdminEvent />} />
             <Route path="event/detail/:musicalId" element={<AdminEventDetail />} />
             <Route path="vision" element={<AdminVision />} />
+            <Route path="vision/detail/:placeId" element={<AdminVisionDetail />} />
             <Route path="query" element={<AdminQuery />} />
             <Route path="query/detail/:queryId" element={<AdminQueryDetail />} />
             <Route path="mypage" element={<AdminMypage />} />
