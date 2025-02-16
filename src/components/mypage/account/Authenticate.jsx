@@ -17,6 +17,8 @@ function Authenticate({ setIsAuthenticated }) {
         const response = await fetchData(`/member/${memberId}/checkPassword`, 'POST', { password });
         if (response?.isSuccess){
           setIsAuthenticated(true);
+        } else {
+          alert('비밀번호가 일치하지 않습니다.');
         }
       } catch (error) {
         alert('비밀번호가 일치하지 않습니다.');
