@@ -47,7 +47,7 @@ export default function AdminUserDetail() {
     name: "",
     phone: "",
     email: "",
-    birthDate: "", // 생년월일
+    //birthDate: "", // 생년월일 삭제
     gender: "",
     address: "",
   });
@@ -72,7 +72,7 @@ export default function AdminUserDetail() {
         name: data.name,
         phone: data.phone,
         email: data.email,
-        birthDate: data.birthDate || "",
+        //birthDate: data.birthDate || "",    //삭제
         gender: data.gender === "MALE" ? "남" : "여",
         address: data.address || "",
       };
@@ -97,14 +97,13 @@ export default function AdminUserDetail() {
   // 수정 적용 -> PATCH /admin/members/{userId}/update
   const handleApply = async () => {
     try {
-      // gender “남” => “MALE” / “여” => “FEMALE”
       const gValue = editForm.gender === "남" ? "MALE" : "FEMALE";
       const patchBody = {
         username: editForm.username,
         name: editForm.name,
         phone: editForm.phone,
         email: editForm.email,
-        birthDate: editForm.birthDate,
+        //birthDate: editForm.birthDate,  //삭제
         gender: gValue,
         address: editForm.address,
       };
@@ -173,10 +172,10 @@ export default function AdminUserDetail() {
               <Th>E-mail</Th>
               <Td>{userInfo.email}</Td>
             </Tr>
-            <Tr>
+            {/* <Tr>
               <Th>생년월일</Th>
               <Td>{userInfo.birthDate}</Td>
-            </Tr>
+            </Tr> */}
             <Tr>
               <Th>성별</Th>
               <Td>{userInfo.gender}</Td>
@@ -231,7 +230,7 @@ export default function AdminUserDetail() {
                 />
               </Td>
             </Tr>
-            <Tr>
+            {/* <Tr>
               <Th>생년월일</Th>
               <Td>
                 <Input
@@ -240,7 +239,7 @@ export default function AdminUserDetail() {
                   onChange={handleChange}
                 />
               </Td>
-            </Tr>
+            </Tr> */}
             <Tr>
               <Th>성별</Th>
               <Td>
