@@ -66,7 +66,7 @@ function Review({ musicalName, score }) {
         <Left>
         <Title>관람 평점</Title>
         <RatingWrapper>
-          <RatingStars rating={score} starSize={36}/>
+          <RatingStars rating={score}/>
           <Rating>{score}</Rating>
         </RatingWrapper>
         </Left>

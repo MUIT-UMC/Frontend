@@ -9,7 +9,8 @@ import { useState } from "react";
 import HeartButton from "../../components/HeartButton";
 import useMoveScroll from "../../hooks/useMoveScroll";
 function MainContent({data,loading, error}) {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(data?.result?.isLike);
+  console.log(data?.result?.isLike);
   
 
   if (loading) return <div>Loading...</div>;
@@ -39,6 +40,9 @@ function MainContent({data,loading, error}) {
   ];
 
   const {element, onMoveToElement} = useMoveScroll();
+
+
+
   return (
     <>
       <Wrapper>
@@ -48,12 +52,15 @@ function MainContent({data,loading, error}) {
 
         <TitleWrapper>
           <h1>{name}</h1>
-          <HeartButton setLiked={setLiked} liked={liked}/>
+          <HeartButton 
+            setLiked={setLiked} liked={liked} 
+            musicalId={musical.id}
+          />
         </TitleWrapper>
         <div>반별 test용으로 별점을 4.6 고정으로 해둠</div>
         <RatingWrapper>
           
-          <RatingStars rating={4.6} starSize={36}/>
+          <RatingStars rating={score} />
           <Rating>{score}</Rating>
         </RatingWrapper>
         

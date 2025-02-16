@@ -4,11 +4,18 @@ import HwangMinsu from "../../../assets/images/actor-pic-hwangminsu.png";
 import LikeActorButton from "../../../components/detail/LikeActorButton";
 import { useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("token");
 function CastsDetail() {
   const {musicalId} = useParams();
   const url = `/musicals/${musicalId}/casting`;
 
-  const { data, error, loading } = useFetch(url);
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  },);
+
   console.log('캐스팅 데이터', data?.result);
 
   return (
