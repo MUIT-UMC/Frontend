@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
+import axios from 'axios';
 
 import SearchIconBlack from "../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
@@ -19,128 +20,61 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-const queryData = [
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "미완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "미완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "미완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "미완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "미완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "미완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "미완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  {id: "diana8443", name: "전시연", email: "jun­siyeon123654@gmail.com", phone: "010-6299-8456", dateTime: "2024.01.18 / 14:00", progress: "완료"},
-  
-];
-const colKeys = ["id", "name", "email", "phone", "dateTime", "progress"];
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = import.meta.env.VITE_APP_ACCESS_TOKEN_ADMIN;
+
+const colKeys = ["username", "name", "email", "phone", "queryTime", "progress"];
 const colLabels = ["아이디", "이름", "E-mail", "번호", "날짜/시간(최신순)", "진행도"];
 
 export default function AdminQuery() {
-  // 체크박스 //
+  
+  // 문의 데이터 API
+  const [queryData, setqueryData] = useState([]);
+  useEffect(() => {
+    fetchQueries();
+  }, []);
+  const fetchQueries = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/admin/inquiries`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`
+        }
+      });
+      const contentArr = response.data.result.content || [];
+      const refined = contentArr.map(item => ({
+        queryId: item.inquiryId,  // 문의 관리 번호
+        userId: item.memberId,    // 유저 관리 번호
+        username: item.userName,  // 아이디
+        name: item.memberName,    // 진짜 이름
+        email: item.email,
+        phone: item.phone,
+        queryTime: formatDate(item.createdAt),
+        progress: item.inquiryStatus === "AWAIT" ? "미완료" : "완료"
+      }));
+      setqueryData(refined);
+    } catch (err) {
+      console.error("사용자 조회 실패:", err);
+      alert("사용자 목록을 불러오는 중 오류가 발생했습니다.");
+      setqueryData([]); 
+    }
+  };
+  // 날짜 포맷 함수 (YYYY.MM.DD / HH:mm)
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  // 날짜 YYYY.MM.DD 형식으로 변환
+  const formattedDate = date.toISOString().split('T')[0].replace(/-/g, '.');
+  // 시간 HH:mm 형식으로 변환
+  const formattedTime = date.toTimeString().split(' ')[0].slice(0, 5); 
+  return `${formattedDate} / ${formattedTime}`;
+};
+
+  // 1. 체크박스 기능 ////////////////////////////////////////////////
   const [checkboxes, setCheckboxes] = useState([false, false, false, false, false, false]);
   const toggleCheck = (index) => {
     setCheckboxes((prev) => {
-      // 이미 체크한 것 다시 클릭 => 전부 해제
       if (prev[index]) {
         return [false, false, false, false, false, false];
       }
-      // 해당 index만 true
       const newState = [false, false, false, false, false, false];
       newState[index] = true;
       return newState;
@@ -148,26 +82,24 @@ export default function AdminQuery() {
   };
   const isAnyChecked = checkboxes.some((checked) => checked === true);
 
-  // 검색 상태 //
+  // 2. SearchBar 검색 기능 ////////////////////////////////////////////
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (inputValue) => {
     setSearchTerm(inputValue);
     setCurrentPage(1);
   };
 
-  // 테이블에 표시할 열 //
+  // 3. Table 기능 ////////////////////////////////////////////////////
   let displayedColIndexes = [];
   const checkedIndex = checkboxes.findIndex((val) => val === true);
-
   if (checkedIndex === -1) {
-    // 아무것도 체크 안됨 => 모든 열 표시
-    displayedColIndexes = [0, 1, 2, 3, 4, 5]; 
+    displayedColIndexes = [0, 1, 2, 3, 4, 5];   // 전부 false => 전체 컬럼
   } else {
     displayedColIndexes = [checkedIndex];
   }
 
-  //  SearchBar 검색 로직 ////
-  let searchKey = "id"; // default 
+  // 4. SearchBar 검색 로직 ////////////////////////////////////////////
+  let searchKey = "username"; // default 
   if (checkedIndex !== -1) {
     searchKey = colKeys[checkedIndex];
   }
@@ -177,7 +109,7 @@ export default function AdminQuery() {
     return fieldValue.includes(searchTerm.toLowerCase());
   });
 
-  //  페이지네이션 기능 /////
+  // 5. 페이지네이션 기능 ////////////////////////////////////////////////////
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 20;
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -269,7 +201,7 @@ export default function AdminQuery() {
                   })}
                   {/* 상세페이지버튼 */}
                   <td>
-                    <DetailButton to={`/adminpage/query/detail/${query.id}`}>상세</DetailButton>
+                    <DetailButton to={`/adminpage/query/detail/${query.queryId}`}>상세</DetailButton>
                   </td>
                 </tr>
               ))}
