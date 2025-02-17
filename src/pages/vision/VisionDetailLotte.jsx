@@ -45,8 +45,8 @@ import {
 } from "../../assets/theaterSeat/charlotte/charlotteSeat";
 
 
-const VisionDetail = () => {
-    const { theatreId } = useParams();
+const VisionDetail = ({theatreId}) => {
+    //const { theatreId } = useParams();
     const { data: theatre, error, loading } = useCustomFetch(
         `/theatres/${theatreId}/sectionType?sectionType`
     );
@@ -129,7 +129,7 @@ const VisionDetail = () => {
         <Container>
             <DetailArea>
                 <div>
-                    <SearchBarDetail />
+                    {/*<SearchBarDetail />*/}
 
                     <SeatArea>
                         <div className="Stage">STAGE</div>
@@ -269,6 +269,7 @@ const DetailArea = styled.div`
 `
 const SeatArea = styled.div`
     width: 580px;
+    margin-top: 50px;
 
     .Stage{
         justify-self: center;
