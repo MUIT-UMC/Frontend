@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
+import useCustomFetch from "../../../hooks/fetchWithAxios";
 import Authenticate from "../../../components/mypage/account/Authenticate";
 import SeePassword from "../../../assets/icons/SeePassword.svg"
 
 function ChangePassword() {
+  const { fetchData } = useCustomFetch();
+  const memberId = localStorage.getItem("userId");
   const [isAuthenticated, setIsAuthenticated] = useState(false); // 인증 상태 관리
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -15,24 +17,26 @@ function ChangePassword() {
     navigate(-1);
   };
 
-
-  // 비밀번호 변경 로직
-  const handleChangePassword = () => {
+  
+  const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
-      alert("새 비밀번호가 일치하지 않습니다.");
+      alert("비밀번호를 다시 확인해 주십시오.");
       return;
     }
-
-    // 비밀번호 변경 API 호출
-    console.log("새 비밀번호:", newPassword);
-    alert("비밀번호가 성공적으로 변경되었습니다.");
+    const response = await fetchData(`/member/${memberId}/changePassword`, 'PATCH', { 
+      newPassword: newPassword,
+      newPasswordConfirm : confirmPassword });
+    if (response?.isSuccess){
+      alert("비밀번호가 성공적으로 변경되었습니다.");
+      GoBack();
+    }
+    console.log("응답:", response);
   };
 
   const [isShowPWChecked, setIsShowPWChecked] = useState(false);
   const handleShowPWChecked = async() => {
     setIsShowPWChecked(!isShowPWChecked);
   };
-
 
   return (
     <Container>
@@ -71,7 +75,7 @@ function ChangePassword() {
             <button onClick={GoBack} className="previous">이전</button>
             <button onClick={handleChangePassword}
             className="confirm"
-            disabled={!newPassword || newPassword !== confirmPassword}
+            disabled={!newPassword || !confirmPassword}
             >변경</button>
           </BtnArea>
 
