@@ -238,11 +238,11 @@ export default function AdminSmallReserveDetail() {
                         : COLOR_GRAY_MAINTEXT,
                   }}
                 >
-                  <option value="예약 중">예약 중</option>
-                  <option value="예약 완료">예약 완료</option>
-                  <option value="사용 완료">사용 완료</option>
-                  <option value="취소 중">취소 중</option>
-                  <option value="취소 완료">취소 완료</option>
+                  <option value="예약 중" style={{color: COLOR_MUIT_RED}}>예약 중</option>
+                  <option value="예약 완료" style={{color: COLOR_GRAY_MAINTEXT}}>예약 완료</option>
+                  <option value="사용 완료" style={{color: COLOR_GRAY_MAINTEXT}}>사용 완료</option>
+                  <option value="취소 중" style={{color: COLOR_MUIT_RED}}>취소 중</option>
+                  <option value="취소 완료" style={{color: COLOR_GRAY_MAINTEXT}}>취소 완료</option>
                 </Select>
               </Td>
             </Tr>

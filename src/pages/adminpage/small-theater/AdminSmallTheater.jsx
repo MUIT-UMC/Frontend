@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import SearchIconBlack from "../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
@@ -20,141 +22,60 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-// 소극장 공연 관리 Mock 데이터
-export const smallTheaterData = [
-  { title: "아스날", dateTime: "1899-01-09 / 14:50", registrant: "사카", status: "확인 전" },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "확인 전" },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "확인 전" },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "등록" },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "등록" },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "등록" },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "등록" },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-  { title: "실종", dateTime: "2025-01-09 / 14:50", registrant: "홍길동", status: "반려", },
-];
-
-export const colKeys = ["title", "dateTime", "registrant", "status"];
-export const colLabels = ["소극장 공연 이름", "날짜/시간", "등록자명", "상태"];
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = localStorage.getItem("adminToken");
+const colKeys = ["title", "schedule", "registerName", "status"];
+const colLabels = ["소극장 공연 이름", "날짜/시간", "등록자명", "상태"];
 
 export default function AdminSmallTheater() {
-  // 1) 체크박스 상태: 4개 열 (title, dateTime, registrant, status)
+
+  // 소극장 공연 정보 API
+    const [smallTheaterData, setSmallTheaterData] = useState([]);
+    useEffect(() => {
+      fetchSmallTheaters();
+    }, []);
+    const fetchSmallTheaters = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/admin/amateur-shows`, {
+          headers: {
+            Authorization: `Bearer ${token_admin}`
+          }
+      });
+        const contentArr = response.data.result.content || [];
+        const refined = contentArr.map((item) => {
+          let statusText = item.amateurStatus;
+          switch (statusText) {
+            case "YET":
+              statusText = "확인 전";
+              break;
+            case "APPROVED":
+              statusText = "등록";
+              break;
+            case "AGAIN":
+              statusText = "반려";
+              break;
+            default:
+              break;
+          }
+          return {
+            smallMusicalId: item.amateurShowId,
+            title: item.amateurShowName, 
+            schedule: item.schedule,
+            registerName: item.memberName,
+            status: statusText  
+          };
+        });
+        setSmallTheaterData(refined);
+      } catch (error) {
+        console.error("소극장 공연 조회 실패:", error);
+        alert("소극장 공연 목록을 불러오는 중 오류가 발생했습니다.");
+        setSmallTheaterData([]);  
+      }
+    };
+
+
+  // 1) 체크박스 ////////////////////////////////////////////////////////////////////
   const [checkboxes, setCheckboxes] = useState([false, false, false, false]);
-  
-  // 하나만 체크하도록 (사용자 관리 페이지 방식과 동일) 
-  // 혹은 여러 개 체크 가능하도록 원하는 로직으로 변경 가능
   const toggleCheck = (index) => {
     setCheckboxes((prev) => {
       if (prev[index]) {
@@ -170,7 +91,7 @@ export default function AdminSmallTheater() {
   };
   const isAnyChecked = checkboxes.some((checked) => checked);
 
-  // 2) 검색 상태
+  // 2) 검색 상태 ////////////////////////////////////////////////////////////////////
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (inputValue) => {
     setSearchTerm(inputValue);
@@ -178,7 +99,7 @@ export default function AdminSmallTheater() {
   };
 
 
-  // 3) 테이블에 표시할 열 결정
+  // 3) 테이블 ////////////////////////////////////////////////////////////////////
   let displayedColIndexes = [];
   const checkedIndex = checkboxes.findIndex((val) => val === true);
   if (checkedIndex === -1) {
@@ -189,7 +110,7 @@ export default function AdminSmallTheater() {
     displayedColIndexes = [checkedIndex];
   }
 
-  // 4) 검색 로직
+  // 4) 검색 로직 ////////////////////////////////////////////////////////////////////
   let searchKey = "title"; // 디폴트
   if (checkedIndex !== -1) {
     searchKey = colKeys[checkedIndex];
@@ -200,7 +121,7 @@ export default function AdminSmallTheater() {
     return fieldValue.includes(searchTerm.toLowerCase());
   });
 
-  // 5) 페이지네이션
+  // 5) 페이지네이션  ////////////////////////////////////////////////////////////////////
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;   // 한 페이지당 20개씩
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -281,7 +202,7 @@ export default function AdminSmallTheater() {
               {currentData.map((smalltheater, idx) => (
                 <tr key={idx}>
                   {displayedColIndexes.map((i) => {
-                    // 상태 열인 경우 & "확인 전" 시 빨강
+                    // "상태" 열인 경우 & "확인 전" 시 빨강
                     if (colKeys[i] === "status") {
                       return (
                         <td
@@ -298,7 +219,7 @@ export default function AdminSmallTheater() {
                   })}
                   <td>
                     {/* 상세 페이지 */}
-                    <DetailButton to={`/adminpage/small-theater/detail/${smalltheater.title}`}>
+                    <DetailButton to={`/adminpage/small-theater/detail/${smalltheater.smallMusicalId}`}>
                       상세
                     </DetailButton>
                   </td>

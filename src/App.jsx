@@ -62,6 +62,8 @@ import AdminQuery from "./pages/adminpage/query/AdminQuery";
 import AdminQueryDetail from "./pages/adminpage/query/AdminQueryDetail";
 import AdminMypage from "./pages/adminpage/mypage/AdminMypage";
 import AdminSmallTheater from "./pages/adminpage/small-theater/AdminSmallTheater";
+import AdminSmallTheaterDetail from "./pages/adminpage/small-theater/AdminSmallTheaterDetail";
+import AdminSTDRegist from "./pages/adminpage/small-theater/AdminSTDRegist";
 import AdminSmallTicket from "./pages/adminpage/small-theater/ticket/AdminSmallTicket";
 import AdminSmallTicketDetail from "./pages/adminpage/small-theater/ticket/AdminSmallTicketDetail";
 import AdminSmallReserve from "./pages/adminpage/small-theater/reservation/AdminSmallReserve";
@@ -174,12 +176,14 @@ function App() {
             <Route path="mypage" element={<AdminMypage />} />
             <Route path="small-theater">
               <Route index element={<AdminSmallTheater />} />
+              <Route path="detail/:smallMusicalId" element={<AdminSmallTheaterDetail />} />
+              <Route path="detail/:smallMusicalId/regist" element={<AdminSTDRegist />} />
               <Route path="ticket" element={<AdminSmallTicket />} />
               <Route path="ticket/detail/:smallMusicalId" element={<AdminSmallTicketDetail />} />
               <Route path="reserve" element={<AdminSmallReserve />} />
               <Route path="reserve/detail/:ticketId" element={<AdminSmallReserveDetail />} />
               <Route path="refund" element={<AdminSmallRefund />} />
-              <Route path="refund/detail/:smallId" element={<AdminSmallRefundDetail />} />
+              <Route path="refund/detail/:refundId" element={<AdminSmallRefundDetail />} />
             </Route>
           </Route>
         </Route>
