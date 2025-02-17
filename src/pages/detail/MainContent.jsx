@@ -98,7 +98,7 @@ function MainContent({data,loading, error}) {
             티켓 오픈 컴포넌트*/}
           </CalendarWrapper>
 
-          <EventLink>
+          <EventLink style={{ transform: "scale(0.8)", transformOrigin: "top left" }}>
             {event?.result?.eventResultListDTO.map((musical)=>(
               <EventContent
                     key={musical.id}
@@ -109,7 +109,9 @@ function MainContent({data,loading, error}) {
                     />
               ))}
 
-            <Text onClick={() => navigate(`/event-check/${data?.result?.id}`)}>이벤트 확인하기<img src={ChevronRight} /></Text>
+            <Text onClick={() => navigate(`/event-check/${data?.result?.id}`)}>
+              <p>이벤트 확인하기</p><img src={ChevronRight} />
+            </Text>
           </EventLink>
         </RightSection>
 
@@ -227,7 +229,7 @@ const Text = styled.div`
 
   display: flex;
   align-items: center;
-  justify-self: right;
+  justify-content: right;
 
   /* Body-me */
   font-family: Pretendard;
