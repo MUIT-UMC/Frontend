@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import PostMenu from "../../../components/post/PostMenu";
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 function ReviewPost() {
 

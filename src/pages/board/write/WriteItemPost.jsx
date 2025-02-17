@@ -4,7 +4,7 @@ import Camera from "../../../assets/icons/Camera.svg";
 import axios from "axios"; // axios 추가
 import { useNavigate } from "react-router-dom";
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 

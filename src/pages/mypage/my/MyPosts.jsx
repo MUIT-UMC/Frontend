@@ -6,7 +6,7 @@ import { useState } from "react";
 import PageNavigator from "../../../components/board/PageNavigator";
 import useCustomFetch from "../../../hooks/useCustomFetch";
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 
 function MyPosts() {
   const tableHeaders = [

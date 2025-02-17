@@ -7,7 +7,7 @@ import { RatingStars } from "../../../components/detail/RatingStars";
 import { useState } from "react";
 import useFetch from "../../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 
 function Review({ musicalName, score }) {
 

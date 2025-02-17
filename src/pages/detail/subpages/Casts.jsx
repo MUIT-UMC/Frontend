@@ -5,7 +5,7 @@ import LikeActorButton from "../../../components/detail/LikeActorButton";
 import { useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 function CastsDetail() {
   const {musicalId} = useParams();
   const url = `/musicals/${musicalId}/casting`;

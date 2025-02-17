@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import TicketContainer from "../../../../components/mypage/myticket/TicketContainer";
 import useCustomFetch from "../../../../hooks/useCustomFetch";
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 
 const TicketList = ({ status }) => {

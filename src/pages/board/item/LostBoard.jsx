@@ -35,7 +35,7 @@ const [searchParams, setSearchParams] = useState({
   const url = `/losts?${queryString}`;
 
   // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
   console.log(token);
   
   const { data, error, loading } = useCustomFetch(url, {
