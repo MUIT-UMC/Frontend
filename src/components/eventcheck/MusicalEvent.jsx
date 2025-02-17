@@ -31,24 +31,24 @@ const MusicalEvent = (props) => {
 
 
     const addLike = async () => {
-        setIsLike(true); // UI 즉시 반영
+        setIsLike(true);
         try {
             await fetchData(`/musicals/${props.id}/likes`, "POST", { musicalId: props.id });
             console.log(props.id, "좋아요 등록");
         } catch (error) {
             console.error("좋아요 등록 실패:", error);
-            setIsLike(false); // 오류 발생 시 원래 상태로 복구
+            setIsLike(false);
         }
     };
 
     const cancelLike = async () => {
-        setIsLike(false); // UI 즉시 반영
+        setIsLike(false);
         try {
             await fetchData(`/musicals/${props.id}/likesCancel`, "DELETE", { musicalId: props.id });
             console.log(props.id, "좋아요 취소");
         } catch (error) {
             console.error("좋아요 취소 실패:", error);
-            setIsLike(true); // 오류 발생 시 원래 상태로 복구
+            setIsLike(true);
         }
     };
 

@@ -13,6 +13,7 @@ function EventDetail() {
 
   const { data: musicalEvents } = useCustomFetch(`/events/${musicalId}`);
   const { data: musicals } = useCustomFetch(`/musicals/${musicalId}`);
+  console.log(musicalEvents);
 
   const handleDateSelect = (date) => {
       setSelectedDate(date);
@@ -32,7 +33,7 @@ function EventDetail() {
                   <h3 className="title-B-600">{musicalEvents?.result?.musicalName}</h3>
                   <img src={ChevronRight} className="ChevronRight" />
               </div>
-              <p className="body-M-600">{musicalEvents?.result?.theatreName}</p>
+              <p className="body-M-600">{musicalEvents?.result?.place}</p>
               <p className="body-M-500">{formatDate(musicalEvents?.result?.perFrom)} ~ {formatDate(musicalEvents?.result?.perTo)}</p>
               <img src={musicals?.result?.posterUrl} className="Poster" />
           </MusicalInfo>
