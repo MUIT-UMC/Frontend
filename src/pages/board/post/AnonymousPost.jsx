@@ -30,7 +30,7 @@ function AnonymousPost() {
   
   // 게시글 데이터 
   // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
   console.log(token);
   
   const url = `/posts/${postId}`;

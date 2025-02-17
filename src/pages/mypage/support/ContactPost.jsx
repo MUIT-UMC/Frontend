@@ -12,7 +12,7 @@ import useFetch from "../../../hooks/useFetch";
 import { useState } from "react";
 
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 
 function ContactPost() {

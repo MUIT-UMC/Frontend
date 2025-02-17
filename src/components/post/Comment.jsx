@@ -7,7 +7,7 @@ import Reply from "./Reply";
 import { useState } from "react";
 import CommentInputArea from "./CommentInputArea";
 import axios from "axios";
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function Comment({data, noneCommentIcon}) {

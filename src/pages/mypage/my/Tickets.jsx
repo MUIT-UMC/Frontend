@@ -9,7 +9,7 @@ import TicketDetail from "../../../components/mypage/myticket/TicketDetail";
 import TicketList from "./ticket/TicketList";
 import useFetch from "../../../hooks/useFetch";
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 
 

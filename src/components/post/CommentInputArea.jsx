@@ -7,7 +7,7 @@ import { useState } from "react";
 import axios from "axios";
 import { GoX } from "react-icons/go";
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 {/* 에러 500 서버오류 의심? */}
 function CommentInputArea({ postId, setCommentTrigger, commentTrigger, isReplying, setIsReplying }) {
   // console.log('게시글', postId);

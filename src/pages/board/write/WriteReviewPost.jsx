@@ -5,7 +5,7 @@ import { InteractiveRatingStars } from "../../../components/detail/InteractiveRa
 import { useNavigate } from "react-router-dom";
 import MusicalIdSearchBar from "../../../components/post/MusicalIdSearchBar";
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 

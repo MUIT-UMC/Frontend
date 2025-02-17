@@ -6,7 +6,7 @@ import posterImg from "../../../../assets/images/miafamiglia-poster.png";
 import useFetch from "../../../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 
 const details2 = [

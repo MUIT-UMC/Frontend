@@ -5,7 +5,7 @@ import CommentBubble from "../../assets/icons/CommentBubbleIcon.svg";
 import ReplyArrow from "../../assets/icons/ReplyArrow.svg";
 import { useState } from "react";
 import axios from "axios";
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 function Reply({key, data}) {
   console.log(data);

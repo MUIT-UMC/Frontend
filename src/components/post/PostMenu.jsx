@@ -4,7 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 const PostMenu = ({isMyPost}) => {
   const location = useLocation();
