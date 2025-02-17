@@ -4,16 +4,20 @@ import CameraIcon from '../../assets/icons/Camera.svg';
 import CastingPictureIcon from '../../assets/icons/CastingPicture.svg';
 import PlusIcon from '../../assets/icons/plus.svg'
 import { useNavigate } from "react-router-dom"; 
+import IntermissionIcon1 from "../../assets/icons/Check.svg"
+import IntermissionIcon2 from "../../assets/icons/Check.svg"
+import CheckIntermissionIcon from "../../assets/icons/CheckRed.svg"
 
 const RegisterMusical = () => {
   const navigate = useNavigate();
+  const [intermission, setIntermission] = useState(null);
   const [posterImage, setPosterImage] = useState(null);
   const [castingImages, setCastingImages] = useState([]);
   const [noticeImages, setNoticeImages] = useState([]);
   const [summaryImage, setSummaryImage] = useState(null);
-  const [castings, setCastings] = useState([]);
-  const [staff, setStaff] = useState([]); 
-  const [ticketPrice, setTicketPrice] = useState("");
+  const [castings, setCastings] = useState([
+    { name: '', role: '', image: null },
+  ]);  
   const [formData, setFormData] = useState({
     name: "",
     place: "",
@@ -27,18 +31,33 @@ const RegisterMusical = () => {
     hashtag: "",
     runtime: "",
     notice: {
-      imgUrls: [],
       content: "",
     },
     summaries: {
-      imgUrl: "",
       content: "",
     },
+    staff: 
+      {
+        name: ""
+      },
+    tickets: [
+        { ticketType: "일반 예매", price: "" },
+        { ticketType: "홍대생 할인", price: "" },
+      ],
+
   });
-  const handleTicketPriceChange = (e) => {
-    setTicketPrice(e.target.value);
+  console.log(formData);
+  const handleIntermissionClick = (type) => {
+    setIntermission(type);
+  };
+  const handleTicketPriceChange = (e, index) => {
+    const newTickets = [...formData.tickets];
+    newTickets[index].price = e.target.value;
+    setFormData((prev) => ({ ...prev, tickets: newTickets }));
   };
   
+  
+  /*이미지 추가*/
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -53,10 +72,52 @@ const RegisterMusical = () => {
   const handleImageClick = () => {
     document.getElementById("imageUploadInput").click();
   };
+  
+  /*캐스팅 이미지 추가*/
+  const handleCastingImageUpload = (e, index) => {
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    // 이미지 파일 상태 갱신
+    const newImages = [...castingImages];
+    newImages[index] = file;
+    setCastingImages(newImages);
+  
+    // castings 상태에 이미지 반영 (미리보기용)
+    const updatedCastings = [...castings];
+    updatedCastings[index] = { ...updatedCastings[index], image: file };
+    setCastings(updatedCastings);
+  };
+  
+  const handleCastingImageClick = (index) => {
+    document.getElementById(`castingImageUploadInput-${index}`).click();
+  };
+
+  /*캐스팅 정보 추가하기*/
+  const handleAddCasting = () => {
+    setCastings([...castings, { name: '', role: '', image: null }]);
+  };
+  
+  const handleCastingChange = (index, field, value) => {
+    const updatedCastings = [...castings];
+    updatedCastings[index][field] = value;
+    setCastings(updatedCastings);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleStaffNameChange = (e) => {
+    const { value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      staff: {
+        ...prev.staff,
+        name: value,
+      },
+    }));
   };
 
   const handleNextClick = () => {
@@ -65,14 +126,10 @@ const RegisterMusical = () => {
         formData,
         posterImage,
         castingImages,
-        noticeImages,
-        summaryImage,
         castings,
-        staff,
-        ticketPrice, 
+        intermission,
       },
     });
-
   };
 
   return (
@@ -136,6 +193,26 @@ const RegisterMusical = () => {
               onChange={handleInputChange}
             />
           </InputWrapper>
+          <IntermissionWrapper>
+          <IntermissionOption 
+    selected={intermission === "include"} 
+    onClick={() => handleIntermissionClick("include")}>
+    <img 
+      src={intermission === "include" ? CheckIntermissionIcon : IntermissionIcon1} 
+      alt="인터미션 포함" 
+    />
+    <span>인터미션 포함</span>
+  </IntermissionOption>
+  <IntermissionOption 
+    selected={intermission === "none"} 
+    onClick={() => handleIntermissionClick("none")}>
+    <img 
+      src={intermission === "none" ? CheckIntermissionIcon : IntermissionIcon2} 
+      alt="인터미션 없음" 
+    />
+    <span>인터미션 없음</span>
+  </IntermissionOption>
+          </IntermissionWrapper>
           <InputWrapper>
             <Label>관람 연령</Label>
             <Input
@@ -155,25 +232,24 @@ const RegisterMusical = () => {
             value={formData.starring}
             onChange={handleInputChange} />
           </InputWrapper>
-          <InputWrapper>
-            <Label>가격</Label>
-            <Input
-  type="text"
-  name="ticketPrice"
-  placeholder="가격을 입력하세요"
-  value={ticketPrice}
-  onChange={handleTicketPriceChange}
-/>
-          </InputWrapper>
-          <InputWrapper>
-            <Label>할인</Label>
-            <Input 
-              type="text" 
-              name="discount"
-              placeholder="예) 지인 할인"
-              value={formData.discount||""}
-              onChange={handleInputChange} />
-          </InputWrapper>
+ 
+  <InputWrapper>
+  <Label>가격</Label>
+  <PriceInputWrapper>
+    {formData.tickets.map((ticket, index) => (
+      <PriceRow key={ticket.ticketType}>
+        <PriceLabel>{ticket.ticketType}</PriceLabel>
+        <PriceInput
+          type="text"
+          placeholder="가격을 입력하세요"
+          value={ticket.price}
+          onChange={(e) => handleTicketPriceChange(e, index)}
+        />
+      </PriceRow>
+    ))}
+  </PriceInputWrapper>
+</InputWrapper>
+
           <InputWrapper>
             <Label>티켓 수</Label>
             <Input
@@ -233,15 +309,11 @@ const RegisterMusical = () => {
     <InputWrapper2>
       <Label>공연시간 정보</Label>
       <TextArea 
-        name="notice.content"
+        name="timeInfo"
         placeholder="예매 가능시간이나 공연시간에 대해 자유롭게 입력하세요"
-        value={formData.notice.content}
-        onChange={(e) =>
-          setFormData((prev) => ({
-            ...prev,
-            notice: { ...prev.notice, content: e.target.value },
-          }))
-        } />
+        value={formData.timeInfo}
+        onChange={handleInputChange}
+       />
     </InputWrapper2>
     <InputWrapper2>
       <Label>공지사항</Label>
@@ -250,37 +322,72 @@ const RegisterMusical = () => {
        placeholder={`공지 사항에 대해 자유롭게 입력하세요
 예: 예매시에 공연 관리자가 안내하는 입금계좌로 입금하시고, 공연 관리자의 입금 확인을 통해 티켓 예매 확인을 받을 수 있습니다. 
 공연 관리자가 입금을 확인해야 하므로 티켓 확인까지 시간이 걸릴 수 있습니다.`} 
-      value={formData.notice}
+      value={formData.notice.content}
       onChange={handleInputChange}/>
     </InputWrapper2>
   </Section>
 
   <Section>
-    <SectionTitle>캐스팅정보</SectionTitle>
-    <CastingWrapper>
+  <SectionTitle>캐스팅정보</SectionTitle>
+  <CastingWrapperContainer>
+  {castings.map((casting, index) => (
+    <CastingWrapper key={index}>
       <Left>
-        <img src={CastingPictureIcon} alt="Casting Icon" width="140" height="140"/>
-        <CastingInfo 
+        <img
+          src={
+            casting.image
+              ? URL.createObjectURL(casting.image)
+              : CastingPictureIcon
+          }
+          alt="Casting Icon"
+          width="140"
+          height="140"
+          onClick={() => handleCastingImageClick(index)}
+          style={{ cursor: 'pointer' }}
+        />
+        <input
+          type="file"
+          id={`castingImageUploadInput-${index}`}
+          style={{ display: 'none' }}
+          accept="image/*"
+          onChange={(e) => handleCastingImageUpload(e, index)}
+        />
+        <CastingInfo
           type="text"
           placeholder="이름"
-          name="castingName"
-          onChange={handleInputChange}/>
-        <CastingInfo 
+          value={casting.name}
+          onChange={(e) =>
+            handleCastingChange(index, 'name', e.target.value)
+          }
+        />
+        <CastingInfo
           type="text"
           placeholder="역할"
-          name="castingRole"
-          onChange={handleInputChange}/>
+          value={casting.role}
+          onChange={(e) =>
+            handleCastingChange(index, 'role', e.target.value)
+          }
+        />
       </Left>
-      <Right>
-        <InputWrapper>
-        <img src={PlusIcon}/>
-         <AddButton>추가하기</AddButton>
-        </InputWrapper>
-      </Right>
     </CastingWrapper>
-    <InputWrapper>
+  ))}
+
+  <AddCastingButtonWrapper>
+    <AddCastingButton onClick={handleAddCasting}>
+      <img src={PlusIcon} alt="추가 아이콘" />
+      <span>추가하기</span>
+    </AddCastingButton>
+  </AddCastingButtonWrapper>
+</CastingWrapperContainer>
+    <InputWrapper2>
       <Label>감독 및 스태프</Label>
-    </InputWrapper>
+      <TextArea
+            name="staff.name"
+            placeholder="예) 감독 - 홍길동"
+            value={formData.staff.name}
+            onChange={handleStaffNameChange}
+          />
+    </InputWrapper2>
 
   </Section>
 
@@ -299,7 +406,7 @@ const RegisterMusical = () => {
       <Label>환불문의</Label>
       <Input2 
       type="text"
-      name="refundContact"
+      name="contact"
       placeholder="환불 문의에 쓰일 SNS 또는 전화번호를 입력하세요"
       value={formData.contact}
       onChange={handleInputChange} />
@@ -312,6 +419,7 @@ const RegisterMusical = () => {
 };
 
 export default RegisterMusical;
+
 
 
 const RegisterWrapper = styled.div`
@@ -466,6 +574,84 @@ line-height: 18px; /* 128.571% */
     border-bottom: 1px solid #333; /* 포커스 시 밑줄 색상 변경 */
   }
 `;
+const PriceInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 300px;
+  margin-left: auto;
+  margin-right: 120px;
+`;
+
+const PriceRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const PriceLabel = styled.span`
+  color: var(--Gray-maintext, #000);
+
+/* Body-tiny-md */
+font-family: Pretendard;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 18px; /* 128.571% */;
+`;
+
+const PriceInput = styled.input`
+  border: none;
+  border-bottom: 1px solid #E6E6E6;
+  outline: none;
+  padding: 4px 0;
+  color: rgb(0, 0, 0);
+  width: 70%;
+
+  &::placeholder {
+    color: #919191;
+    font-family: Pretendard;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+  }
+
+  &:focus {
+    border-bottom: 1px solid #333;
+  }
+`;
+
+// IntermissionWrapper: 옵션들을 감싸는 컨테이너
+const IntermissionWrapper = styled.div`
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-top:-20px;
+  margin-left:-60px;
+`;
+
+// IntermissionOption: 개별 옵션
+const IntermissionOption = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+/* body-14-medium */
+font-family: Pretendard;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 128.571% */
+
+  img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+
+`;
+
 
 const Border=styled.div`
  border: none;
@@ -603,12 +789,19 @@ border: none;
 `;
 
 
-const Right = styled.div`
-align-items: center;
-  flex: 1;
+
+const CastingWrapperContainer = styled.div`
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
 `;
 
-const AddButton = styled.button`
+const AddCastingButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const AddCastingButton = styled.button`
   margin-top: 16px;
   padding: 8px 16px;
   border: none;

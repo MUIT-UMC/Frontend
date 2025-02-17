@@ -50,6 +50,7 @@ const Upcoming = () => {
         date: musical.openDate,
         info: musical.openInfo,
         extraInfo: musical.place,
+        dday:musical.dday,
       }));
       setTicketListMusicals(formattedTicketListMusicals);
     }
@@ -114,6 +115,7 @@ const Upcoming = () => {
         <TicketList>
           {ticketListMusicals.map((musical) => (
            <MusicalItem key={musical.id}>
+             <DdayBadge>{musical.dday}</DdayBadge> 
               <img src={musical.image} alt={musical.name} />
               <div className="details">
                <div className="name">
@@ -275,6 +277,7 @@ const TicketList = styled.div`
 const MusicalItem = styled.div`
   text-align: left;
   font-family: Pretendard;
+  overflow: hidden;
  
   img {
     height: 320px;
@@ -318,4 +321,25 @@ const MusicalItem = styled.div`
       }
     
   }
+`;
+const DdayBadge = styled.div`
+  position: absolute;
+  top: 100px;  /* 기존보다 아래로 이동 */
+  left: 70px; /* 기존보다 오른쪽으로 이동 */
+width: 54px;
+height: 20px;
+flex-shrink: 0;
+display: flex;
+flex-direction: column;
+justify-content: center;
+flex-shrink: 0;
+background: #FFF;
+color: #A00000;
+
+/* Body-bold */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
 `;
