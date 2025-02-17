@@ -41,6 +41,10 @@ const AdminLogin = () => {
       if (response.data.isSuccess) {
         // 로그인 성공
         localStorage.setItem("adminToken", response.data.result.accessToken);
+        // 로그인 만료 시간 설정
+        const expirationTime = Date.now() + 60 * 60 * 1000; // 1시간
+        localStorage.setItem("tokenExpiration", expirationTime);
+
         window.location.reload();
       } else {
         // 로그인 실패
