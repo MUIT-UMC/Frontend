@@ -48,6 +48,7 @@ function EventDetail() {
                           startAt={musical.evFrom}
                           finishAt={musical.evTo}
                           isSelected={isSelected}
+                          duration={musical.duration}
                       />
                   );
               })}

@@ -71,7 +71,7 @@ function Login() {
         }
     };
 
-    /*const googleLogin = () => {
+    const googleLogin = () => {
         const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirectUrl}&response_type=code&scope=email profile`;
 
         const loginWindow = window.open(url, "Connect Google Account", "width=700,height=600");
@@ -100,7 +100,7 @@ function Login() {
             { once: true }
         );
         
-    };*/
+    };
 
 
 
