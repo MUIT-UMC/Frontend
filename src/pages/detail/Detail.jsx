@@ -7,7 +7,7 @@ import { useState } from "react";
 import useMoveScroll from "../../hooks/useMoveScroll";
 import MainContent from "./MainContent";
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 
 
 function Detail() {

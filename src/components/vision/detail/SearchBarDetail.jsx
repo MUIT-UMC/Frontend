@@ -98,6 +98,8 @@ const Overlay = styled.div`
 
 const SearchWrapper = styled.div`
     position: relative;
+    left: 100px;
+    
     width: 508px;
     z-index: 1000;
   `

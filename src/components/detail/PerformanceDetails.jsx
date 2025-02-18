@@ -76,7 +76,7 @@ function PerformanceDetails({data, score}) {
       <Content>
         {activeTab === 'details' && <Performance data={data}/>}
         {activeTab === 'cast' && <Casts />}
-        {activeTab === 'view-guide' && <Seats />}
+        {activeTab === 'view-guide' && <Seats musicalId={musicalId} />}
         {activeTab === 'reviews' && <Review musicalName={data.result.name} score={score}/>}
       </Content>
     </div>

@@ -4,7 +4,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Camera from "../../../assets/icons/Camera.svg";
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const token = localStorage.getItem("token");
+import { GoX } from "react-icons/go";
+const token = localStorage.getItem("accessToken");
 console.log(token);
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
@@ -26,10 +27,12 @@ function WriteAnonymousPost() {
 
   // 업로드할 사진 선택 & 미리보기 
   const handleImageChange = (e) => {
-    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
+    setImgFiles((prevFiles) => [
+      ...prevFiles, 
+      ...Array.from(e.target.files), 
+    ]);
     console.log('이미지파일스 미리보기', imgFiles[0]);
   };
-  const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
 
   // 글 업로드하기 
   const handleSubmit = async () => {
@@ -38,7 +41,7 @@ function WriteAnonymousPost() {
 
     // FormData에 JSON 데이터를 추가하기
     postData.append("postRequestDTO", JSON.stringify({
-      memberId: 1, // 실제 회원 ID로 변경
+      memberId: 1, 
       isAnonymous: true,
       title: title.trim(),
       content: content.trim(),
@@ -68,7 +71,9 @@ function WriteAnonymousPost() {
       console.error(error);
     }
   };
-
+  const removeNewImage = (index) => {
+    setImgFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
   return (
     <WritePostContainer>
       <InputWrapper>
@@ -96,23 +101,47 @@ function WriteAnonymousPost() {
           onChange={(e) => setContent(e.target.value)}
         />
       </ContentWrapper>
+      
       <ImageInsertButtonWrapper>
-        {/* 
+         
+       {/*
         <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
-          <img src={Camera} alt="camera icon" />
-          <Text>사진</Text>
-        </label>
-        */}
+    <img src={Camera} alt="camera icon" />
+    <Text>사진</Text>
+    <input
+      type="file"
+      accept="image/*"
+      id="fileInput"
+      multiple
+      onChange={handleImageChange}
+      style={{ display: 'none' }} 
+    />
+  </label> 
+*/}
         
-        <input
+         <input
           type="file"
           accept="image/*"
           id="fileInput"
           multiple
           onChange={handleImageChange}
-          // style={{ display: 'none' }} // 기본 input 스타일 숨기기
+          // style={{ display: 'none' }} 
         />
+         
+       
     </ImageInsertButtonWrapper>
+
+    <CardWrapper>
+          
+          {imgFiles?.map((file, index) => (
+            <Card key={`file-${index}`}>
+              <DeleteIcon onClick={() => {removeNewImage(index)}}>
+                <GoX />
+              </DeleteIcon>
+              <Image src={URL.createObjectURL(file)} alt={`Uploaded image ${index}`} />
+            </Card>
+          ))}
+        </CardWrapper>
     </WritePostContainer>
   );
 }
@@ -223,4 +252,56 @@ input[type=file]::file-selector-button {
 * {
 color: #919191;
 }
+`
+
+const Card = styled.div`
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #E6E6E6; 
+  position: relative;
+`;
+
+const DeleteIcon = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  filter: 1;
+  background: #919191;
+  color: white;
+
+`;
+
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const CardWrapper = styled.div`
+display: flex;
+flex-direction: row;
+gap: 8px;
+margin-top: 16px;
+`
+
+const DotWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+const Line=styled.div`
+  width:2px;
+  height: 60px;
+  background: #E6E6E6;
+  margin: 4px;
+  border-radius: 1px;
 `

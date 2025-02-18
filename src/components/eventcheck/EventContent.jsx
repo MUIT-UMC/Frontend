@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import formatDateWithDay from "../../utils/formatDateWithDay";
 
-const EventContent = ({ content, startAt, finishAt, isSelected, isLast }) => {
+const EventContent = ({ content, startAt, finishAt, isSelected, isLast, duration }) => {
     return (
         <Container isSelected={isSelected} isLast={isLast}>
             <div className="circle" />
             <EventCard isSelected={isSelected}>
-                <p className="body-M-600">{formatDateWithDay(startAt)} ~ {formatDateWithDay(finishAt)}</p>
+                {/*<p className="body-M-600">{formatDateWithDay(startAt)} ~ {formatDateWithDay(finishAt)}</p>*/}
+                <p className="body-M-600">{duration}</p>
                 <p className="S-body-M-600">{content}</p>
             </EventCard>
         </Container>

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import Heart from "../../../assets/icons/heart-full.svg"
 import useFetch from "../../../hooks/useFetch";
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 
 
 function LikedMusical() {

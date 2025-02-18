@@ -64,8 +64,8 @@ import {
 } from '../../assets/theaterSeat/blueSquare/bluesquareSeat';
 
 
-const VisionDetailBS = () => {
-    const { theatreId } = useParams();
+const VisionDetailBS = ({theatreId}) => {
+    //const { theatreId } = useParams();
     const { data: theatre, error, loading } = useCustomFetch(
         `/theatres/${theatreId}/sectionType?sectionType`
     );
@@ -174,7 +174,7 @@ const VisionDetailBS = () => {
             
             <DetailArea>
                 <div>
-                    <SearchBarDetail />
+                    {/*<SearchBarDetail />*/}
 
                     <SeatArea>
                         <div className="Stage">STAGE</div>
@@ -322,6 +322,7 @@ const DetailArea = styled.div`
 `
 const SeatArea = styled.div`
     width: 580px;
+    margin-top: 50px;
 
     .Stage{
         justify-self: center;

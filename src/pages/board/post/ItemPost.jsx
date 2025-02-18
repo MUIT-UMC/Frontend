@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
@@ -67,7 +67,7 @@ function ItemPost() {
   const board = "분실";
   const nickname = d.nickname;
   const date = d.createdAt.split('T')[0];
-  const image = d?.imgUrls[0];
+  const image = d?.imgUrls[d?.imgUrls.length - 1];
   const commentCount = d?.commentCount;
   const listSize = comment?.result?.listSize;
   const isMyPost = d?.isMyPost;

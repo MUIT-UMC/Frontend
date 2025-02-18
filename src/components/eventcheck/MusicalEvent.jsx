@@ -4,11 +4,16 @@ import useCustomFetch from "../../hooks/fetchWithAxios";
 
 import EventContent from "./EventContent";
 import Heart from "../../assets/icons/heart-line.svg";
+import HeartFull from "../../assets/icons/heart-full.svg"
 import formatDate from "../../utils/formatDate";
+import { useEffect, useState } from "react";
 
 
 const MusicalEvent = (props) => {
     const navigate = useNavigate();
+    const { fetchData } = useCustomFetch();
+    const [isLike, setIsLike] = useState(false);
+
     const cardClick = () => {
         navigate('/event-check/' + props.id, {
             replace: false,
@@ -17,20 +22,53 @@ const MusicalEvent = (props) => {
     }
 
     const {data: musicals, error, loading} = useCustomFetch(`/musicals/${props.id}`);
+    console.log(props?.event);
+    useEffect(() => {
+        if (musicals?.result) {
+            setIsLike(musicals.result.isLike);
+        }
+    }, [musicals]);
+
+
+    const addLike = async () => {
+        setIsLike(true);
+        try {
+            await fetchData(`/musicals/${props.id}/likes`, "POST", { musicalId: props.id });
+            console.log(props.id, "좋아요 등록");
+        } catch (error) {
+            console.error("좋아요 등록 실패:", error);
+            setIsLike(false);
+        }
+    };
+
+    const cancelLike = async () => {
+        setIsLike(false);
+        try {
+            await fetchData(`/musicals/${props.id}/likesCancel`, "DELETE", { musicalId: props.id });
+            console.log(props.id, "좋아요 취소");
+        } catch (error) {
+            console.error("좋아요 취소 실패:", error);
+            setIsLike(true);
+        }
+    };
 
     return(
         <Card>
             <MusicalInfo>
-                <img src={musicals?.result?.posterUrl } className="poster" onClick={cardClick}/>
+                <img src={musicals?.result?.posterUrl} className="poster" onClick={cardClick}/>
                 <MusicalDetail>
                     <div className="detail-text">
                         <h3 className="title-B-600">{props.title}</h3>
                         <div>
-                            <p className="body-M-600">{props.theater}</p>
+                            <p className="body-M-600">{props.place}</p>
                             <p className="body-M-500">{formatDate(props.begin)}~{formatDate(props.end)}</p>
                         </div>
                     </div>
-                    <img className="heart-icon" src={Heart}/>
+                    {isLike ? (
+                        <img className="heart-icon" src={HeartFull} onClick={cancelLike} />
+                    ) : (
+                        <img className="heart-icon" src={Heart} onClick={addLike} />
+                    )}                
                 </MusicalDetail>
             </MusicalInfo>
             <EventArea>
@@ -40,6 +78,7 @@ const MusicalEvent = (props) => {
                     content={musical.name}
                     startAt={musical.evFrom}
                     finishAt={musical.evTo}
+                    duration={musical.duration}
                     />
                 ))}
             </EventArea>

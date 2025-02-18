@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useFetch from "../../../../hooks/useFetch";
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 
 function CancelComplete() {
 

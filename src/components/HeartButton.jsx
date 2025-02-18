@@ -6,7 +6,7 @@ import HeartFull from "../assets/icons/heart-full.svg";
 import HeartLine from "../assets/icons/heart-line.svg";
 import { useState } from "react";
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("accessToken");
 console.log(token);
 const HeartButton = ({liked, setLiked, musicalId}) => {
 

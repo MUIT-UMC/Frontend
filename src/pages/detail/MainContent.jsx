@@ -2,15 +2,30 @@ import React from "react";
 import styled from "styled-components";
 import PerformanceDetails from "../../components/detail/PerformanceDetails";
 import Info from "../../components/detail/Info";
-import Calendar from "../../components/Calendar";
+import Calendar from "../../components/Calendar2";
+import EventContent from "../../components/eventcheck/EventContent";
 import { RatingStars } from './../../components/detail/RatingStars';
 import ChevronRight from "../../assets/icons/ChevronRight.svg";
 import { useState } from "react";
 import HeartButton from "../../components/HeartButton";
 import useMoveScroll from "../../hooks/useMoveScroll";
+import useFetch from "../../hooks/useFetch";
+import { useNavigate } from "react-router-dom";
+
+const token = localStorage.getItem("accessToken");
+
+
 function MainContent({data,loading, error}) {
+  const navigate = useNavigate();
   const [liked, setLiked] = useState(data?.result?.isLike);
-  console.log(data?.result?.isLike);
+  console.log(data?.result);
+
+  const { data: event} = useFetch(`/events/${data?.result?.id}`, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  },);
+  //console.log("이벤트:", event?.result?.eventResultListDTO);
   
 
   if (loading) return <div>Loading...</div>;
@@ -72,18 +87,34 @@ function MainContent({data,loading, error}) {
         </LeftSection>
 
         <RightSection>
-          <CalendarWrapper>
-            <Calendar variant="compact"/>
-            <hr />
-            티켓 오픈 컴포넌트
+
+          <CalendarWrapper >
+            <div style={{ transform: "scale(0.5)", transformOrigin: "top left" }}>
+              <Calendar
+                  variant="compact"
+              />
+            </div>
+            {/*<hr />
+            티켓 오픈 컴포넌트*/}
           </CalendarWrapper>
-          {/*
-          <GroupPurchaseButton>공동 구매하기</GroupPurchaseButton>
-           */}
-          <EventLink>
-          <Text>이벤트 확인하기</Text><img src={ChevronRight} />
+
+          <EventLink style={{ transform: "scale(0.8)", transformOrigin: "top left" }}>
+            {event?.result?.eventResultListDTO.map((musical)=>(
+              <EventContent
+                    key={musical.id}
+                    content={musical.name}
+                    startAt={musical.evFrom}
+                    finishAt={musical.evTo}
+                    duration={musical.duration}
+                    />
+              ))}
+
+            <Text onClick={() => navigate(`/event-check/${data?.result?.id}`)}>
+              <p>이벤트 확인하기</p><img src={ChevronRight} />
+            </Text>
           </EventLink>
         </RightSection>
+
         </div>
       </Wrapper>
    </>
@@ -182,8 +213,9 @@ const GroupPurchaseButton = styled.button`
 
 const CalendarWrapper = styled.div`
   width: 300px;
-  border: 1px solid #E6E6E6;
+  height: 400px;
 
+  border: 1px solid #E6E6E6;
   
   hr {
     border: none;
@@ -193,18 +225,22 @@ const CalendarWrapper = styled.div`
   }
 `
 const Text = styled.div`
-color: #000;
+  color: #000;
 
-/* Body-me */
-font-family: Pretendard;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: 25px; /* 156.25% */
+  display: flex;
+  align-items: center;
+  justify-content: right;
+
+  /* Body-me */
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 25px; /* 156.25% */
 `
 const EventLink = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   justify-content: flex-end;
   margin-top: 16px;
