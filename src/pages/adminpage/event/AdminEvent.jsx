@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
+
+import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
+import axios from 'axios';
 
 import SearchIconBlack from "../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
@@ -11,7 +13,7 @@ import SingleLeftIcon from "../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../assets/icons/DoubleRight.svg";
 
-import SearchBar1 from "../components/SearchBar1";
+import SearchBar from "../components/SearchBar";
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -19,127 +21,40 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-//Event Mock Data
-export const eventData = [
-  { musical: "아스날", place: "애미레이츠 스타디움" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-  { musical: "알라딘", place: "신한 아르떼 뮤지엄" },
-]
-export const colKeys = ["musical", "place"];
-export const colLabels = ["뮤지컬", "장소"];
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = localStorage.getItem("adminToken");
+
+const colKeys = ["musicalName", "place"];
+const colLabels = ["뮤지컬", "장소"];
 
 export default function AdminEvent() {
+
+  // 이벤트(뮤지컬) 데이터 API
+  const [eventData, seteventData] = useState([]);
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/admin/events`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`
+        }
+      });
+      const contentArr = response.data.result.content || [];
+      const refined = contentArr.map(item => ({
+        musicalId: item.musicalId,
+        musicalName: item.name,
+        place: item.place,
+      }));
+      seteventData(refined);
+
+    } catch (err) {
+      console.error("이벤트 조회 실패:", err);
+      alert("이벤트 목록을 불러오는 중 오류가 발생했습니다.");
+      seteventData([]); 
+    }
+  };
 
   // 1. 체크박스 기능 ////////////////////////////////////////////////
     const [checkboxes, setCheckboxes] = useState([false, false]);
@@ -158,9 +73,8 @@ export default function AdminEvent() {
     // 2. SearchBar 검색 기능 ////////////////////////////////////////////
     const [searchTerm, setSearchTerm] = useState("");
     const handleSearch = (inputValue) => {
-      // 검색버튼 누르면 SearchBar에서 넘어온 값
-      setSearchTerm(inputValue);
-      setCurrentPage(1); // 검색 시 1페이지로
+      setSearchTerm(inputValue);  // 검색버튼 누르면 SearchBar에서 넘어온 값
+      setCurrentPage(1);          // 검색 시 1페이지로
     };
   
     // 3. Table 기능 ////////////////////////////////////////////////////
@@ -175,7 +89,7 @@ export default function AdminEvent() {
     }
   
     // 4. SearchBar 검색 로직 ////////////////////////////////////////////
-    let searchKey = "musical"; // default - 아무것도 체크 안 됐으면 뮤지컬명으로 검색, 체크된 게 있으면 해당 컬럼으로 검색
+    let searchKey = "musicalName"; // default
     if (checkedIndex !== -1) {
       searchKey = colKeys[checkedIndex];
     }
@@ -226,7 +140,7 @@ export default function AdminEvent() {
     <Container>
       <Tilte>이벤트 관리</Tilte>
       <SearchSection>
-        <SearchBar1 onSearch={handleSearch}/>
+        <SearchBar onSearch={handleSearch}/>
         <CheckBoxes>
           <CheckBoxWrapper>
             <CheckBox onClick={() => toggleCheck(0)}>
@@ -243,10 +157,6 @@ export default function AdminEvent() {
           <CheckSearchIcon><img src={isAnyChecked ? SearchIconRed : SearchIconBlack} alt="Search Icon" /></CheckSearchIcon>
         </CheckBoxes>
       </SearchSection>
-
-      <AddMusical>
-        <AddButton>추가하기</AddButton>
-      </AddMusical>
 
       <Data>
         <TableWrapper>
@@ -270,7 +180,7 @@ export default function AdminEvent() {
                   ))}
                   {/* 상세페이지버튼 */}
                   <td>
-                    <DetailButton to={`/adminpage/event/detail/${event.musical}`}>상세</DetailButton>
+                    <DetailButton to={`/adminpage/event/detail/${event.musicalId}`}>상세</DetailButton>
                   </td>
                 </tr>
               ))}
@@ -388,7 +298,7 @@ const CheckSearchIcon = styled.div`
 `;
 
 const Data = styled.div`
-  margin-top: 20px;
+  margin-top: 40px;
   width:  100%;
 `;
 
@@ -399,9 +309,10 @@ const TableWrapper = styled.div`
 
 const StyledTable = styled.table`
   width: 100%;
-  border-collapse: collapse;  /* 겹치지 않게 */
+  border-collapse: collapse;  
 
   th, td {
+    min-width: 50px;
     line-height: 30px;
     border: 1px solid ${COLOR_GRAY_MAINTEXT};
     text-align: center;
@@ -468,23 +379,3 @@ const PageNumber = styled.button`
     color: ${COLOR_GRAY_MAINTEXT};
   }
 `;
-
-const AddMusical = styled.div`
-  margin-top:  20px;
-  display:  flex;
-  justify-content:  flex-end;
-  align-items:  center;
-`;
-
-const AddButton = styled.button`
-  font-family: "Pretendard";
-  font-size: 14px;
-  font-weight: 500;
-  color: ${COLOR_WHITE};
-  cursor: pointer;
-  box-sizing:  border-box;
-  border: 1px solid ${COLOR_MUIT_RED};
-  border-radius: 3px;
-  background-color: ${COLOR_MUIT_RED};
-  padding:  5px 14px 5px 14px;
-`

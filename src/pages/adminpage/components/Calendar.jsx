@@ -37,7 +37,7 @@ const Calendar = ({ variant = "default", onDateSelect }) => {
   // Handle date selection
   const handleDateClick = (day) => {
     if (day) {
-        const selected = new Date(year, month, day);
+        const selected = new Date(year, month, day, 12);  // UTC + 9 시차 문제 
         setSelectedDate(selected);
         if (onDateSelect) {
           onDateSelect(selected);
@@ -46,12 +46,12 @@ const Calendar = ({ variant = "default", onDateSelect }) => {
   };
 
   return (
-    <CalendarWrapper variant={variant}>
-      <Header variant={variant}>
+    <CalendarWrapper $variant={variant}>
+      <Header $variant={variant}>
         <NavButton onClick={handlePrevMonth}>
           <img src={PrevMonth} alt="Previous Month" />
         </NavButton>
-        <MonthYear variant={variant}>
+        <MonthYear $variant={variant}>
         {variant === "compact"
           ? `${year}.${String(month + 1).padStart(2, "0")}` 
           : currentDate.toLocaleString("default", { month: "long" }) + ` ${year}`} 
@@ -61,22 +61,22 @@ const Calendar = ({ variant = "default", onDateSelect }) => {
         </NavButton>
       </Header>
 
-      <DaysGrid variant={variant}>
+      <DaysGrid $variant={variant}>
         {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-          <DayName key={day} variant={variant}>
+          <DayName key={day} $variant={variant}>
             {day}
           </DayName>
         ))}
       </DaysGrid>
-      <DaysGrid variant={variant}>
+      <DaysGrid $variant={variant}>
         {daysArray.map((day, index) => (
           <Day
             key={index}
-            isSelected={
+            $isSelected={
               selectedDate?.getDate() === day && selectedDate?.getMonth() === month
             }
             onClick={() => handleDateClick(day)}
-            variant={variant}
+            $variant={variant}
           >
             {day || ""}
           </Day>
@@ -92,16 +92,16 @@ const CalendarWrapper = styled.div`
   overflow: hidden;
   font-family: Pretendard;
 
-  width: ${({ variant }) => (variant === "compact" ? "300px" : "100%")};
+  width: ${({ $variant }) => ($variant === "compact" ? "300px" : "100%")};
 `;
 
 const Header = styled.div`
   display: flex;
-  justify-content: ${({ variant }) => (variant === "compact" ? "flex-start" : "center")};
+  justify-content: ${({ $variant }) => ($variant === "compact" ? "flex-start" : "center")};
   align-items: center;
   color: #000;
   padding: 20px;
-  padding-left:  ${({ variant }) => (variant === "compact" ? "10px" : "20px")};
+  padding-left:  ${({ $variant }) => ($variant === "compact" ? "10px" : "20px")};
 `;
 
 const NavButton = styled.button`
@@ -116,24 +116,24 @@ const NavButton = styled.button`
 `;
 
 const MonthYear = styled.div`
-  font-size: ${({ variant }) => (variant === "compact" ? "20px" : "26px")};
+  font-size: ${({ $variant }) => ($variant === "compact" ? "20px" : "26px")};
   font-weight: bold;
 `;
 
 const DaysGrid = styled.div`
   display: grid;
-  font-size: ${({ variant }) => (variant === "compact" ? "16px" : "24px")};
+  font-size: ${({ $variant }) => ($variant === "compact" ? "16px" : "24px")};
   grid-template-columns: repeat(7, 1fr);
-  gap: ${({ variant }) => (variant === "compact" ? "10px" : "15px")};
+  gap: ${({ $variant }) => ($variant === "compact" ? "10px" : "15px")};
   padding: 10px;
-  padding-top: ${({ variant }) => (variant === "compact" ? "0px" : "10px")};
+  padding-top: ${({ $variant }) => ($variant === "compact" ? "0px" : "10px")};
 `;
 
 const DayName = styled.div`
   text-align: center;
-  margin-bottom: ${({ variant }) => (variant === "compact" ? "3px" : "32px")};
-  color: ${({ variant }) => (variant === "compact" ? "#919191" : "#000")};
-  font-size: ${({ variant }) => (variant === "compact" ? "14px" : "24px")};
+  margin-bottom: ${({ $variant }) => ($variant === "compact" ? "3px" : "32px")};
+  color: ${({ $variant }) => ($variant === "compact" ? "#919191" : "#000")};
+  font-size: ${({ $variant }) => ($variant === "compact" ? "14px" : "24px")};
   font-weight: 500;
 `;
 
@@ -144,15 +144,15 @@ const Day = styled.div`
   align-items: center;
   border-radius: 50%;
 
-  width: ${({ variant }) => (variant === "compact" ? "24px" : "30px")};
-  height: ${({ variant }) => (variant === "compact" ? "24px" : "30px")};
-  margin-bottom: ${({ variant }) => (variant === "compact" ? "3px" : "32px")};
+  width: ${({ $variant }) => ($variant === "compact" ? "24px" : "30px")};
+  height: ${({ $variant }) => ($variant === "compact" ? "24px" : "30px")};
+  margin-bottom: ${({ $variant }) => ($variant === "compact" ? "3px" : "32px")};
 
-  background: ${({ isSelected }) => (isSelected ? "#A00000" : "white")};
-  color: ${({ isSelected }) => (isSelected ? "#FFF" : "#000")};
+  background: white;
+  color: #000000;
 
   cursor: pointer;
-  font-size: ${({ variant }) => (variant === "compact" ? "14px" : "24px")};
+  font-size: ${({ $variant }) => ($variant === "compact" ? "14px" : "24px")};
 `;
 
 export default Calendar;

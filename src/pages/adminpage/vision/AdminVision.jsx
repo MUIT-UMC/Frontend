@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
+
+import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
+import axios from 'axios';
 
 import DoubleLeftIcon from "../../../assets/icons/DoubleLeft.svg";
 import SingleLeftIcon from "../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../assets/icons/DoubleRight.svg";
 
-import SearchBar1 from "../components/SearchBar1";
+import SearchBar from "../components/SearchBar";
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -15,133 +17,49 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-// 시야 Mock data
-const visionData = [
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-  {place: "링크아트센터드림 드림1관"},
-]
+// // 시야 Mock data
+// const visionData = [
+//   {place: "에미레이츠 스타디움움"},
+//   {place: "올드 트래포트"},
+//   {place: "스탬포드 브릿지"},
+//   {place: "안필드"},
+//   {place: "에티하드 스타디움"},
+//   {place: "세인트 제임스 파크"},
+//   {place: "셀허스트 파크"},
+// ]
+
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = localStorage.getItem("adminToken");
 
 export default function AdminVision() {
 
-  //  SearchBar 검색 기능 ////////////////////////////////////////////
+  // 문의 데이터 API
+  const [visionData, setvisionData] = useState([]);
+  useEffect(() => {
+    fetchVisions();
+  }, []);
+  const fetchVisions = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/admin/views`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`
+        }
+      });
+      const contentArr = response.data.result.content || [];
+      const refined = contentArr.map(item => ({
+        placeId: item.id,
+        place: item.name,
+        musicalName: item.musicalName
+      }));
+      setvisionData(refined);
+    } catch (err) {
+      console.error("시야데이터 조회 실패:", err);
+      alert("시야데이터 목록을 불러오는 중 오류가 발생했습니다.");
+      setvisionData([]); 
+    }
+  };
+
+  // 1. SearchBar 검색 기능 ////////////////////////////////////////////
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (inputValue) => {
     // 검색버튼 누르면 SearchBar에서 넘어온 값
@@ -149,13 +67,13 @@ export default function AdminVision() {
     setCurrentPage(1); // 검색 시 1페이지로
   };
 
-  //  visionData 필터링 (검색) /////////////////////////////////////
+  // 2. 검색 로직 ///////////////////////////////////////////////////////
   const filteredData = visionData.filter((item) => {
     if (!searchTerm) return true;
     return item.place.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  //  페이지네이션 기능 ////////////////////////////////////////////////////
+  // 3. 페이지네이션 기능 ////////////////////////////////////////////////////
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -196,7 +114,7 @@ export default function AdminVision() {
     <Container>
       <Tilte>시야 관리</Tilte>
       <SearchSection>
-        <SearchBar1 onSearch={handleSearch}/>
+        <SearchBar onSearch={handleSearch}/>
       </SearchSection>
 
       <AddMusical>
@@ -218,8 +136,8 @@ export default function AdminVision() {
                 <tr key={index}>
                   <td>{item.place}</td>
                   <td>
-                    {/* 예시: 상세 페이지 버튼 */}
-                    <DetailButton to={`/adminpage/vision/detail/${item.place}`}>상세</DetailButton>
+                    {/* 상세 페이지 버튼 */}
+                    <DetailButton to={`/adminpage/vision/detail/${item.placeId}`}>상세</DetailButton>
                   </td>
                 </tr>
               ))}
