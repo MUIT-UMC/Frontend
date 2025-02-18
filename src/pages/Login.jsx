@@ -69,6 +69,24 @@ function Login() {
         }
     };
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const authCode = urlParams.get("code");
+    
+        if (authCode) {
+            fetchData("/login/oauth2/code/google", "POST", { code: authCode })
+                .then((response) => {
+                    if (response?.result) {
+                        console.log("구글 로그인 성공:", response);
+                        localStorage.setItem("accessToken", response.result.accessToken);
+                        localStorage.setItem("refreshToken", response.result.refreshToken);
+                        navigate("/");
+                    }
+                })
+                .catch((error) => console.error("구글 로그인 실패:", error));
+        }
+    }, [fetchData, navigate]);
+
 
 
     return (
@@ -117,7 +135,7 @@ function Login() {
             <SocialLogin>
                 <SocialIcon src={Kakao} />
                 <SocialIcon src={Naver} />
-                <SocialIcon src={Google} border="#E6E6E6" onClick={googleLogin} />
+                <SocialIcon src={Google} border="#E6E6E6" onClick={() => googleLogin()} />
             </SocialLogin>
         </Container>
     );
