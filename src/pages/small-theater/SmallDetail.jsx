@@ -32,14 +32,18 @@ function SmallDetail() {
   // API에서 받아온 데이터를 처리합니다.
   const musical = data.result; 
   const name = musical.name;
+  const content = musical.summaries.content || ''; // content가 없으면 빈 문자열로 처리
+  const [quote, ...descriptionParts] = content.split("\n");
+  const description = descriptionParts.join("\n").replace(/\n/g, "<br />");
 
+  const imageUrls = musical.notice.imgUrls; 
   const poster =  musical.posterImgUrl
   const detailImg=DetailImg;
   const details = [
     { label: "장소", value: musical.place},
     { label: "공연 기간", value: musical.schedule },
-    { label: "공연 시간", value: "60분 (인터미션 없음)" },
-    { label: "관람 연령", value: "중학생 이상 관람가" },
+    { label: "공연 시간", value: musical.runtime },
+    { label: "관람 연령", value:musical.age },
     { label: "출연", value: musical.starring },
     { label: "가격", value: <Price>
       <div className="item">
@@ -60,19 +64,16 @@ function SmallDetail() {
        <BannerContainer>
                 <Header>{name}</Header>
                 <TagWrapper>
-                  <Tag>극중극</Tag>
-                  <Tag>드라마</Tag>
-                  <Tag>구덩이</Tag>
-                </TagWrapper>
-                <Quote>1998년 가을,</Quote>
-                <Description>
-                  ‘아무 국가기관'의 업무 보조를 하게 된 학생<br/>
-                  모두가 동일한 것을 추구하는 사회에서 학생은 적응하지 못한다
-                </Description>   
+             {musical.hashtag
+            .split(" ")
+            .map((tag, index) => <Tag key={index}>{tag.replace("#", "")}</Tag>)}
+            </TagWrapper>
+            <Quote>{quote}</Quote>
+            <Description dangerouslySetInnerHTML={{ __html: description }} />
+
                 <ChevronWrapper>
                   <img src={ChevronDown} style={{ display: 'block', marginTop: '20px' }} />
                 </ChevronWrapper>
-                
             </BannerContainer>
 
       {/* 본문 */}
@@ -100,12 +101,20 @@ function SmallDetail() {
       <BottomSection>
         <Label>공연 정보
         <Title>공연시간 정보</Title>
-        <Text>예매가능시간: 관람 3시간 전까지</Text>
+        <Text>{musical.timeInfo}</Text>
         <Title>공지사항</Title>
         <Text>예매시에 공연 관리자가 안내하는 입금계좌로 입금하시고, 공연 관리자의 입금 확인을 통해 티켓 예매 확인을 받을 수<br/>
         있습니다. 공연 관리자가 입금을 확인해야 하므로 티켓 확인까지 시간이 걸릴 수 있습니다.</Text>
         </Label>
-        <DetailImage><img src={detailImg} alt="Detail Image"/></DetailImage> 
+        {imageUrls && imageUrls.length > 0 && (
+  <DetailImageWrapper>
+    {imageUrls.map((url, index) => (
+      <DetailImage key={index}>
+        <img src={url} alt={`Detail Image ${index + 1}`} style={{ width: '100%', height: '100%' }} />
+      </DetailImage>
+    ))}
+  </DetailImageWrapper>
+)}
         <Label>캐스팅 정보</Label>
         <CastList/>  {/*사진 간격 조정필요 */}
         <Title>감독 및 스태프</Title>
@@ -123,7 +132,7 @@ const BannerContainer = styled.div`
       var(--Muit-Red-main, #A00000),
       rgba(160, 0, 0, 0.5)
     ),
-   url(${pic}) no-repeat center center / cover;
+   url(${(props) => props.poster}) no-repeat center center / cover;
   width: 1250px;
   height:822px;
   padding: 101px 95px;
@@ -340,9 +349,14 @@ font-style: normal;
 font-weight: 500;
 line-height: 25px; /* 156.25% */
 `
-const DetailImage=styled.div`
+const DetailImageWrapper = styled.div`
+  display: flex;
+  gap: 20px; /* 이미지 간 간격 */
+  margin-bottom: 60px;
+`;
+
+const DetailImage = styled.div`
   width: 500px;
-height: 888px;
-flex-shrink: 0;
-margin-bottom: 60px;
-`
+  height: 888px;
+  flex-shrink: 0;
+`;

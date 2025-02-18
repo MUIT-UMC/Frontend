@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate,useLocation  } from 'react-router-dom'; 
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN; 
+import axios from "axios";
 
 
 const RegisterCheck = () => {
@@ -22,6 +23,7 @@ const RegisterCheck = () => {
     posterImage,
     castingImages,
     castings,
+    noticeImages,
   } = location.state || {};
   
   useEffect(() => {
@@ -31,63 +33,85 @@ const RegisterCheck = () => {
 
   const handleRegister = async () => {
     setIsLoading(true);
-  
+
     const dataToSend = new FormData();
   
     // 서버 요구사항에 맞게 payload 작성
     const payload = {
       data: {
-        name: formData.name,
-        posterImgUrl: "", // 서버에서 업로드 후 URL 반환됨
-        place: formData.place,
-        schedule: formData.schedule,
-        age: formData.age,
-        starring: formData.starring,
-        totalTicket: formData.totalTicket,
-        timeInfo: formData.timeInfo,
-        account: formData.account,
-        contact: formData.contact,
-        hashtag: formData.hashtag,
-        runtime: formData.runtime,
-        castings: castings.map((casting) => ({
-          imgUrl: "", // 서버에서 업로드 후 URL 반환됨
-          actorName: casting.name,
-          castingName: casting.role
-        })),
-        notice: {
-          // 서버에서 업로드 후 URL 반환됨
-          content: formData.notice,
-        },
-        tickets: formData.tickets.map(ticket => ({
-          ticketType: ticket.ticketType,
-          price: ticket.price,
-        })),
-        staff: {
-           name: formData.staff.name
-        },
-        summaries: {
-          content: formData.summaries.content,
-        },
+         name: formData.name || "", // 빈 문자열로 대체
+         place: formData.place || "",
+         schedule: formData.schedule || "",
+         age: formData.age || "",
+         starring: formData.starring || "",
+         totalTicket: Number(formData.totalTicket) || 0, // 0으로 초기화
+         timeInfo: formData.timeInfo || "",
+         account: formData.account || "",
+         contact: formData.contact || "",
+         hashtag: formData.hashtag || "",
+         runtime: formData.runtime || "",
+         castings: castings
+            ? castings.map((casting) => ({
+                  actorName: casting.name || "",
+                  castingName: casting.role || "",
+              }))
+            : [],
+         noticeContent: formData.noticeContent || "",
+         tickets: formData.tickets
+            ? formData.tickets.map((ticket) => ({
+                  ticketName: ticket.ticketName || "",
+                  price: ticket.price || 0,
+              }))
+            : [],
+         staff: formData.staff
+            ? formData.staff.map((staff) => ({
+                  position: staff.position || "",
+                  name: staff.name || "",
+              }))
+            : [],
+         summaryContent: formData.summaryContent || "",
       },
-    };
+   };
+   
   
-    dataToSend.append(
-      "data",
-      new Blob([JSON.stringify(payload)], { type: "application/json" })
-    );
+   // JSON 데이터를 FormData에 추가
+   dataToSend.append("data", JSON.stringify(payload));
   
-    if (posterImage) dataToSend.append("posterImage", posterImage);
-    castingImages.forEach((image) => dataToSend.append(`castingImages`, image));
+    if (posterImage) {
+      console.log("✅ Adding posterImage:", posterImage);
+      dataToSend.append("posterImage", posterImage);
+   } else {
+      console.log("⚠️ No posterImage provided");
+   }
+   
+   if (castingImages && castingImages.length > 0) {
+      castingImages.forEach((image, index) => {
+         console.log(`✅ Adding castingImage[${index}]:`, image);
+         dataToSend.append("castingImages", image);
+      });
+   } else {
+      console.log("⚠️ No castingImages provided");
+   }
+   
+   if (noticeImages && noticeImages.length > 0) {
+      noticeImages.forEach((image, index) => {
+         console.log(`✅ Adding noticeImage[${index}]:`, image);
+         dataToSend.append("noticeImages", image);
+      });
+   } else {
+      console.log("⚠️ No noticeImages provided");
+   }
+   
+    
   
     const url = `${import.meta.env.VITE_APP_SERVER_URL}/amateurs/enroll`;
   
     try {
-      const response = await fetch(url, {
-        method: "POST",
+      const response = await axios.post(url, dataToSend, {
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
+          "Content-Type": "multipart/form-data",
         },
-        body: dataToSend,
       });
   
       if (response.ok) {

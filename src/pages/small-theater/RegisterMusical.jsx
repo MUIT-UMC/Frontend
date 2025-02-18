@@ -14,7 +14,6 @@ const RegisterMusical = () => {
   const [posterImage, setPosterImage] = useState(null);
   const [castingImages, setCastingImages] = useState([]);
   const [noticeImages, setNoticeImages] = useState([]);
-  const [summaryImage, setSummaryImage] = useState(null);
   const [castings, setCastings] = useState([
     { name: '', role: '', image: null },
   ]);  
@@ -30,19 +29,14 @@ const RegisterMusical = () => {
     contact: "",
     hashtag: "",
     runtime: "",
-    notice: {
-      content: "",
-    },
-    summaries: {
-      content: "",
-    },
-    staff: 
-      {
-        name: ""
-      },
+    noticeContent:"",
+    summaryContent:"",
+    staff: [
+      { position: "", name: "" }
+    ],
     tickets: [
-        { ticketType: "일반 예매", price: "" },
-        { ticketType: "홍대생 할인", price: "" },
+        { ticketName: "일반 예매", price: "" },
+        { ticketName: "홍대생 할인", price: "" },
       ],
 
   });
@@ -56,7 +50,7 @@ const RegisterMusical = () => {
     setFormData((prev) => ({ ...prev, tickets: newTickets }));
   };
   
-  
+
   /*이미지 추가*/
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -103,21 +97,31 @@ const RegisterMusical = () => {
     updatedCastings[index][field] = value;
     setCastings(updatedCastings);
   };
+  /* 공지사항 이미지 추가 */
+  const handleNoticeImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const newImages = [...noticeImages, file];
+    setNoticeImages(newImages);
+  };
+  /*스태프 추가 */
+  const handleStaffChange = (index, field, value) => {
+    const updatedStaff = [...formData.staff];
+    updatedStaff[index][field] = value;
+    setFormData((prev) => ({ ...prev, staff: updatedStaff }));
+  };
+  
+  const handleAddStaff = () => {
+    setFormData((prev) => ({
+      ...prev,
+      staff: [...prev.staff, { position: "", name: "" }],
+    }));
+  };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleStaffNameChange = (e) => {
-    const { value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      staff: {
-        ...prev.staff,
-        name: value,
-      },
-    }));
   };
 
   const handleNextClick = () => {
@@ -125,9 +129,9 @@ const RegisterMusical = () => {
       state: {
         formData,
         posterImage,
+        noticeImages,
         castingImages,
         castings,
-        intermission,
       },
     });
   };
@@ -237,8 +241,8 @@ const RegisterMusical = () => {
   <Label>가격</Label>
   <PriceInputWrapper>
     {formData.tickets.map((ticket, index) => (
-      <PriceRow key={ticket.ticketType}>
-        <PriceLabel>{ticket.ticketType}</PriceLabel>
+      <PriceRow key={ticket.ticketName}>
+        <PriceLabel>{ticket.ticketName}</PriceLabel>
         <PriceInput
           type="text"
           placeholder="가격을 입력하세요"
@@ -290,16 +294,11 @@ const RegisterMusical = () => {
     <InputWrapper2>
       <Label>줄거리</Label>
       <TextArea
-         name="summaries.content"   
+         name="summaryContent"   
         placeholder={`공연의 줄거리를 입력하세요
 사진을 추가할 경우 미리보기 포스터로 올라갑니다`}
-       value={formData.summaries.content}
-  onChange={(e) =>
-    setFormData((prev) => ({
-      ...prev,
-      summaries: { ...prev.summaries, content: e.target.value },
-    }))
-  }
+       value={formData.summaryContent}
+  onChange={handleInputChange }
       />
     </InputWrapper2>
   </Section>
@@ -317,13 +316,30 @@ const RegisterMusical = () => {
     </InputWrapper2>
     <InputWrapper2>
       <Label>공지사항</Label>
+      <NoticeTextAreaContainer>
       <TextArea 
-       name="notice"
+       name="noticeContent"
        placeholder={`공지 사항에 대해 자유롭게 입력하세요
 예: 예매시에 공연 관리자가 안내하는 입금계좌로 입금하시고, 공연 관리자의 입금 확인을 통해 티켓 예매 확인을 받을 수 있습니다. 
 공연 관리자가 입금을 확인해야 하므로 티켓 확인까지 시간이 걸릴 수 있습니다.`} 
-      value={formData.notice.content}
+      value={formData.noticeContent}
       onChange={handleInputChange}/>
+       <ImageUploadButton onClick={() => document.getElementById('noticeImageUploadInput').click()}>
+                <img src={CameraIcon} alt="이미지 업로드" />
+              </ImageUploadButton>
+              <input
+                id="noticeImageUploadInput"
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleNoticeImageUpload}
+              />
+            </NoticeTextAreaContainer>
+            <ImagePreviewContainer>
+              {noticeImages.map((image, index) => (
+                <img key={index} src={URL.createObjectURL(image)} alt="Uploaded" width="100" height="100" />
+              ))}
+            </ImagePreviewContainer>
     </InputWrapper2>
   </Section>
 
@@ -381,13 +397,27 @@ const RegisterMusical = () => {
 </CastingWrapperContainer>
     <InputWrapper2>
       <Label>감독 및 스태프</Label>
-      <TextArea
-            name="staff.name"
-            placeholder="예) 감독 - 홍길동"
-            value={formData.staff.name}
-            onChange={handleStaffNameChange}
-          />
+      {formData.staff.map((staff, index) => (
+    <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+      <Input3
+        type="text"
+        placeholder="역할을 입력하세요"
+        value={staff.position}
+        onChange={(e) => handleStaffChange(index, 'position', e.target.value)}
+      />
+      <Input3
+        type="text"
+        placeholder="이름을 입력하세요"
+        value={staff.name}
+        onChange={(e) => handleStaffChange(index, 'name', e.target.value)}
+      />
+    </div>
+  ))}
     </InputWrapper2>
+    <AddStaffButton onClick={handleAddStaff}>
+      <img src={PlusIcon} alt="추가 아이콘" />
+      <span>추가하기</span>
+    </AddStaffButton>
 
   </Section>
 
@@ -752,6 +782,30 @@ line-height: 25px; /* 156.25% */
   }
 `;
 
+const NoticeTextAreaContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const ImageUploadButton = styled.button`
+  position: absolute;
+  left: 10px;
+  bottom: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
+
+const ImagePreviewContainer = styled.div`
+  img {
+    width: 350px;
+    height: 600px;
+    object-fit: cover;
+  }
+  margin-top: 10px;
+`;
+
 const CastingWrapper = styled.div`
   display: flex;
   gap: 20px;
@@ -802,6 +856,9 @@ const AddCastingButtonWrapper = styled.div`
 `;
 
 const AddCastingButton = styled.button`
+ display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  gap: 4px; /* 아이콘과 글자 사이 간격 */
   margin-top: 16px;
   padding: 8px 16px;
   border: none;
@@ -811,7 +868,49 @@ const AddCastingButton = styled.button`
   color: var(--Gray-sub, #919191);
 
 /* Body-tiny-md */
-font-family: Inter;
+font-family: Pretended;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 128.571% */
+`;
+const Input3 = styled.input`
+  border: none;
+  border-bottom: 1px solid #E6E6E6; /* 밑줄만 표시 */
+  outline: none; /* 포커스 시 기본 테두리 제거 */
+  padding: 4px 0;
+  color:rgb(0, 0, 0);
+  width: 250px;
+  flex-direction: column;
+  margin-bottom: 5px;
+ 
+  &::placeholder {
+    color: #919191; /* 플레이스홀더 색상 */
+    /* body-14-medium */
+font-family: Pretendard;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 128.571% */
+  }
+
+  &:focus {
+    border-bottom: 1px solid #333; /* 포커스 시 밑줄 색상 변경 */
+  }
+  `
+  const AddStaffButton = styled.button`
+   display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  gap: 4px; /* 아이콘과 글자 사이 간격 */
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+    background-color: transparent; /* 배경 제거 */
+  cursor: pointer;
+  color: var(--Gray-sub, #919191);
+
+/* Body-tiny-md */
+font-family: Pretendard;
 font-size: 14px;
 font-style: normal;
 font-weight: 500;
