@@ -189,7 +189,7 @@ export default function AdminSmallTheaterDetail() {
         </SearchSection>
         
         <Subtitle>
-          <BackButton onClick={() => navigate(-1)}>
+          <BackButton onClick={() => navigate(`/adminpage/small-theater`)}>
             &lt;
           </BackButton>
           &nbsp; {smallTheaterInfo.title}

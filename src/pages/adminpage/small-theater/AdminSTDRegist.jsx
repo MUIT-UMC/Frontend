@@ -8,6 +8,8 @@ import SearchIconBlack from "../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
 import CheckBoxIcon from "../../../assets/icons/AdminCheckbox.svg";
 import CheckBoxIconRed from "../../../assets/icons/AdminCheckboxRed.svg";
+import CheckWhite from "../../../assets/icons/CheckWhite.svg";
+import CheckRed from "../../../assets/icons/CheckRed.svg";
 
 import SearchBar_Mock from '../components/SearchBar_Mock';
 
@@ -99,8 +101,11 @@ export default function AdminSTDRegist() {
       navigate(`/adminpage/small-theater/detail/${smallMusicalId}`);
     }
   };
+  // 선택된 심사 상태
+  const [selectedStatus, setSelectedStatus] = useState();
   // 심사 상태
   const handleChangeStatus = (newStatus) => {
+    setSelectedStatus(newStatus);
     setDecisionInfo((prev) => ({
       ...prev,
       status: newStatus
@@ -132,7 +137,7 @@ export default function AdminSTDRegist() {
         }
       });
       alert("심사 결과가 반영되었습니다.");
-      navigate(`/adminpage/small-theater`);  // 등록/반려 후 리스트 페이지 등으로 이동
+      navigate(`/adminpage/small-theater`);
     } catch (err) {
       console.error("소공연 등록/반려 실패:", err);
       alert("등록/반려 처리 중 오류 발생");
@@ -181,22 +186,24 @@ export default function AdminSTDRegist() {
                 <Th>심사결과</Th>
                 <Td>
                   {/* “확인” / “반려” 버튼 */}
-                  <ButtonOption
-                    $active={decisionInfo.status === "등록"}
-                    onClick={() => handleChangeStatus("등록")}
-                  >
-                    확인
-                  </ButtonOption>
-                  <ButtonOption
-                    $active={decisionInfo.status === "반려"}
-                    onClick={() => handleChangeStatus("반려")}
-                  >
-                    반려
-                  </ButtonOption>
+                  <CheckOptions>
+                    <CheckBoxWrapper>
+                      <CheckBox onClick={() => handleChangeStatus("등록")}                      >
+                        <img src={selectedStatus === "등록" ? CheckRed : CheckWhite} alt="Check"/>
+                      </CheckBox>
+                      <CheckText>확인</CheckText>
+                    </CheckBoxWrapper>
+                    <CheckBoxWrapper>
+                      <CheckBox onClick={() => handleChangeStatus("반려")}>
+                        <img src={selectedStatus === "반려" ? CheckRed : CheckWhite} alt="Check"/>
+                      </CheckBox>
+                      <CheckText>반려</CheckText>
+                    </CheckBoxWrapper>
+                  </CheckOptions>
                 </Td>
               </Tr>
               {/* 반려인 경우 */}
-              {decisionInfo.status === "반려" && (
+              {selectedStatus === "반려" && (
                 <Tr>
                   <Th>반려 사유</Th>
                   <Td>
@@ -326,7 +333,6 @@ const Th = styled.th`
   color: #8F8E94;
 `;
 const Td = styled.td`
-  width:  515px;
   padding: 6px 20px 6px 20px;
   border-top: 1px solid #8F8E94;
   border-bottom: 1px solid #8F8E94;
@@ -336,21 +342,11 @@ const Td = styled.td`
   color: ${COLOR_GRAY_MAINTEXT};
 `;
 
-const ButtonOption = styled.button`
-  margin-right: 20px;
-  font-family: "Pretendard";
-  font-size: 16px;
-  font-weight: 700;
-  color: ${({ $active }) => ($active ? "#fff" : "#000")};
-  background-color: ${({ $active }) => ($active ? COLOR_MUIT_RED : "#eee")};
-  border: none;
-  border-radius: 8px;
-  padding: 6px 14px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ $active }) => ($active ? "#9E0000" : "#ddd")};
-  }
+const CheckOptions = styled.div`
+  display:  flex;
+  gap:  18px;
+  justify-content: flex-start;
+  align-items:  center;
 `;
 
 const ApplyButton = styled.button`
