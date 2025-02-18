@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { Link } from 'react-router-dom';
 import axios from "axios";
 
 import SearchIcon from "../assets/icons/SearchButton.svg";
@@ -16,6 +17,9 @@ const COLOR_GRAY_SUB = "#919191";
 const MAX_WIDTH = 1440;
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+// const token = localStorage.getItem("accessToken"); 로그인 구현되면 이렇게
+// 그전 까지 임시
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 export default function Search() {
   
@@ -30,7 +34,7 @@ export default function Search() {
     "마타하리",
     "지킬 앤 하이드",
   ]);
-  const [filteredData, setFilteredData] = useState([]);         // 검색결과 목록 (검색 API)
+  const [filteredData, setFilteredData] = useState([]);         // 검색결과 목록
 
   useEffect(() => {
     fetchHotMusicals();
@@ -46,10 +50,15 @@ export default function Search() {
   //Hot 10 API
   const fetchHotMusicals = async () => {
     try {
-      const response = await axios.get(`${baseURL}/musicals/hot/all?page=1`);
+      const response = await axios.get(`${baseURL}/musicals/hot/all?page=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       const dataArr = response.data.result.content;
       const topTen = dataArr.slice(0, 10);
       const refined = topTen.map((item, idx) => ({
+        musicalId: item.id,
         poster: item.posterUrl,
         title: item.name,
         locate: item.place,
@@ -73,11 +82,17 @@ export default function Search() {
   }, [searchInput]);
 
    // 검색 API
-   const fetchSearchData = async (keyword) => {
+  const fetchSearchData = async (keyword) => {
     try {
-      const res = await axios.get(`${baseURL}/musicals/search`, {params: { musicalName: keyword } });
+      const res = await axios.get(`${baseURL}/musicals/search`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: { musicalName: keyword }
+      });
       const list = res.data.result.musicalHomeList || [];
       const refined = list.map((item) => ({
+        musicalId: item.id,
         poster: item.posterUrl,
         title: item.name,
         locate: item.place,
@@ -243,7 +258,9 @@ export default function Search() {
               {filteredData.length > 0 ? (
                 filteredData.map((item, index) => (
                   <SearchResultItem key={index}>
-                    <Poster src={item.poster} alt={item.title} />
+                    <Poster to={item ? `/detail/${item.musicalId}` : "#"}>
+                      <img style={{ width: '100%', height: '100%' }} src={item.poster} alt={item.title} />
+                    </Poster> 
                     <SearchResultDetails>
                       <SearchResultTitle>{item.title}</SearchResultTitle>
                       <Location>{item.locate}</Location>
@@ -529,7 +546,7 @@ const SearchResultItem = styled.div`
   gap: 26px;
 `;
 
-const Poster = styled.img`
+const Poster = styled(Link)`
   margin-left: 10px;
   width: 140px;
   height: 200px;

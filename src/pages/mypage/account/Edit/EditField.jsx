@@ -1,19 +1,61 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import useCustomFetch from "../../../../hooks/fetchWithAxios";
 
 function EditField() {
+  const { fetchData } = useCustomFetch();
+  const memberId = localStorage.getItem("userId");
   const { field } = useParams();
   const [inputValue, setInputValue] = useState("");
 
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
-  const handleVerificationChange = (e) => setVerificationCode(e.target.value);
-  const handleRequestVerification = () => {
-    if (inputValue.trim()) {
-      setShowVerification(true); // 인증번호 입력 필드
+  const [isVerified, setIsVerified] = useState(true);
+  const sendVerificationCode = async () => {
+    try {
+        const email = inputValue;
+        if (!email) {
+            alert('이메일을 입력해주세요.');
+            return;
+        }
+        const response = fetchData('/sendCode', 'POST', { email });
+        setShowVerification(true);
+        alert('인증번호가 전송되었습니다.');
+        //console.log(response?.message);
+    } catch (error) {
+        alert('인증번호 전송에 실패했습니다.');
+        console.log(error);
+    }
+};
+  const verifyCode = async () => {
+    try {
+        const email = inputValue;
+        const [username, domain] = email.split("@");
+        const url = `/verify?email=${username}%40${domain}&code=${verificationCode}`
+        
+        if (!verificationCode) {
+            alert('인증번호를 입력해주세요.');
+            return;
+        }
+        const response = await fetchData(url, 'POST', { 
+            email, 
+            code: String(verificationCode) }
+        );
+        console.log('response:', response);
+
+        if (response?.isSuccess) {
+            alert('이메일 인증이 완료되었습니다.');
+            setIsVerified(true);
+        } else {
+            alert(response?.message);
+        }
+    } catch (error) {
+        console.error("이메일 인증 실패:", error);
+        alert('이메일 인증에 실패했습니다.');
     }
   };
+  const handleVerificationChange = (e) => setVerificationCode(e.target.value);
 
   const navigate = useNavigate();
   const GoBack = () => {
@@ -22,24 +64,35 @@ function EditField() {
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
-  const handleChangeInfo = () => {
-    if (!inputValue.trim()) {
-      alert("값을 입력해주세요!");
+  const changeInfo = () => {
+    if(!inputValue.trim()){
+      alert("값을 입력해주세요.");
       return;
     }
-    
-    // 실제 변경 API 요청을 보낼 수 있음
-    console.log(`변경된 ${field}:`, inputValue);
 
-    // 예시: 변경 완료 후 이전 페이지로 이동
-    alert(`${field}가 성공적으로 변경되었습니다!`);
+    let requestData = {};
+
+    if (field === "Username") {
+        requestData = { newUsername: inputValue };
+    } else if (field === "Email") {
+        verifyCode();
+        if(isVerified){
+          requestData = { email: inputValue };
+        }
+    } else if (field === "Phone") {
+        requestData = { newPhoneNumber: inputValue };
+    }
+
+    fetchData(`/member/${memberId}/change${field}`, 'PATCH', requestData);
+    console.log(requestData);
+    alert('변경이 완료되었습니다.');
     navigate(-1);
-  };
+  }
 
 
   return (
     <Container>
-      {field === 'id' && <>
+      {field === 'Username' && <>
         <h3>변경할 아이디를 입력하세요</h3>
         <InputArea>
           <p className="body-B-600">아이디</p>
@@ -48,7 +101,8 @@ function EditField() {
           </Input>
         </InputArea>
       </>}
-      {field === 'email' && <>
+
+      {field === 'Email' && <>
         <h3>이메일 변경을 위해 인증이 필요합니다</h3>
         <InputArea>
           <p className="body-B-600">이메일</p>
@@ -57,7 +111,7 @@ function EditField() {
             <button
             className='passkey-btn'
             disabled={!inputValue.trim()}
-            onClick={handleRequestVerification}
+            onClick={sendVerificationCode}
             >인증번호 받기</button>
           </Input>
         </InputArea>
@@ -75,9 +129,9 @@ function EditField() {
               </Input>
             </InputArea>
           )}
-        
       </>}
-      {field === 'phone' && <>
+
+      {field === 'Phone' && <>
         <h3>변경 휴대폰 번호를 입력하세요</h3>
         <InputArea>
           <p className="body-B-600">휴대폰</p>
@@ -91,7 +145,7 @@ function EditField() {
             onClick={GoBack}
             className="previous"> 이전</button>
             <button
-            onClick={handleChangeInfo}
+            onClick={changeInfo}
             className='confirm'
             disabled={!inputValue}
             >수정</button>

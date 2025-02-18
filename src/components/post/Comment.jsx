@@ -6,7 +6,8 @@ import ReplyArrow from "../../assets/icons/ReplyArrow.svg";
 import Reply from "./Reply";
 import { useState } from "react";
 import CommentInputArea from "./CommentInputArea";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+import axios from "axios";
+const token = localStorage.getItem("accessToken");
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function Comment({data, noneCommentIcon}) {
@@ -76,7 +77,31 @@ function Comment({data, noneCommentIcon}) {
   const replyHandler = () => {
     setIsReplying(true);
   }
+  const reportHandler = async (commentId) => {
+    if (window.confirm("게시글을 신고하시겠습니까?")) {
+      try {
+        console.log('신고할 댓글 ', commentId);
+        const response = await axios.post(`${muit_server}/reports/${commentId}?commentType=COMMENT`, 
+          {},
+          {
+          headers: { 
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        });
   
+        if (response.data.isSuccess) {
+          alert("정상적으로 신고 처리 되었습니다.");
+          console.log(commentId, "신고 완료");
+        } else {
+          alert("신고 실패: " + response.data.message);
+        }
+      } catch (error) {
+        console.error("신고 오류:", error);
+        alert("신고 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
   return (
     <Wrapper>
     <CommentWrapper>
@@ -85,16 +110,18 @@ function Comment({data, noneCommentIcon}) {
             <UserName isWriter={isWriter}>{data.nickname}</UserName>
             
             <Text>{data.createdAt?.split('T')[0]}</Text>
-            <Text>{data.commentId}</Text>
-            {/*<Text>신고하기</Text>*/}
+            <Text 
+              style={{display: (data.nickname=="삭제된 댓글" || data.isMyComment) ? "none" : "block"}}
+              onClick={() => reportHandler(data.commentId)}
+              >신고하기</Text>
           </TopLeft>
           <TopRight>
           {(!noneCommentIcon  && !isEditing) && (
             <div 
-            style={{ display: "flex", flexDirection: "row", gap: "4px" }}
+            style={{ display: "flex", flexDirection: "row", gap: "4px",}}
             onClick={replyHandler}>
               <img src={CommentBubble} />
-              <Text>댓글</Text>
+              <Text style={{width:'28px'}}>댓글</Text>
             </div>
           )}
             {isEditing ? (
@@ -105,7 +132,8 @@ function Comment({data, noneCommentIcon}) {
             ) : (
               <>
                 {/*<Text onClick={() => setIsEditing(true)}>수정</Text>*/}
-                <Text onClick={deleteHandler}>삭제</Text>
+                {console.log('댓글 닉네임', data.nickname)}
+                <Text onClick={deleteHandler} style={{ display: (data.nickname !== "삭제된 댓글" && data.isMyComment) ? "block" : "none" }}>삭제</Text>
               </>
             )}
           </TopRight>
@@ -192,6 +220,7 @@ const TopRight = styled.div`
 
 const Bottom = styled.div`
 margin-bottom: 20px;
+width: 100%;
 `
 
 const Text = styled.div`

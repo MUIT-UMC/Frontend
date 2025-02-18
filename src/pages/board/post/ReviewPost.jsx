@@ -9,8 +9,9 @@ import { RatingStars } from "../../../components/detail/RatingStars";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import PostMenu from "../../../components/post/PostMenu";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken");
+console.log(token);
 function ReviewPost() {
   const navigate = useNavigate();
   const { postId } = useParams();
@@ -47,23 +48,20 @@ function ReviewPost() {
 
   // console.log('데이터', data);
   
-  const d = data.result;
-  const title = d.title;
+
+  const { title, createdAt, commentCount, isMyPost, imgUrls, musicalName, location, rating, content } = data.result;
   const board = "뮤지컬 리뷰";
   const user = "익명";
-  const date = d.createdAt?.split('T')[0];
-  const images = d?.imgUrls;
-  const commentCount = d?.commentCount;
-  const listSize = comment?.result?.listSize;
+  const date = createdAt?.split('T')[0];
+
   // console.log('image', image);
   const details = [
-    { label: "뮤지컬명", value: d.musicalName},
-    { label: "장소", value: d.location },
-    { label: "평점", value: <RatingStars rating={d.rating} starSize={36}/> },
-    { label: "특징", value: d.content},
+    { label: "뮤지컬명", value: musicalName},
+    { label: "장소", value: location },
+    { label: "평점", value: <RatingStars rating={rating}/> },
+    { label: "특징", value: content},
   ];
 
-  console.log(d.rating);
   return (
     <>
       <ReviewPostContainer>
@@ -76,7 +74,7 @@ function ReviewPost() {
           <TitleWrapper>
             <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
           </TitleWrapper>
-         <PostMenu />
+          <PostMenu isMyPost={isMyPost}/>
         </TopWrapper>
 
         <SubTitleWrapper>
@@ -88,7 +86,7 @@ function ReviewPost() {
        
         <Info alt="" details={details} valueWidth='600px'/>
         <ImagesArea>
-        {images.map((url, index) => (
+        {imgUrls.map((url, index) => (
     <ImageWrapper key={index}>
       <img src={url} alt={`image-${index}`} />
     </ImageWrapper>

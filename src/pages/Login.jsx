@@ -1,29 +1,33 @@
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useCustomFetch from "../hooks/fetchWithAxios";
 
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+import googleLogin from "../utils/googleSignUp";
+
 import MuitElement from "../assets/logos/MuitElement.png";
 import Google from "../assets/logos/google.png";
 import Kakao from "../assets/logos/kakao.png";
 import Naver from "../assets/logos/naver.png";
 import SeePassword from "../assets/icons/SeePassword.svg";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
 
 const COLOR_MUIT_RED = "#A00000";
 
 function Login() {
     const { fetchData } = useCustomFetch();
+    const navigate = useNavigate();
+
     const schema = yup.object().shape({
         id: yup.string().required(),
         email: yup.string().required(),
         password: yup.string().required(),
     });
 
-    const navigate = useNavigate();
     const navigateToSignUp = () => {
         navigate("/signup");
     };
@@ -54,14 +58,18 @@ function Login() {
             const pw = watch('password');
             const response = await fetchData("/member/email/login", 'POST', { email, pw });
             console.log("응답:", response);
-            localStorage.setItem("token", response?.result?.accessToken);
-            localStorage.setItem("userName", response?.result?.userName);
+            localStorage.setItem("accessToken", response?.result?.accessToken);
+            localStorage.setItem("refreshToken", response?.result?.refreshToken);
+            localStorage.setItem("userName", response?.result?.username);
+            localStorage.setItem("userId", response?.result?.id);
             navigate("/", {});
         } catch (error) {
-            console.error("이메일 인증 실패:", error);
+            console.error("로그인 실패:", error);
             alert("로그인에 실패했습니다.");
         }
     };
+
+
 
     return (
         <Container>
@@ -109,7 +117,7 @@ function Login() {
             <SocialLogin>
                 <SocialIcon src={Kakao} />
                 <SocialIcon src={Naver} />
-                <SocialIcon src={Google} border="#E6E6E6" />
+                <SocialIcon src={Google} border="#E6E6E6" onClick={googleLogin} />
             </SocialLogin>
         </Container>
     );

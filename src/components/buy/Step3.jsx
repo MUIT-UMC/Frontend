@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
+import useFetch from "../../hooks/useFetch";
+import { useParams } from 'react-router-dom';
+
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 // Step3 - 배송 선택 및 주문자 확인
 const Step3 = () => {
-     const navigate = useNavigate();  // useNavigate 훅 사용
+  const {amateurId} = useParams();
+  const navigate = useNavigate();
+  
+  const url = `/tickets/${amateurId}/ticketInfo`;
+  const { data, error, loading } = useFetch(url, {
+      headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+      },
+  });
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>데이터를 불러오는 데 문제가 발생했습니다.</div>;
+  if (!data || !data.result) return <div>데이터가 없습니다.</div>;
+
+  const ticketInfo = data.result;
+  const memberInfo = data.result.reserveConfirmMemberDTO;
       
      return (
       <Container>
@@ -16,9 +35,9 @@ const Step3 = () => {
       </Sidebar>
       <Content>
           <LeftContent>
-        <Title>실종</Title>
-        <Subtitle>홍익대학교 학생회관 3층 소극장</Subtitle>
-        <DateRange>2024.10.03~2024.10.05</DateRange>
+        <Title>{ticketInfo.name}</Title>
+        <Subtitle>{ticketInfo.place}</Subtitle>
+        <DateRange>{ticketInfo.schedule}</DateRange>
         <DiscountBox>
           <DiscountTitle>티켓 수령 방법</DiscountTitle>
           <Options>
@@ -28,20 +47,20 @@ const Step3 = () => {
             <DiscountTitle>예매자 확인</DiscountTitle>
             <Row2>
             <Label>이름</Label>
-            <Value>최윤경</Value>
+            <Value>{memberInfo.memberName}</Value>
           </Row2>
           <Row2>
             <Label>생년월일</Label>
-            <Value>020616</Value>
+            <Value>{memberInfo.memberBirth}</Value>
             <Detail>(YYMMDD)</Detail>
           </Row2>
           <Row2>
             <Label>연락처</Label>
-            <Value>010-0000-0000</Value>
+            <Value>{memberInfo.memberPhone}</Value>
           </Row2>
           <Row2>
             <Label>이메일</Label>
-            <Value>rose06166@sookmyung.ac.k</Value>
+            <Value>{memberInfo.memberEmail}</Value>
           </Row2>
           </Options>
         </DiscountBox>
@@ -49,7 +68,7 @@ const Step3 = () => {
         <Summary>
           <Row>
             <Label>일시</Label>
-            <Value>2024.10.03 (목) 19:00</Value>
+            <Value>{ticketInfo.schedule}</Value>
           </Row>
           <Row>
             <Label>인원</Label>
@@ -57,7 +76,7 @@ const Step3 = () => {
           </Row>
           <Row>
             <Label>티켓 금액</Label>
-            <Value>10,000원</Value>
+            <Value>{ticketInfo.tickets.price}</Value>
           </Row>
           <Row>
             <Label>할인</Label>
@@ -69,7 +88,7 @@ const Step3 = () => {
           </Row>
           <TotalRow>
           <TotalLabel>총 결제 금액</TotalLabel>
-          <TotalValue>7,000원</TotalValue>
+          <TotalValue>{ticketInfo.tickets.price}</TotalValue>
         </TotalRow>
         <Button onClick={() => navigate('../step4')} active>다음</Button>  {/* 이전 페이지로 이동 */}
       <Button onClick={() => navigate('../step2')}>이전</Button>  {/* 다음 페이지로 이동 */}

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
+import useCustomFetch from "../../../hooks/fetchWithAxios";
 
 import Authenticate from "../../../components/mypage/account/Authenticate";
 
 function EditAccount() {
+  const memberId = localStorage.getItem("userId");
   const [isAuthenticated, setIsAuthenticated] = useState(false); 
   const [password, setPassword] = useState("");
 
@@ -16,6 +18,9 @@ function EditAccount() {
     navigate(`/mypage/account/edit/${field}`);
   }
 
+  const {data: info, error, loading} = useCustomFetch(`/member/${memberId}`);
+  console.log(info?.result);
+
   return (
     <Container>
       {isAuthenticated ? (
@@ -23,31 +28,31 @@ function EditAccount() {
           <InputArea>
             <p className="body-B-600">이름</p>
             <Input>
-              <input />
+              <p>{info?.result?.name}</p>
             </Input>
           </InputArea>
 
           <InputArea>
             <p className="body-B-600">아이디</p>
             <Input>
-              <input />
-              <EditButton onClick={() => handleEdit("id")}>수정</EditButton>
+              <p>{info?.result?.username}</p>
+              <EditButton onClick={() => handleEdit("Username")}>수정</EditButton>
             </Input>
           </InputArea>
 
           <InputArea>
             <p className="body-B-600">이메일</p>
             <Input>
-              <input />
-              <EditButton onClick={() => handleEdit("email")}>수정</EditButton>
+              <p>{info?.result?.email}</p>
+              <EditButton onClick={() => handleEdit("Email")}>수정</EditButton>
             </Input>
           </InputArea>
 
           <InputArea>
             <p className="body-B-600">휴대폰</p>
             <Input>
-              <input />
-              <EditButton onClick={() => handleEdit("phone")}>수정</EditButton>
+            <p>{info?.result?.phone}</p>
+              <EditButton onClick={() => handleEdit("Phone")}>수정</EditButton>
             </Input>
           </InputArea>
         </div>
@@ -83,6 +88,7 @@ const InputArea = styled.div`
 const Input = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   height: 32px;
   width: 716px;

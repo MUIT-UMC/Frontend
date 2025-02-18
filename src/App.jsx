@@ -100,9 +100,9 @@ function App() {
         {/* 4-2) 뮤지컬 등록확인인 페이지 */}
         <Route path="/register-musical/check" element={<RegisterCheck />} />       
         {/* 4-3) 소극장 상세 페이지 */}
-        <Route path="/small-detail" element={< SmallDetail/>} />
+        <Route path="/small-detail/:amateurId" element={< SmallDetail/>} />
         {/* 4-4) 소극장 구매매 페이지 */}
-        <Route path="/small-detail/buy/*" element={< BuyTicket/>} />
+        <Route path="/small-detail/buy/:amateurId/*" element={< BuyTicket/>} />
         {/* 5) 이벤트 확인 */}
         <Route path="/event-check" element={<EventCheck />} />
 
@@ -147,9 +147,9 @@ function App() {
         <Route path="/mypage/account-deletion/complete" element={<AccountDeletionComplete />} />
 
        {/* 티켓 상세페이지 */}
-        <Route path="ticket/:number" element={<TicketDetailPage />} />
-        <Route path="ticket/:number/cancel" element={<CancelTicket />} />
-        <Route path="ticket/:number/cancel/complete" element={<CancelComplete />}  />
+        <Route path="ticket/:memberTicketId" element={<TicketDetailPage />} />
+        <Route path="ticket/:memberTicketId/cancel" element={<CancelTicket />} />
+        <Route path="ticket/:memberTicketId/cancel/complete" element={<CancelComplete />}  />
         {/* 검색 */}
         <Route path="/search" element={<Search />} />
         {/* 랭킹 */}

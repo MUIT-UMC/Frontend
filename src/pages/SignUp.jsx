@@ -5,20 +5,45 @@ import Google from '../assets/logos/google.png';
 import Kakao from '../assets/logos/kakao.png';
 import Naver from '../assets/logos/naver.png';
 
+import kakaoSignup from "../utils/kakaoSignup";
+import googleSignUp from "../utils/googleSignUp";
+import useCustomFetch from "../hooks/fetchWithAxios";
+
+
 const COLOR_MUIT_RED = "#A00000";
 
 function SignUp() {
-
+    const {fetchData} = useCustomFetch();
+    const googleLogin=()=>{
+        console.log('구글 로그인 시도');
+        const response = fetchData(`/login/oauth2/code/google`, {code});
+        console.log(response);
+    }
     return(
         <Container>
             <img src={MuitElement} className="MuitElement" />
             <LogoLink>MUIT</LogoLink>
             <h3>회원가입 후 MUIT의 다양한 서비스를 경험해보세요</h3>
             <BtnArea>
-                <SignUpBtn to='/signup/terms' bgcolor={COLOR_MUIT_RED} color={'#FFF'}> 개인 회원가입 </SignUpBtn>
-                <SignUpBtn bgcolor={'#FDDC3F'} color={'#000'}> <img src={Kakao}/>카카오로 가입 </SignUpBtn>
-                <SignUpBtn bgcolor={'#00B818'} color={'#FFF'}><img src={Naver}/> 네이버로 가입 </SignUpBtn>
-                <SignUpBtn bgcolor={'#FFF'} border={'#E6E6E6'} color={'#000'}> <img src={Google}/>구글로 가입 </SignUpBtn>
+                <SignUpBtn 
+                to='/signup/terms' 
+                bgcolor={COLOR_MUIT_RED} 
+                color={'#FFF'}> 개인 회원가입 </SignUpBtn>
+
+                <SignUpBtn 
+                bgcolor={'#FDDC3F'} 
+                color={'#000'}> <img src={Kakao}/>카카오로 가입 </SignUpBtn>
+
+                <SignUpBtn 
+                bgcolor={'#00B818'} 
+                color={'#FFF'}
+                onClick={kakaoSignup}><img src={Naver}/> 네이버로 가입 </SignUpBtn>
+
+                <SignUpBtn
+                bgcolor={'#FFF'}
+                border={'#E6E6E6'}
+                color={'#000'}
+                onClick={googleSignUp}><img src={Google}/>구글로 가입 </SignUpBtn>
             </BtnArea>
         </Container>
     )

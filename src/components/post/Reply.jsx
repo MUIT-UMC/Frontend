@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CommentBubble from "../../assets/icons/CommentBubbleIcon.svg";
 import ReplyArrow from "../../assets/icons/ReplyArrow.svg";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+import { useState } from "react";
+import axios from "axios";
+const token = localStorage.getItem("accessToken");
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 function Reply({key, data}) {
   console.log(data);
   console.log('리플라이 콘텐츠', data.content);
+
+  const [isWriter, setIsWriter] = useState(data.nickname=='글쓴이');
 
   const deleteHandler = async () => {
     if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
@@ -37,6 +41,31 @@ function Reply({key, data}) {
       alert("삭제 중 오류가 발생했습니다.");
     }
   };
+
+  const reportHandler = async (commentId) => {
+    if (window.confirm("게시글을 신고하시겠습니까?")) {
+      try {
+        console.log('신고할 답댓글 ', commentId);
+        const response = await axios.post(`${muit_server}/reports/${commentId}?commentType=REPLY`, 
+          {},
+          {
+          headers: { 
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        });
+  
+        if (response.data.isSuccess) {
+          alert("정상적으로 신고 처리 되었습니다.");
+          console.log(commentId, "신고 완료");
+        } else {
+          alert("신고 실패: " + response.data.message);
+        }
+      } catch (error) {
+        console.error("신고 오류:", error);
+        alert("신고 중 오류가 발생했습니다.");
+      }
+    }
+  };
   
   return (
     <ReplyWrapper>
@@ -47,17 +76,15 @@ function Reply({key, data}) {
       <CommentWrapper>
         <Top>
           <TopLeft>
-            <UserName color='#A00000'>{data.nickname}</UserName>
+          <UserName isWriter={isWriter}>{data.nickname}</UserName>
             <Text>{data.createdAt?.split('T')[0]}</Text>
-            <Text>{data.replyId}</Text>
-            <Text style={{display: 'none'}}>신고하기</Text>
+            <Text 
+            style={{display: data.isMyComment ? "none" : "block"}}
+            onClick={() => reportHandler(data.replyId)}
+            >신고하기</Text>
           </TopLeft>
           <TopRight>
-            <div style={{display:'flex', flexDirection: 'row', gap: '4px'}}>
-              <img src={CommentBubble} /><Text>댓글</Text>
-            </div>
-            <Text>수정</Text>
-            <Text onClick={deleteHandler}>삭제</Text>
+            <Text onClick={deleteHandler} style={{ display: (data.nickname !== "삭제된 댓글" && data.isMyComment) ? "block" : "none" }}>삭제</Text>
           </TopRight>
           
         </Top>
@@ -85,8 +112,7 @@ margin-left: 20px;
 
 `
 const UserName = styled.div`
-  color: ${(props) => props.color ? props.color : '#000'};
-
+  color: ${(props) => (props.isWriter ? '#A00000' : props.color || '#000')};
 /* Body-bold */
 font-family: Pretendard;
 font-size: 16px;
@@ -118,7 +144,7 @@ const TopRight = styled.div`
 
 const Bottom = styled.div`
 margin-bottom: 20px;
-wdith: 100%;
+width: 100%;
 `
 
 const Text = styled.div`

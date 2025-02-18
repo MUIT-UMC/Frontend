@@ -3,7 +3,9 @@ import styled from "styled-components";
 import Camera from "../../../assets/icons/Camera.svg";
 import axios from "axios"; // axios 추가
 import { useNavigate } from "react-router-dom";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken");
+console.log(token);
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
 function WriteItemPost({category}) {
@@ -42,7 +44,6 @@ function WriteItemPost({category}) {
   
   // 글 업로드하기 
   const handleSubmit = async () => {
-
     const formData = new FormData();
 
     const lostRequestDTO = {
@@ -55,6 +56,7 @@ function WriteItemPost({category}) {
       lostDate: lostDate.trim(),
     };
     
+    console.log(lostRequestDTO);
     // 제출할 데이터를 formData에 추가한다. 
     formData.append(
       "lostRequestDTO",

@@ -29,8 +29,10 @@ function AnonymousPost() {
   const [commentTrigger, setCommentTrigger] = useState(0);
   
   // 게시글 데이터 
-  const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-
+  // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+  const token = localStorage.getItem("accessToken");
+  console.log(token);
+  
   const url = `/posts/${postId}`;
   const { data, error, loading } = useFetch(url, {
     headers: {
@@ -102,6 +104,7 @@ function AnonymousPost() {
   const images = d?.imgUrls;
   const commentCount = d?.commentCount;
   const listSize = comment?.result?.listSize;
+  const isMyPost = d?.isMyPost;
 
   // const likeCount = d?.likeCount;
 
@@ -116,7 +119,7 @@ function AnonymousPost() {
           <TitleWrapper>
             <PostTitle>{title}</PostTitle><BoardName>{board}</BoardName>
           </TitleWrapper>
-          <PostMenu />
+          <PostMenu isMyPost={isMyPost}/>
         
         </TopWrapper>
 

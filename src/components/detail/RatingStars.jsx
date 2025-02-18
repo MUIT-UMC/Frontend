@@ -9,7 +9,7 @@ import starHalf from "../../assets/icons/star-half.svg"; // half star 아이콘 
  * Renders full, half, or empty star based on the decimal value.
  * @param {number} rating - The current rating value (0-5).
  */
-export const RatingStars = ({ rating, starSize = 24 }) => {
+export const RatingStars = ({ rating, starSize = 24, gap = 4}) => {
   // 5개의 별을 생성하면서 각 별의 상태를 결정합니다.
   const stars = Array.from({ length: 5 }, (_, index) => {
     if (rating >= index + 1) {
@@ -22,7 +22,7 @@ export const RatingStars = ({ rating, starSize = 24 }) => {
   });
 
   return (
-    <StarWrapper>
+    <StarWrapper gap={gap}>
       {stars.map((type, index) => (
         <Star
           key={index}
@@ -35,6 +35,7 @@ export const RatingStars = ({ rating, starSize = 24 }) => {
           }
           alt={`${type} star`}
           size={starSize}
+          
         />
       ))}
     </StarWrapper>
@@ -44,6 +45,8 @@ export const RatingStars = ({ rating, starSize = 24 }) => {
 // Styled Components
 const StarWrapper = styled.div`
   display: flex;
+  gap: ${({gap}) => gap}px;
+  align-items: center;
 `;
 
 const Star = styled.img`

@@ -7,8 +7,7 @@ import { RatingStars } from "../../../components/detail/RatingStars";
 import { useState } from "react";
 import useFetch from "../../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
-
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken");
 
 function Review({ musicalName, score }) {
 
@@ -25,7 +24,6 @@ function Review({ musicalName, score }) {
     const queryString = new URLSearchParams({
       postType,
       page: currentPage,
-      size,
       musicalName: musicalName,
     }).toString();
   
@@ -67,7 +65,7 @@ function Review({ musicalName, score }) {
         <Left>
         <Title>관람 평점</Title>
         <RatingWrapper>
-          <RatingStars rating={score} starSize={36}/>
+          <RatingStars rating={score}/>
           <Rating>{score}</Rating>
         </RatingWrapper>
         </Left>
@@ -85,9 +83,10 @@ function Review({ musicalName, score }) {
         </select>
       </Form>
          */}
-        {data?.result?.posts?.map((d) => (
-            <ReviewContainer data={d} />
-        ))}
+         {data?.result?.posts.length == 0 ? <div>아직 작성된 리뷰가 없습니다.</div> :
+         data?.result?.posts?.map((d) => (
+          <ReviewContainer data={d} />
+      ))}
 
       </Content>
    </>

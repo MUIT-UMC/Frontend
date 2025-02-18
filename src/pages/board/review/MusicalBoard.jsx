@@ -9,8 +9,9 @@ import useCustomFetch from "../../../hooks/useCustomFetch";
 import { useEffect } from "react";
 import useFetch from "../../../hooks/useFetch";
 
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken");
+console.log(token);
 const MusicalBoard = () => {
   
   const [postType] = useState("REVIEW");
@@ -80,16 +81,18 @@ const MusicalBoard = () => {
       <SearchContainer fields={fieldsForTwo} onSearchChange={handleSearchChange}/>
       {loading && <div>로딩 중...</div>}
       {error && <div>에러 발생: {error}</div>}
-      {!loading && !error && (
-        <>
-          <PostList details={data.result.posts} headers={tableHeaders} cols={3}/>
-          <PageNavigator
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-           </>
-      )}
+      {data?.result?.posts?.length == 0 ? <div style={{marginTop: '30px'}}>아직 작성된 게시글이 없습니다.</div> :
+        !loading && !error && (
+          <>
+            <PostList details={data.result.posts} headers={tableHeaders} cols={3}/>
+            <PageNavigator
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+             </>
+        )
+      }
     </>
   );
 };

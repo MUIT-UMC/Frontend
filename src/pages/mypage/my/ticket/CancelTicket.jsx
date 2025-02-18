@@ -5,30 +5,93 @@ import TicketContainer from "../../../../components/mypage/myticket/TicketContai
 import posterImg from "../../../../assets/images/miafamiglia-poster.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import useFetch from "../../../../hooks/useFetch";
+
+const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
+
+const token = localStorage.getItem("accessToken");
+console.log(token);
+
+
 function CancelTicket() {
-  const poster = posterImg; 
-  const details = [ 
-    { label: "예매번호", value: "T0000000000" },
-    { label: "예매일", value: "2025-01-15" },
-    { label: "장소", value: "링크아트센터드림 드림1관" },
-    { label: "관람일시", value: "2025-03-21 (금) 14:30 1회" },
-    { label: "취소가능일시", value: "2025-03-20 (목) 17:00 까지" },
-    { label: "상태", value: "예매완료 (무통장 미입금)" },
-  ];
+
+  const {memberTicketId} = useParams();
+    console.log(memberTicketId);
+
   const [isChecked, setIsChecked] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleCancelClick = () => {
-    const currentUrl = window.location.pathname; // 현재 URL 가져오기
-    navigate(currentUrl + '/complete'); // '/cancel'을 URL 뒤에 추가하여 이동
-  };
+  const url = `/tickets/myTickets/${memberTicketId}`;
+
+  const { data, error, loading } = useFetch(url, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  },);
+
+  const { 
+    amateurShowName, 
+    place,
+    posterImgUrl,
+    quantity, 
+    reservationDate,
+    reservationStatus,
+    schedule,
+ } = data?.result || {};
+ 
+ const korStatus = {
+  RESERVE_AWAIT: "입금 대기중",
+  RESERVED: "예매 완료",
+  EXPIRED: "예매 기한 만료",
+  CANCEL_AWAIT: "취소 대기중",
+  CANCELED: "취소 완료",
+
+ }
+
+
+ console.log(data);
+
+ const handleCancelClick = async () => {
+  // 취소 요청 URL
+  const cancelUrl = `${serverUrl}/tickets/myTickets/${memberTicketId}/cancel`;
+
+  try {
+    // PATCH 요청 보내기
+    const response = await fetch(cancelUrl, {
+      method: 'PATCH', // PATCH 요청으로 변경
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // API 응답 확인
+    if (response.ok) {
+      // 취소 완료 후 'complete' 페이지로 이동
+      setLastCanceledTicket({
+        amateurShowName: amateurShowName,
+        quantity: quantity,
+        memberTicketId: memberTicketId, // Example ticket ID
+      });
+  
+      navigate(window.location.pathname + '/complete');
+    } else {
+      // 에러 처리 (예: 실패 시 메시지 표시)
+      console.error('취소 실패', response.status);
+    }
+  } catch (error) {
+    // 네트워크 오류 등 예외 처리
+    console.error('API 요청 중 오류 발생:', error);
+  }
+};
 
   return (
     <Wrapper>
       <Title>예매 취소</Title>
-      <Text mb='20px'>미아 파밀리아 2매를 예매 취소하시겠습니까?</Text>
-      <TicketContainer details={details} image={posterImg}/>
+      <Text mb='20px'>{amateurShowName} {quantity}매를 예매 취소하시겠습니까?</Text>
+      <TicketContainer details={data?.result} image={posterImg}/>
       <Text fontWeight='700' mt='40px' mb='24px'>예매 취소에 관한 취소 수수료에 대한 내용을 숙지하셨나요?</Text>
       <AgreeText>
       <Checkbox 

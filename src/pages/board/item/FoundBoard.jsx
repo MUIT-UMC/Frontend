@@ -5,8 +5,9 @@ import SearchContainer from "../../../components/board/SearchContainer";
 import useFetch from "../../../hooks/useFetch";
 import PageNavigator from "../../../components/board/PageNavigator";
 import useCustomFetch from "../../../hooks/useCustomFetch";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-
+// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken");
+console.log(token);
 const FoundBoard = () => {
   const [postType] = useState("FOUND");
   const [currentPage, setCurrentPage] = useState(0);
@@ -88,16 +89,18 @@ const FoundBoard = () => {
 
       {loading && <div>로딩 중...</div>}
       {error && <div>에러 발생: {error}</div>}
-      {!loading && !error && (
-        <>
-          <PostList details={data.result.posts} headers={tableHeaders} cols="4" />
-          <PageNavigator
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </>
-      )}
+      {data?.result?.posts?.length == 0 ? <div style={{marginTop: '30px'}}>아직 작성된 게시글이 없습니다.</div> :
+        !loading && !error && (
+          <>
+            <PostList details={data.result.posts} headers={tableHeaders} cols={3}/>
+            <PageNavigator
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+             </>
+        )
+      }
     </>
   );
 };

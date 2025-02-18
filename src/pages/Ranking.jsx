@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Link } from 'react-router-dom';
 import axios from "axios";
 
 // 색상
@@ -13,6 +14,9 @@ const COLOR_GRAY_SUB = "#919191";
 const MAX_WIDTH = 1440;
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+// const token = localStorage.getItem("accessToken"); 로그인 구현되면 이렇게
+// 그전 까지 임시
+const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 
 const Ranking = () => {
 
@@ -23,9 +27,14 @@ const Ranking = () => {
   // 랭킹 API연결
   const fetchRankingData = async () => {
     try {
-      const response = await axios.get(`${baseURL}/musicals/rank/all?page=1`);
+      const response = await axios.get(`${baseURL}/musicals/rank/all?page=1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       const list = response.data.result.content || [];
       const refined = list.map((item, idx) => ({
+        musicalId: item.id,
         poster: item.posterUrl,
         title: item.name,
         locate: item.place,
@@ -89,9 +98,11 @@ const Ranking = () => {
                 $offsetX={offsetX}
                 $zIndex={zIndex}
                 $isSelected={isSelected}
-                onClick={() => setSelectedRank(musical.ranking)}
+                onMouseEnter={() => setSelectedRank(musical.ranking)}
               >
-                <CardImage src={musical.poster} alt={musical.title} />
+                <CardImage to={musical ? `/detail/${musical.musicalId}` : "#"}>
+                  <img style={{ width: '100%', height: '100%' }} src={musical.poster} alt={musical.title} />
+                </CardImage>
                 <CardRank>{musical.ranking}</CardRank>
                 {isSelected && (
                   <CardDetail>
@@ -112,7 +123,9 @@ const Ranking = () => {
         <GridWrapper>
           {others.map((musical) => (
             <BottomItem key={musical.ranking}>
-              <BottomPoster src={musical.poster} alt={musical.title} />
+              <BottomPoster to={musical ? `/detail/${musical.musicalId}` : "#"}>
+                <img style={{ width: '100%', height: '100%' }} src={musical.poster} alt={musical.title} />
+              </BottomPoster>
               <BottomInfo>
                 <BottomRank>{musical.ranking}위</BottomRank>
                 <BottomTitleText>{musical.title}</BottomTitleText>
@@ -193,7 +206,7 @@ const CardWrapper = styled.div`
   cursor: pointer; 
 `;
 
-const CardImage = styled.img`
+const CardImage = styled(Link)`
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -270,7 +283,7 @@ const BottomItem = styled.div`
   text-align: left;
 `;
 
-const BottomPoster = styled.img`
+const BottomPoster = styled(Link)`
   width: 226.52px;
   height: 320px;
   object-fit: cover;
