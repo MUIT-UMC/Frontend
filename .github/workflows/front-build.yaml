@@ -1,0 +1,50 @@
+name: 리액트 빌드 / 배포 Actions # workflow 이름
+
+on:  # workflow 실행 조건
+  push:
+    branches:
+      - dev # 메인 브랜치가 푸쉬된 경우
+
+jobs: # job 설정
+  react: # job id
+    name: 리액트 build & deploy
+    runs-on: ubuntu-20.04
+    steps: 
+      - name: checkout Github Action
+        uses: actions/checkout@v3 # github actions 가상 환경에 해당 레포 소스 가져오기
+        
+      # Node.js 버전 설정 (20.0.0 이상으로 설정)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'  
+          
+      - name: install yarn dependencies
+        run: yarn install
+
+      - name: React build
+        run: yarn build
+
+      # aws user 연결
+      - name: Configure AWS credentials 
+        uses: aws-actions/configure-aws-credentials@v1 
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_S3_ACCESS_KEY_ID }} 
+          aws-secret-access-key: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY_ID }} 
+          aws-region: ap-northeast-2
+
+      # react 빌드한 /build를 s3로 업로드
+      - name: Upload to S3
+        env:
+          BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME}}
+        run: |
+          aws s3 sync \
+            ./dist s3://$BUCKET_NAME
+            
+      # 업로드한 s3 파일을 각 CDN 캐시 무효화하여 리프레시 하기
+      - name: CloudFront Invalidation
+        env:
+          CLOUD_FRONT_ID: ${{ secrets.AWS_CLOUDFRONT_ID}}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id $CLOUD_FRONT_ID --paths "/*"
