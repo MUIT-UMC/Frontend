@@ -72,6 +72,7 @@ import AdminSmallRefundDetail from "./pages/adminpage/small-theater/refund/Admin
 import ItemPostEdit from "./pages/board/edit/ItemPostEdit";
 import AnonymousPostEdit from './pages/board/edit/AnonymousPostEdit';
 import ReviewPostEdit from "./pages/board/edit/ReviewPostEdit";
+
 function App() {
   return (
     
@@ -90,7 +91,6 @@ function App() {
         <Route path="/vision" element={<Vision />} />
         {/* 3-1) 시야확인 상세 */}
         <Route path="/vision/:theatreId" element={<VisionDetailMain />} />
-        {/*<Route path="/vision/7" element={<VisionDetailLotte />} />*/}
 
         {/* 4) 소극장 공연 */}
         <Route path="/small-theater" element={<SmallTheater />} />
