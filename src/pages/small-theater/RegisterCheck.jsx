@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate,useLocation  } from 'react-router-dom'; 
 const token = import.meta.env.VITE_APP_ACCESS_TOKEN; 
-const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
+import axios from "axios";
 
 
 const RegisterCheck = () => {
@@ -22,62 +22,110 @@ const RegisterCheck = () => {
     formData,
     posterImage,
     castingImages,
-    noticeImages,
-    summaryImage,
     castings,
-    staff,
-    tickets,
+    noticeImages,
   } = location.state || {};
   
+  useEffect(() => {
+    // RegisterMusical에서 전달한 데이터를 콘솔에 출력
+    console.log('RegisterMusical에서 전달된 데이터:', location.state);
+  }, [location]);
+
   const handleRegister = async () => {
+    setIsLoading(true);
+
     const dataToSend = new FormData();
   
+    // 서버 요구사항에 맞게 payload 작성
     const payload = {
       data: {
-        ...formData,
-        castings,
-        staff,
-        tickets: [
-          {
-            ticketName: "일반석", // 예시
-            ticketType: "성인", // 예시
-            price: tickets.price, // 입력받은 단일 가격
-          },
-        ],
+         name: formData.name || "", // 빈 문자열로 대체
+         place: formData.place || "",
+         schedule: formData.schedule || "",
+         age: formData.age || "",
+         starring: formData.starring || "",
+         totalTicket: Number(formData.totalTicket) || 0, // 0으로 초기화
+         timeInfo: formData.timeInfo || "",
+         account: formData.account || "",
+         contact: formData.contact || "",
+         hashtag: formData.hashtag || "",
+         runtime: formData.runtime || "",
+         castings: castings
+            ? castings.map((casting) => ({
+                  actorName: casting.name || "",
+                  castingName: casting.role || "",
+              }))
+            : [],
+         noticeContent: formData.noticeContent || "",
+         tickets: formData.tickets
+            ? formData.tickets.map((ticket) => ({
+                  ticketName: ticket.ticketName || "",
+                  price: ticket.price || 0,
+              }))
+            : [],
+         staff: formData.staff
+            ? formData.staff.map((staff) => ({
+                  position: staff.position || "",
+                  name: staff.name || "",
+              }))
+            : [],
+         summaryContent: formData.summaryContent || "",
       },
-    };
+   };
+   
   
-    dataToSend.append(
-      "request",
-      new Blob([JSON.stringify(payload)], { type: "application/json" })
-    );
+   // JSON 데이터를 FormData에 추가
+   dataToSend.append("data", JSON.stringify(payload));
   
-    if (posterImage) dataToSend.append("posterImage", posterImage);
-    castingImages.forEach((image, index) =>
-      dataToSend.append(`castingImages`, image)
-    );
-    noticeImages.forEach((image, index) =>
-      dataToSend.append(`noticeImages`, image)
-    );
-    if (summaryImage) dataToSend.append("summaryImage", summaryImage);
+    if (posterImage) {
+      console.log("✅ Adding posterImage:", posterImage);
+      dataToSend.append("posterImage", posterImage);
+   } else {
+      console.log("⚠️ No posterImage provided");
+   }
+   
+   if (castingImages && castingImages.length > 0) {
+      castingImages.forEach((image, index) => {
+         console.log(`✅ Adding castingImage[${index}]:`, image);
+         dataToSend.append("castingImages", image);
+      });
+   } else {
+      console.log("⚠️ No castingImages provided");
+   }
+   
+   if (noticeImages && noticeImages.length > 0) {
+      noticeImages.forEach((image, index) => {
+         console.log(`✅ Adding noticeImage[${index}]:`, image);
+         dataToSend.append("noticeImages", image);
+      });
+   } else {
+      console.log("⚠️ No noticeImages provided");
+   }
+   
+    
+  
+    const url = `${import.meta.env.VITE_APP_SERVER_URL}/amateurs/enroll`;
   
     try {
-      const response = await fetch(`${serverUrl}/amateurs/enroll`, {
-        method: "POST",
+      const response = await axios.post(url, dataToSend, {
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
+          "Content-Type": "multipart/form-data",
         },
-        body: dataToSend,
       });
   
       if (response.ok) {
+        const responseData = await response.json();
+        console.log("등록 성공:", responseData);
         setMessage("🎉 공연이 성공적으로 등록되었습니다!");
         setIsRegistered(true);
       } else {
         const errorData = await response.json();
+        console.error("등록 실패:", errorData);
         setMessage(errorData.message || "등록에 실패했습니다.");
       }
     } catch (error) {
+      console.error("서버 오류:", error);
       setMessage("서버 오류가 발생했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
@@ -141,6 +189,8 @@ const RegisterCheck = () => {
     </Container>
   );
 };
+
+export default RegisterCheck;
 
 // 스타일링
 
@@ -303,4 +353,3 @@ font-weight: 700;
 line-height: normal;
 `;
 
-export default RegisterCheck;

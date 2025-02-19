@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { InteractiveRatingStars } from "../../../components/detail/InteractiveRatingStars";
-
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+import { GoX } from "react-icons/go";
+const token = localStorage.getItem("accessToken");
 const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
 
 function ReviewPostEdit() {
@@ -21,6 +21,7 @@ function ReviewPostEdit() {
   const [content, setContent] = useState("");
   // const [categoryState, setCategoryState] = useState("LOST");
   const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
+  const [originalImgUrls, setOriginalImgUrls] = useState([]);
   const [rating, setRating] = useState(0);
 
   // 기존 데이터 불러오기
@@ -39,6 +40,7 @@ function ReviewPostEdit() {
         setLocation(data.location);
         setContent(data.content);
         setRating(data.rating);
+        setOriginalImgUrls(data.imgUrls);
         console.log('평점', data.rating);
         // setCategoryState(data.postType);
         // setImgFiles(data.imgUrls);
@@ -50,12 +52,21 @@ function ReviewPostEdit() {
     fetchData();
   }, [postId]);
 
+  const handleImageChange = (e) => {
+    setImgFiles((prevFiles) => [
+      ...prevFiles, 
+      ...Array.from(e.target.files), 
+    ]);
+    console.log('이미지파일스 미리보기', imgFiles[0]);
+  };
+  
+
   // 게시글 수정 API 요청
   const handleUpdate = async () => {
-    //if (!musicalName || !location || !content) {
-    //  alert("모든 필드를 입력해주세요.");
-    //  return;
-    //}
+    if (!title || !musicalId || !rating || !content) {
+      alert("모든 필드를 입력해주세요.");
+      return;
+    }
 
     const formData = new FormData();
     const updateData = {
@@ -65,11 +76,12 @@ function ReviewPostEdit() {
       location,
       content,
       rating,
+      originalImgUrls,
      // postType: categoryState,
     };
 
     formData.append(
-      "reviewRequestDTO",
+      "postRequestDTO",
       new Blob([JSON.stringify(updateData)], { type: "application/json" })
     );
     // console.log('수정된 데이터', updateData);
@@ -84,7 +96,7 @@ function ReviewPostEdit() {
     console.log(key, value);
   });
     try {
-      const response = await axios.patch(`${serverUrl}/reviews/${postId}`, formData, {
+      const response = await axios.patch(`${serverUrl}/${postId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -99,20 +111,26 @@ function ReviewPostEdit() {
       console.error(error);
     }
   };
+  const removeOriginalImage = (index) => {
+    setOriginalImgUrls((prevUrls) => prevUrls.filter((_, i) => i !== index));
+    console.log(originalImgUrls);
+  };
+  const removeNewImage = (index) => {
+    setImgFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
 
+  
 // 필드 전부 입력 해야 버튼 활성화화
   const [isButtonDisabled, setButtonDisabled] = useState(true);
   
   useEffect(() => {
-    setButtonDisabled(
-      !(content.trim() && musicalName && location && lostItem && lostDate)
-    );
-    console.log(isButtonDisabled);
-  }, [content, musicalName, location, lostItem, lostDate]);
+    setButtonDisabled(!(title.trim() && content.trim() && musicalId && rating));
+  }, [title, content, musicalId, rating]);
+
   return (
 <WritePostContainer>
       <InputWrapper>
-        <Input
+        <InputTitle
           placeholder="제목을 입력하세요"
           type="text"
           value={title}
@@ -148,9 +166,9 @@ function ReviewPostEdit() {
           </div>
         
          */}
-      <div>
+      <Div>
           <label>뮤지컬명</label>
-          <input
+          <Input
             type="text"
             value={musicalName}
             onChange={(e) => {
@@ -158,34 +176,77 @@ function ReviewPostEdit() {
               console.log(musicalName);
             }}
           />
-        </div>
-        <div>
+        </Div>
+        <Div>
           <label>장소</label>
-          <input
+          <Input
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
           />
-        </div>
-        <div>
+        </Div>
+        <Div>
           <label>평점</label>
           <InteractiveRatingStars
-            starSize={36}
             value={rating}
             rating={rating}
             onRatingChange={setRating}
           />
-        </div>
-        <div>
-          <label>특징</label>
+        </Div>
+        <Div>
+          <label>내용</label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
-        </div>
+        </Div>
       </Form>
       </Content>
-    </WritePostContainer>
+
+       <ImageInsertButtonWrapper>
+              {/* 
+              <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
+                <img src={Camera} alt="camera icon" />
+                <Text>사진</Text>
+              </label>
+              */}
+      
+              <input
+                type="file"
+                accept="image/*"
+                id="fileInput"
+                multiple
+                onChange={handleImageChange}
+                // style={{ display: 'none' }} // 기본 input 스타일 숨기기
+              />
+          </ImageInsertButtonWrapper>
+          <CardWrapper>
+            {originalImgUrls?.map((url, index) => (
+              <Card key={`original-${index}`}>
+                <DeleteIcon onClick={() => {removeOriginalImage(index); }}>
+                  <GoX />
+                </DeleteIcon>
+                <Image src={url} alt={`Original image ${index}`} />
+              </Card>
+            ))}
+            {/*
+            <DotWrapper>
+            <Line />
+            </DotWrapper>
+             */}
+            
+            
+            {imgFiles?.map((file, index) => (
+              <Card key={`file-${index}`}>
+                <DeleteIcon onClick={() => {removeNewImage(index)}}>
+                  <GoX />
+                </DeleteIcon>
+                <Image src={URL.createObjectURL(file)} alt={`Uploaded image ${index}`} />
+              </Card>
+            ))}
+          </CardWrapper>
+          </WritePostContainer>
+
   );
 }
 
@@ -201,6 +262,19 @@ const Hr = styled.hr`
   border: 0;
   border-top: 1px solid var(--Gray-outline, #E6E6E6);
 `;
+const InputTitle = styled.input`
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 24px;
+  font-weight: 700;
+
+  &:focus {
+    outline: none;
+  }
+`;
 
 const InputWrapper = styled.div`
   margin-bottom: 24px;
@@ -210,6 +284,25 @@ const InputWrapper = styled.div`
 
  
 `;
+
+const Input = styled.input`
+    width: 610px;
+    border: none;
+    border-bottom: 1px solid #E6E6E6;
+    color: var(--Gray-maintext, #000);
+
+    /* Body-me */
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 25px; /* 156.25% */
+
+  }
+  input:focus {
+     outline: none;
+  }`
+
 
 const Button = styled.div`
     display: flex;
@@ -224,19 +317,7 @@ const Button = styled.div`
     cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
     transition: all 0.3s ease;
 `
-const Input = styled.input`
-  width: 100%;
-  border: none;
-  border-radius: 4px;
-  color: #000;
-  font-family: Pretendard;
-  font-size: 24px;
-  font-weight: 700;
 
-  &:focus {
-    outline: none;
-  }
-`;
 
 const Text = styled.div`
   color: var(--Gray-sub, #919191);
@@ -251,31 +332,16 @@ const Form = styled.form`
   flex-direction: column;
   gap: 30px;
 
-  div {
+  
+`;
+
+const Div = styled.div`
     display: flex;
     flex-direction: row;
     align-items: flex-start; /* 라벨을 상단 정렬 */
     gap: 10px; /* 라벨과 textarea 간 간격 */
-  }
 
-  div > input {
-    width: 610px;
-    border: none;
-    border-bottom: 1px solid #E6E6E6;
-    color: var(--Gray-maintext, #000);
-
-    /* Body-me */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 25px; /* 156.25% */
-  }
-  div > input:focus {
-     outline: none;
-  }
-
-  div > label {
+    label {
     width: 100px;
     color: #000;
 
@@ -286,12 +352,11 @@ const Form = styled.form`
     font-weight: 700;
     line-height: normal;
   }
-
-  div > textarea {
-    border: 1px solid #E6E6E6;
-    width: 610px;
+    textarea {
+    border: none;
+    width: 1104px;
+    height: 600px;
     color: #000;
-    height: 100px;
 
     /* Body-me */
     font-family: Pretendard;
@@ -299,13 +364,13 @@ const Form = styled.form`
     font-style: normal;
     font-weight: 500;
     line-height: 25px; /* 156.25% */
-    padding: 4px 12px;
+    padding: 0px;
   }
-
-  div > textarea:focus {
+    textarea:focus {
     outline: none;
   }
-`;
+
+`
 
 const ImgWrapper = styled.div`
   height: 320px;
@@ -343,3 +408,82 @@ const SelectWrapper = styled.div`
     outline: none;
     }
 `
+
+
+const ImageInsertButtonWrapper = styled.div`
+width: 100%;
+display: flex;
+// justify-content: flex-end;
+label {
+display: flex;
+flex-direction: row;
+gap: 8px;
+}
+input {
+// width: 190px;
+}
+input[type=file]::file-selector-button {
+  color: #919191;
+  width: 80px;
+  height: 30px;
+  background: #fff;
+  border: 1px solid #E6E6E6;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+* {
+color: #919191;
+}
+`
+
+const Card = styled.div`
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #E6E6E6; 
+  position: relative;
+`;
+
+const DeleteIcon = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  filter: 1;
+  background: #919191;
+  color: white;
+
+`;
+
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const CardWrapper = styled.div`
+display: flex;
+flex-direction: row;
+gap: 8px;
+margin-top: 16px;
+`
+
+const DotWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+const Line=styled.div`
+  width:2px;
+  height: 60px;
+  background: #E6E6E6;
+  margin: 4px;
+  border-radius: 1px;`

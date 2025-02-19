@@ -1,0 +1,9 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<<<<<<< HEAD
+<g id="check">
+<rect id="Rectangle 3466221" x="0.5" y="0.5" width="19" height="19" rx="2.5" fill="#A00000" stroke="#A00000"/>
+</g>
+=======
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15.0458 7.52685L8.57646 14.1922L4.75417 10.2541L6.04581 9.00047L8.57646 11.6078L13.7542 6.27319L15.0458 7.52685ZM0 9.9C0 4.43238 4.43238 0 9.9 0C15.3676 0 19.8 4.43238 19.8 9.9C19.8 15.3676 15.3676 19.8 9.9 19.8C4.43238 19.8 0 15.3676 0 9.9Z" fill="#A00000"/>
+>>>>>>> b02da37bb73dbc412010324d1b03eaec22dae246
+</svg>

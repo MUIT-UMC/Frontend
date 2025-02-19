@@ -1,12 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import SearchIconBlack from "../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
 import CheckBoxIcon from "../../../assets/icons/AdminCheckbox.svg";
 import CheckBoxIconRed from "../../../assets/icons/AdminCheckboxRed.svg";
+
+import SearchBar_Mock from '../components/SearchBar_Mock';
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -14,12 +17,13 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-import SearchBar from '../components/SearchBar';
-import {userData, colKeys, colLabels} from "./AdminUser";
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = localStorage.getItem("adminToken");
+const colLabels = ["아이디", "이름", "E-mail", "번호", "성별"];
 
 export default function AdminUserDetail() {
 
-  // 1. 체크박스 기능 ////////////////////////////////////////////////
+  // 1. 체크박스 //////////////////////////////////////////////////////////////////
   const [checkboxes, setCheckboxes] = useState([false, false, false, false, false]);
   const toggleCheck = (index) => {
     setCheckboxes((prev) => {
@@ -37,69 +41,94 @@ export default function AdminUserDetail() {
   const { userId } = useParams();  // URL 파라미터 (/adminpage/user/detail/:userId)
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
-
-  useEffect(() => {
-    // userData 중 해당 userId를 가진 객체 찾기
-    const found = userData.find((item) => item.id === userId);
-    if (found) {
-      setUserInfo(found);
-    } else {
-      // 해당 user를 찾지 못한 경우 → 목록으로 리다이렉트 or 에러 처리
-      alert("해당 사용자를 찾지 못했습니다.");
-      navigate("/adminpage/user");
-    }
-  }, [userId, navigate]);
-
-  // 2) 수정 관련 상태 ////////////////////////////////////////////
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState({
-    id: "",
+    username: "",
     name: "",
     phone: "",
     email: "",
-    gender: ""
+    //birthDate: "", // 생년월일 삭제
+    gender: "",
+    address: "",
   });
   useEffect(() => {
-    if (userInfo) {
-      setEditForm({
-        id: userInfo.id,
-        name: userInfo.name,
-        phone: userInfo.phone,
-        email: userInfo.email,
-        gender: userInfo.gender,
-      });
+    if (userId) {
+      fetchUserDetail(userId);
     }
-  }, [userInfo]);
+  }, [userId]);
 
+  // 사용자 상세 조회 API
+  const fetchUserDetail = async (userId) => {
+    try {
+      const res = await axios.get(`${baseURL}/admin/members/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`,
+        },
+      });
+      const data = res.data.result || {};
+      const refined = {
+        userId: data.memberId,
+        username: data.username,
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+        //birthDate: data.birthDate || "",    //삭제
+        gender: data.gender === "MALE" ? "남" : "여",
+        address: data.address || "",
+      };
+      setUserInfo(refined);
+      setEditForm({ ...refined });
+    } catch (err) {
+      console.error("사용자 정보 조회 실패:", err);
+      alert("해당 사용자를 조회할 수 없습니다.");
+      navigate("/adminpage/user"); 
+    }
+  };
+  
+  // 수정을 위해 입력값 변경
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
-
-  // 2) 수정 모드 ////////////////////////////////////////////
+  // 수정하기 -> editMode = true
   const handleEdit = () => {
     setEditMode(true);
   };
-  const handleApply = () => {
-    // 여기서는 userData 배열을 직접 수정하는 대신 임시로 console.log
-    console.log("수정 완료:", editForm);
-
-    // API적용시 서버에 PATCH 요청 등으로 저장 후:
-    // fetch(`/api/users/${userId}`, { method:"PATCH", body: JSON.stringify(editForm) })
-    //   .then(...)
-    //   .catch(...)
-
-    // 수정 적용 후 editMode 해제, userInfo 업데이트
-    setUserInfo(editForm);
-    setEditMode(false);
+  // 수정 적용 -> PATCH /admin/members/{userId}/update
+  const handleApply = async () => {
+    try {
+      const gValue = editForm.gender === "남" ? "MALE" : "FEMALE";
+      const patchBody = {
+        username: editForm.username,
+        name: editForm.name,
+        phone: editForm.phone,
+        email: editForm.email,
+        //birthDate: editForm.birthDate,  //삭제
+        gender: gValue,
+        address: editForm.address,
+      };
+      await axios.patch(`${baseURL}/admin/members/${userId}/update`, patchBody, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`,
+        },
+      });
+      // 성공 시 userInfo 업데이트, editMode 해제
+      setUserInfo({ ...editForm });
+      setEditMode(false);
+      alert("수정 완료");
+    } catch (err) {
+      console.error("사용자 수정 실패:", err);
+      alert("수정 실패!");
+    }
   };
-  if (!userInfo) return null; // 아직 로딩 or 없는경우
+  // 아직 로딩 or 없는경우
+  if (!userInfo) return null;
 
   return (
     <Container>
       <Tilte>사용자 관리</Tilte>
       <SearchSection>
-        <SearchBar/>
+        <SearchBar_Mock/>
         <CheckBoxes>
           {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>
@@ -116,7 +145,12 @@ export default function AdminUserDetail() {
         </CheckBoxes>
       </SearchSection>
       
-      <Subtitle>&lt; 기본 정보</Subtitle>
+      <Subtitle>
+        <BackButton onClick={() => navigate(-1)}>
+          &lt;
+        </BackButton>
+        &nbsp; 기본 정보
+      </Subtitle>
 
       {!editMode ? (
         // --- 정보표시만 ---
@@ -124,7 +158,7 @@ export default function AdminUserDetail() {
           <tbody>
             <Tr>
               <Th>아이디</Th>
-              <Td>{userInfo.id}</Td>
+              <Td>{userInfo.username}</Td>
             </Tr>
             <Tr>
               <Th>이름</Th>
@@ -138,11 +172,18 @@ export default function AdminUserDetail() {
               <Th>E-mail</Th>
               <Td>{userInfo.email}</Td>
             </Tr>
+            {/* <Tr>
+              <Th>생년월일</Th>
+              <Td>{userInfo.birthDate}</Td>
+            </Tr> */}
             <Tr>
               <Th>성별</Th>
               <Td>{userInfo.gender}</Td>
             </Tr>
-            {/* 추후 추가 필드... */}
+            <Tr>
+              <Th>주소</Th>
+              <Td>{userInfo.address}</Td>
+            </Tr>
           </tbody>
         </InfoTable>
       ) : (
@@ -153,8 +194,8 @@ export default function AdminUserDetail() {
               <Th>아이디</Th>
               <Td>
                 <Input
-                  name="id"
-                  value={editForm.id}
+                  name="username"
+                  value={editForm.username}
                   onChange={handleChange}
                 />
               </Td>
@@ -189,6 +230,16 @@ export default function AdminUserDetail() {
                 />
               </Td>
             </Tr>
+            {/* <Tr>
+              <Th>생년월일</Th>
+              <Td>
+                <Input
+                  name="birthDate"
+                  value={editForm.birthDate}
+                  onChange={handleChange}
+                />
+              </Td>
+            </Tr> */}
             <Tr>
               <Th>성별</Th>
               <Td>
@@ -199,7 +250,16 @@ export default function AdminUserDetail() {
                 />
               </Td>
             </Tr>
-            {/* 추후 추가 필드... */}
+            <Tr>
+              <Th>주소</Th>
+              <Td>
+                <Input
+                  name="address"
+                  value={editForm.address}
+                  onChange={handleChange}
+                />
+              </Td>
+            </Tr>
           </tbody>
         </InfoTable>
       )}
@@ -290,8 +350,18 @@ const Subtitle = styled.div`
   color: ${COLOR_GRAY_MAINTEXT};
 `;
 
+const BackButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: "Pretendard";
+  font-size: 24px;
+  font-weight: 500;
+  color: ${COLOR_GRAY_MAINTEXT};
+`;
+
 const InfoTable = styled.table`
-  width:  609px;
+  width:  610px;
   margin-top: 26px;
   margin-left: 154px;
   border-collapse: collapse;
@@ -300,14 +370,26 @@ const InfoTable = styled.table`
 const Tr = styled.tr``;
 
 const Th = styled.th`
-  width: 100px;
-  text-align: left;
+  width: 94px;
+  text-align: center;
   padding: 8px;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  border-right: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: #8F8E94;
 `;
 const Td = styled.td`
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
+  width:  515px;
+  padding: 6px 20px 6px 20px;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: ${COLOR_GRAY_MAINTEXT};
 `;
 
 const Input = styled.input`

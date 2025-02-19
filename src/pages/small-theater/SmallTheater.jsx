@@ -2,19 +2,24 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FormattedDate from "../../components/date/FormattedDate";
 import { useNavigate } from "react-router-dom";
-import useFetch from "../../hooks/useFetch";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+//import useFetch from "../../hooks/useFetch";
+import useCustomFetch from "../../hooks/useCustomFetch";
+//const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken");
+console.log('불러온 토큰:', token);
+
 
 const SmallTheater = () => {
   const [SmallMusicals, setSmallMusicals] = useState([]);
   const navigate = useNavigate();
   
   const url = `/amateurs/list`;
-  const { data, error, loading } = useFetch(url, {
+  const { data, error, loading } = useCustomFetch(url, {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
   });
+
    console.log('데이터', data);
 
   useEffect(() => {

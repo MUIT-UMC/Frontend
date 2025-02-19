@@ -5,6 +5,7 @@ import { InteractiveRatingStars } from "../../../components/detail/InteractiveRa
 import { useNavigate } from "react-router-dom";
 import MusicalIdSearchBar from "../../../components/post/MusicalIdSearchBar";
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+import { GoX } from "react-icons/go";
 const token = localStorage.getItem("accessToken");
 console.log(token);
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
@@ -28,12 +29,15 @@ function WriteReviewPost() {
   const [isButtonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
-    setButtonDisabled(!(title.trim() && content.trim() && location.trim()));
-  }, [title, content, location]);
+    setButtonDisabled(!(title.trim() && content.trim() && musicalId && rating));
+  }, [title, content, musicalId, rating]);
 
   // 업로드할 사진 선택 & 미리보기 
   const handleImageChange = (e) => {
-    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
+    setImgFiles((prevFiles) => [
+      ...prevFiles, 
+      ...Array.from(e.target.files), 
+    ]);
     console.log('이미지파일스 미리보기', imgFiles[0]);
   };
   const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
@@ -45,13 +49,12 @@ function WriteReviewPost() {
 
     // FormData에 JSON 데이터를 추가하기
     postData.append("reviewRequestDTO", JSON.stringify({
-      memberId: 1, // 실제 회원 ID로 변경
       isAnonymous: true,
       title: title.trim(),
       content: content.trim(),
       location: location.trim(),
-      musicalId: musicalId, // 뮤지컬 ID (적절한 값으로 대체하세요)
-      rating: rating, // 평점이 필요하지 않다면 생략 가능
+      musicalId: musicalId, 
+      rating: rating, 
     }));
 
     // 이미지 파일이 있다면 FormData에 추가하기
@@ -70,7 +73,7 @@ function WriteReviewPost() {
             "Content-Type": "multipart/form-data",
           }
         }
-      ); // API URL 변경 필요
+      ); 
       alert("게시글이 성공적으로 등록되었습니다!");
       console.log("리스폰스 데이터", response.data);
       console.log("데이터 아이디", response.data.result.id);
@@ -82,6 +85,9 @@ function WriteReviewPost() {
       alert("게시글 등록 중 오류가 발생했습니다.");
       console.error(error);
     }
+  };
+  const removeNewImage = (index) => {
+    setImgFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   return (
@@ -159,6 +165,17 @@ function WriteReviewPost() {
           // style={{ display: 'none' }} // 기본 input 스타일 숨기기
         />
     </ImageInsertButtonWrapper>
+    <CardWrapper>
+              
+              {imgFiles?.map((file, index) => (
+                <Card key={`file-${index}`}>
+                  <DeleteIcon onClick={() => {removeNewImage(index)}}>
+                    <GoX />
+                  </DeleteIcon>
+                  <Image src={URL.createObjectURL(file)} alt={`Uploaded image ${index}`} />
+                </Card>
+              ))}
+            </CardWrapper>
     </WritePostContainer>
   );
 }
@@ -348,3 +365,55 @@ const Input = styled.input`
   input:focus {
      outline: none;
   }`
+
+  const Card = styled.div`
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #E6E6E6; 
+  position: relative;
+`;
+
+const DeleteIcon = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  filter: 1;
+  background: #919191;
+  color: white;
+
+`;
+
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const CardWrapper = styled.div`
+display: flex;
+flex-direction: row;
+gap: 8px;
+margin-top: 16px;
+`
+
+const DotWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+const Line=styled.div`
+  width:2px;
+  height: 60px;
+  background: #E6E6E6;
+  margin: 4px;
+  border-radius: 1px;
+`

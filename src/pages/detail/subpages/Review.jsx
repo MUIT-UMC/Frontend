@@ -24,7 +24,6 @@ function Review({ musicalName, score }) {
     const queryString = new URLSearchParams({
       postType,
       page: currentPage,
-      size,
       musicalName: musicalName,
     }).toString();
   
