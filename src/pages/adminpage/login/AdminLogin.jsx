@@ -1,28 +1,65 @@
 
 import React, { useState }  from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 
 import SeePassword from "../../../assets/icons/SeePassword.svg";
 
 // 색상
 const COLOR_MUIT_RED = "#A00000";
+const COLOR_GRAY_MAINTEXT = "#000000";
+
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
 
 const AdminLogin = () => {
 
   const [adminId, setAdminId] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-   // 로그인 버튼 핸들러
-   const handleLogin = () => {
-    // 임시 로직: ID=1, PW=1이면 로그인 성공
-    if (adminId === "1" && password === "1") {
-      // localStorage에 토큰 저장
-      localStorage.setItem("adminToken", "FAKE_TOKEN");
-      // 새로고침 등으로 AdminLayout이 다시 그려져서 모달 사라짐
-      window.location.reload();
-    } else {
-      alert("아이디 또는 비밀번호가 잘못되었습니다.");
+  const handleToggleShow = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  // 로그인 버튼 핸들러
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(`${baseURL}/admin/login`,
+        {
+          email: adminId, 
+          pw: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // JSON 형식으로 전송
+          },
+        }
+      );
+      // 로그인 응답 처리
+      if (response.data.isSuccess) {
+        // 로그인 성공
+        localStorage.setItem("adminToken", response.data.result.accessToken);
+        // 로그인 만료 시간 설정
+        const expirationTime = Date.now() + 60 * 60 * 1000; // 1시간
+        localStorage.setItem("tokenExpiration", expirationTime);
+
+        window.location.reload();
+      } else {
+        // 로그인 실패
+        alert("아이디 또는 비밀번호가 잘못되었습니다.");
+      }
+    } catch (error) {
+      console.error("로그인 요청 실패:", error);
+      alert("로그인에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleLogin();
     }
   };
 
@@ -34,24 +71,26 @@ const AdminLogin = () => {
         {/* 로그인 폼 */}
         <LoginForm>
           <Input>
-            {/* 단순 input, 기능 로직 제거 */}
             <input 
             type="text" 
             placeholder="관리자 아이디" 
             value={adminId}
             onChange={(e) => setAdminId(e.target.value)}
+            onKeyDown={handleKeyDown}
             />
           </Input>
 
           <Input>
             <input 
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="비밀번호"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
             />
-            {/* UI만 */}
-            <img src={SeePassword} alt="Show Password" />
+            <EyeIcon onClick={handleToggleShow}>
+                <img src={SeePassword} alt="SeePassword"/>
+            </EyeIcon>
           </Input>
         </LoginForm>
 
@@ -70,7 +109,6 @@ const AdminLogin = () => {
 
         <BtnArea>
           <LoginBtn onClick={handleLogin}>로그인</LoginBtn>
-          <SignUpBtn>회원가입</SignUpBtn>
         </BtnArea>
       </ContentWrapper>
     </LoginContainer>
@@ -144,10 +182,13 @@ const Input = styled.form`
   input:focus {
     outline: none;
   }
+`;
 
-  img {
-    cursor: pointer;
-  }
+const EyeIcon = styled.span`
+  margin-right: 8px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
 `;
 
 const OptionArea = styled.div`
@@ -155,7 +196,7 @@ const OptionArea = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #989898;
+  color: ${COLOR_GRAY_MAINTEXT};
   font-size: 14px;
   font-weight: 500;
 
@@ -169,7 +210,7 @@ const OptionArea = styled.div`
     width: 20px;
     height: 20px;
     border-radius: 3px;
-    border: 1px solid #898989;
+    border: 1px solid ${COLOR_GRAY_MAINTEXT};
   }
   .LoginCheck:checked {
     background: ${COLOR_MUIT_RED};
@@ -194,20 +235,6 @@ const LoginBtn = styled.button`
   border: 1px solid #a00000;
   background: #a00000;
   color: #fff;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-`;
-
-const SignUpBtn = styled.button`
-  box-sizing: border-box;
-  width: 400px;
-  height: 40px;
-  border-radius: 3px;
-  border: 1px solid #e6e6e6;
-  background: #fff;
-  color: #000;
   font-family: Pretendard;
   font-size: 16px;
   font-weight: 700;

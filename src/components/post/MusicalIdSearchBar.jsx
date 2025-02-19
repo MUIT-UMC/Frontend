@@ -4,7 +4,7 @@ import SearchIcon from "../../assets/icons/Search2.svg"; // 파일 직접 불러
 import { useState } from "react";
 import useCustomFetch from "../../hooks/useCustomFetch";
 import MusicalIdSearchItem from "./MusicalIdSearchItem";
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken");
 
 const MusicalIdSearchBar = ({setMusicalId, setLocation}) => {
 

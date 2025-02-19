@@ -224,6 +224,22 @@ const TableWrapper = styled.div`
   width: 100%;
   max-height: 330px; /* 테이블 높이가 길어질 경우 스크롤되게 */
   overflow-y: auto;
+  padding-right: 15px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: ${COLOR_WHITE};
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d9d9d9;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #a0a0a0;
+  }
 `;
 
 // 테이블 스타일

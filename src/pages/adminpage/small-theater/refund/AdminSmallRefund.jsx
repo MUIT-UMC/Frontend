@@ -11,7 +11,7 @@ import SingleLeftIcon from "../../../../assets/icons/SingleLeft.svg";
 import SingleRightIcon from "../../../../assets/icons/SingleRight.svg";
 import DoubleRightIcon from "../../../../assets/icons/DoubleRight.svg";
 
-import SearchBar1 from "../../components/SearchBar1";
+import SearchBar from "../../components/SearchBar";
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -239,7 +239,7 @@ export default function AdminSmallRefund() {
             환불 내역 관리</MenuLink>
       </PageMenu>
       <SearchSection>
-        <SearchBar1 onSearch={handleSearch}/>
+        <SearchBar onSearch={handleSearch}/>
         <CheckBoxes>
           {checkBoxLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>

@@ -44,7 +44,6 @@ function WriteItemPost({category}) {
   
   // 글 업로드하기 
   const handleSubmit = async () => {
-
     const formData = new FormData();
 
     const lostRequestDTO = {
@@ -57,6 +56,7 @@ function WriteItemPost({category}) {
       lostDate: lostDate.trim(),
     };
     
+    console.log(lostRequestDTO);
     // 제출할 데이터를 formData에 추가한다. 
     formData.append(
       "lostRequestDTO",

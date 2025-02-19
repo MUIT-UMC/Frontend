@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken");
 const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
 
 function ItemPostEdit() {
@@ -17,6 +17,7 @@ function ItemPostEdit() {
   const [lostItem, setLostItem] = useState("");
   const [lostDate, setLostDate] = useState("");
   const [content, setContent] = useState("");
+  const [originalImgUrls, setOriginalImgUrls] = useState([]);
   // const [categoryState, setCategoryState] = useState("LOST");
   const [imgFiles, setImgFiles] = useState([]); // 이미지 배열 
 
@@ -27,7 +28,6 @@ function ItemPostEdit() {
     setButtonDisabled(
       !(content.trim() && musicalName && location && lostItem && lostDate)
     );
-    console.log(isButtonDisabled);
   }, [content, musicalName, location, lostItem, lostDate]);
   
   
@@ -46,13 +46,15 @@ function ItemPostEdit() {
         setMusicalName(data.musicalName);
         setLocation(data.location);
         setLostItem(data.lostItem);
-        setLostDate(data.lostDate.split("T")[0]); // 날짜 형식 변환
+        setLostDate(data.lostDate); // 날짜 형식 변환
         setContent(data.content);
+        setOriginalImgUrls(data.imgUrls);
         // setCategoryState(data.postType);
         // setImgFiles(data.imgUrls);
       } catch (error) {
         console.error("게시글 불러오기 오류:", error);
       }
+
     };
 
     fetchData();
@@ -60,10 +62,12 @@ function ItemPostEdit() {
 
   // 이미지 파일 변경 핸들러
   const handleImageChange = (e) => {
-    setImgFiles(Array.from(e.target.files)); // 여러 파일 선택 가능
-    console.log('이미지파일스 미리보기', imgFiles[0]);
+    setImgFiles(Array.from(e.target.files)); // 기존 파일을 유지하지 않음
   };
-  const previewImage = imgFiles.length > 0 ? URL.createObjectURL(imgFiles[0]) : null;
+  
+  const previewImage = imgFiles.length > 0 
+  ? URL.createObjectURL(imgFiles[imgFiles?.length-1]) 
+  : (originalImgUrls.length > 0 ? originalImgUrls[originalImgUrls?.length-1] : null);
 
   // 게시글 수정 API 요청
   const handleUpdate = async () => {
@@ -75,16 +79,16 @@ function ItemPostEdit() {
     const formData = new FormData();
     const updateData = {
       title,
-      musicalName,
       location,
       lostItem,
       lostDate,
       content,
+      originalImgUrls,
      // postType: categoryState,
     };
-
+    console.log(updateData);
     formData.append(
-      "lostRequestDTO",
+      "postRequestDTO",
       new Blob([JSON.stringify(updateData)], { type: "application/json" })
     );
     // console.log('수정된 데이터', updateData);
@@ -99,7 +103,7 @@ function ItemPostEdit() {
     console.log(key, value);
   });
     try {
-      const response = await axios.patch(`${serverUrl}/losts/${postId}`, formData, {
+      const response = await axios.patch(`${serverUrl}/${postId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -144,7 +148,7 @@ function ItemPostEdit() {
             accept="image/*"
             style={{ display: "none" }} // 기본 input 스타일 숨기기
             id="fileInput"
-            multiple 
+            // multiple 
             onChange={handleImageChange}
           />
           <label htmlFor="fileInput">
@@ -200,7 +204,7 @@ function ItemPostEdit() {
         <div>
           <label>분실일</label>
           <input
-            type="datetime-local"
+            type="date"
             value={lostDate}
             onChange={(e) => {
               setLostDate(e.target.value);
