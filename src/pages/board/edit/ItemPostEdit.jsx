@@ -62,11 +62,7 @@ function ItemPostEdit() {
 
   // 이미지 파일 변경 핸들러
   const handleImageChange = (e) => {
-    setImgFiles((prevFiles) => [
-      ...prevFiles, 
-      ...Array.from(e.target.files), 
-    ]);
-    console.log('이미지파일스 미리보기', imgFiles[0]);
+    setImgFiles(Array.from(e.target.files)); // 기존 파일을 유지하지 않음
   };
   
   const previewImage = imgFiles.length > 0 
