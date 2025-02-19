@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import useCustomFetch from "../../hooks/fetchWithAxios";
+import useCustomFetchAxios from "../../hooks/fetchWithAxios";
 
 import SearchBarDetail from "../../components/vision/detail/SearchBarDetail";
 import TheatreInfo from "../../components/vision/detail/TheatereInfo";

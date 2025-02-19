@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import useCustomFetch from "../../hooks/fetchWithAxios";
+import useCustomFetchAxios from "../../hooks/fetchWithAxios";
 import { useParams } from "react-router-dom";
 
 

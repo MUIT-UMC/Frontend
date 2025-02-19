@@ -17,9 +17,9 @@ function SignUp() {
   const navigate = useNavigate();
 
   const googleLogin = async () => {
-    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirectUri}&response_type=code&scope=email profile`;
+    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirectUri}&response_type=code&scope=openid email profile`;
 
-    const popup = window.open(oauthUrl, "GoogleAuth", "width=700,height=600");
+    const popup = window.location.href(oauthUrl, "GoogleAuth", "width=700,height=600");
     if (!popup) {
       alert("팝업 차단이 활성화되어 있습니다. 팝업을 허용해주세요.");
       return;

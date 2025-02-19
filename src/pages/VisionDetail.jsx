@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const VisionDetailMain = ({theatreId}) => {
-    //const { theatreId } = useParams();
     const id = Number(theatreId);
     return(
         <Container>
