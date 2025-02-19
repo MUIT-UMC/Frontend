@@ -18,14 +18,13 @@ import SmallDetail from "./pages/small-theater/SmallDetail";
 import BuyTicket from "./pages/small-theater/BuyTicket";
 import Board from "./pages/board/Board";
 import VisionDetailMain from "./pages/VisionDetail";
-import VisionDetailLotte from "./pages/vision/VisionDetailLotte";
-import VisionDetailBS from "./pages/vision/VisionDetailBlueSquare";
 import ItemPost from "./pages/board/post/ItemPost";
 import FoundPost from "./pages/board/post/FoundPost";
 import AnonymousPost from "./pages/board/post/AnonymousPost";
 import ReviewPost from "./pages/board/post/ReviewPost";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import GoogleRedirect from "./pages/signup/redirect/googleRedirect";
 import Terms from "./pages/signup/Terms"
 import Info from "./pages/signup/Info";
 import Complete from "./pages/signup/Complete";
@@ -127,6 +126,7 @@ function App() {
         
         {/* 9) 로그인/회원가입 */}
         <Route path="/login" element={<Login />} />
+        <Route path="/google-redirect" element={<GoogleRedirect />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signup/terms" element={<Terms/>}/>
         <Route path="/signup/info" element={<Info/>}/>
