@@ -14,7 +14,7 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-import SearchBar from '../../components/SearchBar';
+import SearchBar_Mock from '../../components/SearchBar_Mock';
 import {smallRefundData, colKeys, colLabels, checkBoxMap, checkBoxLabels} from "./AdminSmallRefund";
 
 export default function AdminSmallRefundDetail() {
@@ -108,7 +108,7 @@ export default function AdminSmallRefundDetail() {
             환불 내역 관리</MenuLink>
       </PageMenu>
       <SearchSection>
-        <SearchBar/>
+        <SearchBar_Mock/>
         <CheckBoxes>
           {checkBoxLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>

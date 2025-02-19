@@ -1,12 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import SearchIconBlack from "../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../assets/icons/AdminSearchRed.svg";
 import CheckBoxIcon from "../../../assets/icons/AdminCheckbox.svg";
 import CheckBoxIconRed from "../../../assets/icons/AdminCheckboxRed.svg";
+
+import SearchBar_Mock from '../components/SearchBar_Mock';
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -14,8 +17,9 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-import SearchBar from '../components/SearchBar';
-import {musicalData, colKeys, colLabels} from "./AdminMusical";
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = localStorage.getItem("adminToken");
+const colLabels = ["뮤지컬", "기간", "가격"];
 
 export default function AdminMusicalDetail() {
 
@@ -34,58 +38,70 @@ export default function AdminMusicalDetail() {
   const isAnyChecked = checkboxes.some((checked) => checked === true);
 
 
-  const { musicalName } = useParams();  // URL 파라미터 (/adminpage/musical/detail/:musicalName)
+  const { musicalId } = useParams();  // URL 파라미터 (/adminpage/musical/detail/:musicalId)
   const navigate = useNavigate();
   const [musicalInfo, setMusicalInfo] = useState(null);
-
-  useEffect(() => {
-    // userData 중 해당 userId를 가진 객체 찾기
-    const found = musicalData.find((item) => item.musical === musicalName);
-    if (found) {
-      setMusicalInfo(found);
-    } else {
-      // 해당 user를 찾지 못한 경우 → 목록으로 리다이렉트 or 에러 처리
-      alert("해당 사용자를 찾지 못했습니다.");
-      navigate("/adminpage/musical");
-    }
-  }, [musicalName, navigate]);
-
-  // 2) 수정 관련 상태 ////////////////////////////////////////////
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState({
-    musical: "",
-    date_time: "",
-    price: ""
+    musicalName: "",
+    duration: "",
+    place: "",
+    price: "",
+    castInfo: "",
+    timeInfo: "",
+    moreInfo: "",
+    eventList: ""
   });
   useEffect(() => {
-    if (musicalInfo) {
-      setEditForm({
-        musical: musicalInfo.musical,
-        date_time: musicalInfo.date_time,
-        price: musicalInfo.price,
-      });
+    if (musicalId) {
+      fetchMusicalDetail(musicalId);
     }
-  }, [musicalInfo]);
+  }, [musicalId]);
 
+  // 뮤지컬 상세조회 API
+  const fetchMusicalDetail = async (userId) => {
+    try {
+      const res = await axios.get(`${baseURL}/admin/musicals/${musicalId}`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`,
+        },
+      });
+      const data = res.data.result || {};
+      const refined = {
+        musicalId: data.Id,
+        musicalName: data.name,
+        duration: `${data.perFrom} ~ ${data.perTo}`,
+        place: data.place,
+        price: data.priceInfo,
+        castInfo: data.actorPreview,
+        timeInfo: data.perPattern,
+        moreInfo: `상영시간 : ${data.runtime} / 연령제한 : ${data.ageLimit}`,
+        eventList: data.eventList?.eventResultListDTO
+        ? data.eventList.eventResultListDTO
+            .map(ev => `${ev.name} - ${ev.duration}`)
+            .join("\n")
+        : ""
+      };
+      setMusicalInfo(refined);
+      setEditForm({ ...refined });
+    } catch (err) {
+      console.error("뮤지컬 정보 조회 실패:", err);
+      alert("해당 뮤지컬를 조회할 수 없습니다.");
+      navigate("/adminpage/musical"); 
+    }
+  };
+
+  // 수정
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
-
-  // 2) 수정 모드 ////////////////////////////////////////////
   const handleEdit = () => {
     setEditMode(true);
   };
   const handleApply = () => {
-    // 여기서는 musicalData 배열을 직접 수정하는 대신 임시로 console.log
+    // 뮤지컬 수정 PATCH API없음 -> 임시로 console.log
     console.log("수정 완료:", editForm);
-
-    // API적용시 서버에 PATCH 요청 등으로 저장 후:
-    // fetch(`/api/users/${userId}`, { method:"PATCH", body: JSON.stringify(editForm) })
-    //   .then(...)
-    //   .catch(...)
-
-    // 수정 적용 후 editMode 해제, musicalInfo 업데이트
     setMusicalInfo(editForm);
     setEditMode(false);
   };
@@ -95,7 +111,7 @@ export default function AdminMusicalDetail() {
     <Container>
       <Tilte>뮤지컬 관리</Tilte>
       <SearchSection>
-        <SearchBar/>
+        <SearchBar_Mock/>
         <CheckBoxes>
           {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>
@@ -119,17 +135,36 @@ export default function AdminMusicalDetail() {
           <tbody>
             <Tr>
               <Th>뮤지컬</Th>
-              <Td>{musicalInfo.musical}</Td>
+              <Td>{musicalInfo.musicalName}</Td>
             </Tr>
             <Tr>
-              <Th>날짜/시간</Th>
-              <Td>{musicalInfo.date_time}</Td>
+              <Th>기간</Th>
+              <Td>{musicalInfo.duration}</Td>
+            </Tr>
+            <Tr>
+              <Th>장소</Th>
+              <Td>{musicalInfo.place}</Td>
             </Tr>
             <Tr>
               <Th>가격</Th>
               <Td>{musicalInfo.price}</Td>
             </Tr>
-            {/* 추후 추가 필드... */}
+            <Tr>
+              <Th>캐스팅</Th>
+              <Td>{musicalInfo.castInfo}</Td>
+            </Tr>
+            <Tr>
+              <Th>공연정보</Th>
+              <Td>{musicalInfo.timeInfo}</Td>
+            </Tr>
+            <Tr>
+              <Th>기타정보</Th>
+              <Td>{musicalInfo.moreInfo}</Td>
+            </Tr>
+            <Tr>
+              <Th>이벤트</Th>
+              <Td style={{ whiteSpace: "pre-line" }}>{musicalInfo.eventList}</Td>
+            </Tr>
           </tbody>
         </InfoTable>
       ) : (
@@ -140,18 +175,28 @@ export default function AdminMusicalDetail() {
               <Th>뮤지컬</Th>
               <Td>
                 <Input
-                  name="musical"
-                  value={editForm.musical}
+                  name="musicalName"
+                  value={editForm.musicalName}
                   onChange={handleChange}
                 />
               </Td>
             </Tr>
             <Tr>
-              <Th>날짜/시간</Th>
+              <Th>기간</Th>
               <Td>
                 <Input
-                  name="date_time"
-                  value={editForm.date_time}
+                  name="duration"
+                  value={editForm.duration}
+                  onChange={handleChange}
+                />
+              </Td>
+            </Tr>
+            <Tr>
+              <Th>장소</Th>
+              <Td>
+                <Input
+                  name="place"
+                  value={editForm.place}
                   onChange={handleChange}
                 />
               </Td>
@@ -166,7 +211,46 @@ export default function AdminMusicalDetail() {
                 />
               </Td>
             </Tr>
-            {/* 추후 추가 필드... */}
+            <Tr>
+              <Th>캐스팅</Th>
+              <Td>
+                <Input
+                  name="castInfo"
+                  value={editForm.castInfo}
+                  onChange={handleChange}
+                />
+              </Td>
+            </Tr>
+            <Tr>
+              <Th>공연정보</Th>
+              <Td>
+                <Input
+                  name="timeInfo"
+                  value={editForm.timeInfo}
+                  onChange={handleChange}
+                />
+              </Td>
+            </Tr>
+            <Tr>
+              <Th>기타정보</Th>
+              <Td>
+                <Input
+                  name="moreInfo"
+                  value={editForm.moreInfo}
+                  onChange={handleChange}
+                />
+              </Td>
+            </Tr>
+            <Tr>
+              <Th>이벤트</Th>
+              <Td>
+                <Input
+                  name="eventList"
+                  value={editForm.eventList}
+                  onChange={handleChange}
+                />
+              </Td>
+            </Tr>
           </tbody>
         </InfoTable>
       )}
@@ -249,7 +333,7 @@ const CheckSearchIcon = styled.div`
 `;
 
 const InfoTable = styled.table`
-  width:  609px;
+  width:  610px;
   margin-top: 149px;
   margin-left: 154px;
   border-collapse: collapse;
@@ -258,14 +342,26 @@ const InfoTable = styled.table`
 const Tr = styled.tr``;
 
 const Th = styled.th`
-  width: 100px;
-  text-align: left;
+  width: 94px;
+  text-align: center;
   padding: 8px;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  border-right: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: #8F8E94;
 `;
 const Td = styled.td`
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
+  width:  515px;
+  padding: 6px 20px 6px 20px;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: ${COLOR_GRAY_MAINTEXT};
 `;
 
 const Input = styled.input`

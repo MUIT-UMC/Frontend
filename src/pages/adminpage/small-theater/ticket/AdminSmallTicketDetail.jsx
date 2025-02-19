@@ -2,11 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios'; 
 
 import SearchIconBlack from "../../../../assets/icons/AdminSearchBlack.svg";
 import SearchIconRed from "../../../../assets/icons/AdminSearchRed.svg";
 import CheckBoxIcon from "../../../../assets/icons/AdminCheckbox.svg";
 import CheckBoxIconRed from "../../../../assets/icons/AdminCheckboxRed.svg";
+
+import SearchBar_Mock from '../../components/SearchBar_Mock';
 
 const COLOR_WHITE = "#FFFFFF";
 const COLOR_MUIT_RED = "#A00000";
@@ -14,8 +17,9 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-import SearchBar from '../../components/SearchBar';
-import {smallTicketData, colKeys, colLabels} from "./AdminSmallTicket";
+const baseURL = import.meta.env.VITE_APP_SERVER_URL;
+const token_admin = localStorage.getItem("adminToken");
+const colLabels = ["소극장 공연 이름", "날짜/시간", "예약현황"];
 
 export default function AdminSmallTicketDetail() {
 
@@ -34,61 +38,103 @@ export default function AdminSmallTicketDetail() {
   const isAnyChecked = checkboxes.some((checked) => checked === true);
 
 
-  const { smallTitle } = useParams();  // URL 파라미터 (/adminpage/small-theater/ticket/detail/:smallTitle)
+  const { smallMusicalId } = useParams();  // URL 파라미터 (/adminpage/small-theater/ticket/detail/:smallMusicalId)
   const navigate = useNavigate();
   const [smallTicketInfo, setSmallTicketInfo] = useState(null);
-
-  useEffect(() => {
-    const found = smallTicketData.find((item) => item.title === smallTitle);
-    if (found) {
-      setSmallTicketInfo(found);
-    } else {
-      alert("해당 소공연을 찾지 못했습니다.");
-      navigate("/adminpage/small-theater/ticket");
-    }
-  }, [smallTitle, navigate]);
-
-  // 2) 수정 관련 상태 ////////////////////////////////////////////
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState({
-    title: "",
-    dateTime: "",
-    reserveStatus: ""
+    musicalName: "",
+    schedule: "",
+    reserveStatus: "",
   });
   useEffect(() => {
-    if (smallTicketInfo) {
-      setEditForm({
-        title: smallTicketInfo.title,
-        dateTime: smallTicketInfo.dateTime,
-        reserveStatus: smallTicketInfo.reserveStatus,
-      });
+    if (smallMusicalId) {
+      fetchUserDetail(smallMusicalId);
     }
-  }, [smallTicketInfo]);
+  }, [smallMusicalId]);
+  // 소극장 공연 상세 조회 API
+  const fetchUserDetail = async (smallMusicalId) => {
+    try {
+      const res = await axios.get(`${baseURL}/admin/amateur-tickets/${smallMusicalId}`, {
+        headers: {
+          Authorization: `Bearer ${token_admin}`,
+        },
+      });
+      const data = res.data.result || {};
+      const refined = {
+        smallMusicalId: data.amateurShowId,
+        musicalName: data.name,
+        schedule: data.schedule,
+        reserveStatus: `${data.soldTicket}/${data.totalTicket}`,
+      };
+      setSmallTicketInfo(refined);
+      setEditForm({ 
+        musicalName: refined.musicalName,
+        schedule: refined.schedule,
+        reserveStatus: refined.reserveStatus
+      });
+    } catch (err) {
+      console.error("소공연 정보 조회 실패:", err);
+      alert("해당 소공연을 조회할 수 없습니다.");
+      navigate("/adminpage/small-theater/ticket"); 
+    }
+  };
 
+
+  // 수정을 위해 입력값 변경
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
-
-  // 2) 수정 모드 ////////////////////////////////////////////
+  // 수정하기 -> editMode = true
   const handleEdit = () => {
     setEditMode(true);
   };
-  const handleApply = () => {
-    // 임시로 console.log
-    console.log("수정 완료:", editForm);
+  // 수정 적용 -> PATCH
+  const handleApply = async () => {
+    try {
+      // reserveStatus "25/50"  → "25", "50" 분리
+      let soldNum = 0;
+      let totalNum = 0;
+      if (editForm.reserveStatus.includes("/")) {
+        const parts = editForm.reserveStatus.split("/");
+        if (parts.length === 2) {
+          soldNum = parseInt(parts[0], 10) || 0;
+          totalNum = parseInt(parts[1], 10) || 0;
+        }
+      }
+      const patchBody = {
+        name: editForm.musicalName,
+        schedule: editForm.schedule,
+        soldTicket: soldNum,
+        totalTicket: totalNum
+      };
+      await axios.patch(
+        `${baseURL}/admin/amateur-tickets/${smallMusicalId}/update`,
+        patchBody,
+        {
+          headers: {
+            Authorization: `Bearer ${token_admin}`,
+          },
+        }
+      );
+      const updated = {
+        smallMusicalId: smallTicketInfo.smallMusicalId,
+        musicalName: editForm.musicalName,
+        schedule: editForm.schedule,
+        reserveStatus: editForm.reserveStatus
+      };
+      setSmallTicketInfo(updated);
+      setEditMode(false);
+      alert("수정이 완료되었습니다.");
 
-    // API적용시 서버에 PATCH 요청 등으로 저장 후:
-    // fetch(`/api/users/${userId}`, { method:"PATCH", body: JSON.stringify(editForm) })
-    //   .then(...)
-    //   .catch(...)
-
-    // 수정 적용 
-    setSmallTicketInfo(editForm);
-    setEditMode(false);
+    } catch (err) {
+      console.error("소공연 티켓 수정 실패:", err);
+      alert("티켓 수정 중 오류가 발생했습니다.");
+    }
   };
   if (!smallTicketInfo) return null; // 아직 로딩 or 없는경우
-
+  
   return (
     <Container>
       <Tilte>소극장 공연 관리</Tilte>
@@ -99,12 +145,12 @@ export default function AdminSmallTicketDetail() {
         <MenuLink $active={location.pathname.startsWith("/adminpage/small-theater/reserve")}
         to="/adminpage/small-theater/reserve">
             예약 내역 관리</MenuLink>
-        <MenuLink $active={location.pathname.startsWith("/adminpage/small-theater/refund")}
+        {/* <MenuLink $active={location.pathname.startsWith("/adminpage/small-theater/refund")}
         to="/adminpage/small-theater/refund">
-            환불 내역 관리</MenuLink>
+            환불 내역 관리</MenuLink> */} {/* 데모데이 이후 구현 */}
       </PageMenu>
       <SearchSection>
-        <SearchBar/>
+        <SearchBar_Mock/>
         <CheckBoxes>
           {colLabels.map((label, idx) => (
             <CheckBoxWrapper key={label}>
@@ -121,7 +167,12 @@ export default function AdminSmallTicketDetail() {
         </CheckBoxes>
       </SearchSection>
       
-      <Subtitle>&lt; {smallTitle}</Subtitle>
+      <Subtitle>
+        <BackButton onClick={() => navigate(-1)}>
+          &lt;
+        </BackButton>
+        &nbsp; {smallTicketInfo.musicalName}
+      </Subtitle>
 
       {!editMode ? (
         // --- 정보표시만 ---
@@ -129,11 +180,11 @@ export default function AdminSmallTicketDetail() {
           <tbody>
             <Tr>
               <Th>소극장 공연 이름</Th>
-              <Td>{smallTicketInfo.title}</Td>
+              <Td>{smallTicketInfo.musicalName}</Td>
             </Tr>
             <Tr>
-              <Th>날짜</Th>
-              <Td>{smallTicketInfo.dateTime}</Td>
+              <Th>날짜/시간</Th>
+              <Td>{smallTicketInfo.schedule}</Td>
             </Tr>
             <Tr>
               <Th>예약 현황</Th>
@@ -149,18 +200,18 @@ export default function AdminSmallTicketDetail() {
               <Th>소극장 공연 이름</Th>
               <Td>
                 <Input
-                  name="title"
-                  value={editForm.title}
+                  name="musicalName"
+                  value={editForm.musicalName}
                   onChange={handleChange}
                 />
               </Td>
             </Tr>
             <Tr>
-              <Th>날짜</Th>
+              <Th>날짜/시간</Th>
               <Td>
                 <Input
-                  name="dateTime"
-                  value={editForm.dateTime}
+                  name="schedule"
+                  value={editForm.schedule}
                   onChange={handleChange}
                 />
               </Td>
@@ -285,8 +336,18 @@ const Subtitle = styled.div`
   color: ${COLOR_GRAY_MAINTEXT};
 `;
 
+const BackButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: "Pretendard";
+  font-size: 24px;
+  font-weight: 500;
+  color: ${COLOR_GRAY_MAINTEXT};
+`;
+
 const InfoTable = styled.table`
-  width:  609px;
+  width:  610px;
   margin-top: 26px;
   margin-left: 145px;
   border-collapse: collapse;
@@ -295,14 +356,26 @@ const InfoTable = styled.table`
 const Tr = styled.tr``;
 
 const Th = styled.th`
-  width: 150px;
-  text-align: left;
+  width: 146px;
+  text-align: center;
   padding: 8px;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  border-right: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: #8F8E94;
 `;
 const Td = styled.td`
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
+  width: 463px;
+  padding: 6px 20px 6px 20px;
+  border-top: 1px solid #8F8E94;
+  border-bottom: 1px solid #8F8E94;
+  font-family: 'Pretendard';
+  font-size: 16px;
+  font-weight: 500;
+  color: ${COLOR_GRAY_MAINTEXT};
 `;
 
 const Input = styled.input`

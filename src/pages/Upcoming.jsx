@@ -4,8 +4,8 @@ import styled from "styled-components";
 import FormattedDate from "../components/date/FormattedDate";
 import useFetch from "../hooks/useFetch";
 
-const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
-
+//const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken");
 
 const Upcoming = () => {
   const [activeIndex, setActiveIndex] = useState(0); // 현재 표시 중인 뮤지컬 인덱스

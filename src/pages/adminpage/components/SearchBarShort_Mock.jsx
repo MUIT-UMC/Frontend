@@ -9,36 +9,25 @@ const COLOR_GRAY_MAINTEXT = "#000000";
 const COLOR_GRAY_UNSELECTED = "#C1C1C1";
 const COLOR_GRAY_SUB = "#919191";
 
-export default function SearchBarShort({ onSearch }) {
+export default function SearchBarShort_Mock() {
   // 검색어 입력값
   const [searchInput, setSearchInput] = useState("");           
 
-  const handleSearchClick = () => {
-    if (onSearch) {
-      onSearch(searchInput);
-    }
-  };   
-
   return(
-      <SearchBarWrapper>
-        <InputRow>
-          <SearchInput
-            type="text"
-            placeholder=""
-            onChange={(e) => setSearchInput(e.target.value)}
-            value={searchInput}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSearchClick();
-              }
-            }}
-          />
-          <SearchButton onClick={handleSearchClick}>
-            <img src={SearchIcon} alt="Search Icon" />
-          </SearchButton>
-        </InputRow>
-      </SearchBarWrapper>
-    );
+    <SearchBarWrapper>
+      <InputRow>
+        <SearchInput
+          type="text"
+          placeholder=""
+          onChange={(e) => setSearchInput(e.target.value)}
+          value={searchInput}
+        />
+        <SearchButton>
+          <img src={SearchIcon} alt="Search Icon" />
+        </SearchButton>
+      </InputRow>
+    </SearchBarWrapper>
+  );
 }
 
 

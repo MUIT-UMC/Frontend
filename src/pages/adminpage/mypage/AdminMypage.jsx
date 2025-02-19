@@ -23,6 +23,11 @@ export default function AdminMypage() {
     console.log("입력된 비밀번호:", password);
     // 임시
   };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleConfirm();
+    }
+  };
 
   return (
     <Container>
@@ -44,6 +49,7 @@ export default function AdminMypage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호 인증"
+                onKeyDown={handleKeyDown}
             />
             <EyeIcon onClick={handleToggleShow}>
                 <img src={SeePassword} alt="SeePassword"/>
@@ -152,13 +158,14 @@ const PasswordWrapper = styled.div`
 
 const PasswordInput = styled.input`
   width: 300px;
-  padding-left: 4px;
+  padding-left: 8px;
   font-family:  "Pretendard";
   font-size: 14px;
   font-weight: 500;
   color:  ${COLOR_GRAY_MAINTEXT};  
   box-sizing: border-box;
-  border: 1px solid ${COLOR_WHITE};
+  border: none;
+  outline: none;
 `;
 
 const EyeIcon = styled.span`
