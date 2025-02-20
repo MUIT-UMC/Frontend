@@ -7,20 +7,6 @@ import formatDate from "../../utils/formatDate";
 import { useEffect, useState } from "react";
 import HeartButton from "../HeartButton";
 
-    const posterClick = () => {
-        navigate('/detail/' + props.id, {
-            replace: false,
-            state: {musicalId: props.id},
-        })
-    }
-
-    const {data: musicals, error, loading} = useCustomFetch(`/musicals/${props.id}`);
-    console.log(props?.event);
-    useEffect(() => {
-        if (musicals?.result) {
-            setIsLike(musicals.result.isLike);
-        }
-    }, [musicals]);
 
 const MusicalEvent = (props) => {
   const navigate = useNavigate();
@@ -94,6 +80,10 @@ const MusicalInfo = styled.div`
   .poster {
     width: 140px;
     height: 200px;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.04);
+      transition: transform 0.2s ease;
   }
 `
 
@@ -118,6 +108,7 @@ const MusicalDetail = styled.div`
     font-style: normal;
     font-weight: 700;
     color: #000;
+    cursor: pointer;
   }
   .body-M-600 {
     font-size: 16px;
