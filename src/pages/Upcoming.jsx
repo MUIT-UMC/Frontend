@@ -4,6 +4,7 @@ import styled from "styled-components";
 import FormattedDate from "../components/date/FormattedDate";
 // import useFetch from "../hooks/useFetch";
 import useCustomFetch from "../hooks/useCustomFetch";
+import { Link } from 'react-router-dom';
 
 //const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const token = localStorage.getItem("accessToken");
@@ -94,7 +95,9 @@ const Upcoming = () => {
               style={{ zIndex: index === activeIndex ? 2 : 1 }} // 클릭된 이미지가 위로
               onClick={() => handleMusicalClick(index)}
             >
-              <img src={musical.image} alt={musical.name} />
+              <CardLink to={musical ? `/detail/${musical.id}` : "#"}>
+                <img src={musical.image} alt={musical.name} />
+              </CardLink>
               {index === activeIndex && (
                 <div className="details">
                   <div className="title">
@@ -117,7 +120,9 @@ const Upcoming = () => {
           {ticketListMusicals.map((musical) => (
            <MusicalItem key={musical.id}>
              <DdayBadge>{musical.dday}</DdayBadge> 
-              <img src={musical.image} alt={musical.name} />
+              <CardLink to={musical ? `/detail/${musical.id}` : "#"}>
+                <img src={musical.image} alt={musical.name} />
+              </CardLink>
               <div className="details">
                <div className="name">
                 {musical.name}
@@ -343,4 +348,11 @@ font-size: 16px;
 font-style: normal;
 font-weight: 700;
 line-height: normal;
+`;
+
+const CardLink = styled(Link)`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 `;
