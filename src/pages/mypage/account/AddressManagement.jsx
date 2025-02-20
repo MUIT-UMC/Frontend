@@ -43,7 +43,9 @@ function AddressManagement() {
                 <span>|</span>
                 <span>{info?.result?.address}</span>
               </div>
-              <EditButton>기본 배송지로 등록</EditButton>
+              <EditButton
+              onClick={handleAddAddress}>
+                배송지 수정</EditButton>
             </Input>
           </InputArea>
 
