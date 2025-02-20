@@ -276,6 +276,7 @@ const TicketList = styled.div`
 `;
 
 const MusicalItem = styled.div`
+  position: relative;
   text-align: left;
   font-family: Pretendard;
   overflow: hidden;
@@ -325,11 +326,10 @@ const MusicalItem = styled.div`
 `;
 const DdayBadge = styled.div`
   position: absolute;
-  top: 100px;  /* 기존보다 아래로 이동 */
-  left: 70px; /* 기존보다 오른쪽으로 이동 */
-width: 54px;
+  top: 13px;  /* 기존보다 아래로 이동 */
+  left: 11px; /* 기존보다 오른쪽으로 이동 */
+width: 35px;
 height: 20px;
-flex-shrink: 0;
 display: flex;
 flex-direction: column;
 justify-content: center;
