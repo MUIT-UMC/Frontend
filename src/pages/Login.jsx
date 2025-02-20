@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useCustomFetch from "../hooks/fetchWithAxios";
-
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -15,12 +15,15 @@ import Naver from "../assets/logos/naver.png";
 import SeePassword from "../assets/icons/SeePassword.svg";
 import { useEffect, useRef, useState } from "react";
 
+const muit_server = import.meta.env.VITE_APP_SERVER_URL;
+
 
 const COLOR_MUIT_RED = "#A00000";
 
 function Login() {
     const { fetchData } = useCustomFetch();
     const navigate = useNavigate();
+    const [isShowPWChecked, setIsShowPWChecked] = useState(false);
 
     const schema = yup.object().shape({
         id: yup.string().required(),
@@ -32,14 +35,9 @@ function Login() {
         navigate("/signup");
     };
 
-    const [isShowPWChecked, setIsShowPWChecked] = useState(false);
     const passwordRef = useRef(null);
-
-    const handleShowPWChecked = () => {
-        if (!passwordRef.current) return;
-
-        setIsShowPWChecked((prev) => !prev);
-        passwordRef.current.type = isShowPWChecked ? "password" : "text";
+    const handleShowPWChecked = async() => {
+        setIsShowPWChecked(!isShowPWChecked);
     };
 
     const {
@@ -56,18 +54,38 @@ function Login() {
         try {
             const email = watch('email');
             const pw = watch('password');
-            const response = await fetchData("/member/email/login", 'POST', { email, pw });
+            const response = await axios.post(`${muit_server}/member/email/login`, { email, pw });
+            console.log(email, pw);
             console.log("응답:", response);
-            localStorage.setItem("accessToken", response?.result?.accessToken);
-            localStorage.setItem("refreshToken", response?.result?.refreshToken);
-            localStorage.setItem("userName", response?.result?.username);
-            localStorage.setItem("userId", response?.result?.id);
+
+            localStorage.setItem("accessToken", response?.data?.result?.accessToken);
+            localStorage.setItem("refreshToken", response?.data?.result?.refreshToken);
+            localStorage.setItem("userName", response?.data?.result?.username);
+            localStorage.setItem("userId", response?.data?.result?.id);
             navigate("/", {});
         } catch (error) {
             console.error("로그인 실패:", error);
             alert("로그인에 실패했습니다.");
         }
     };
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const authCode = urlParams.get("code");
+    
+        if (authCode) {
+            fetchData("/login/oauth2/code/google", "POST", { code: authCode })
+                .then((response) => {
+                    if (response?.result) {
+                        console.log("구글 로그인 성공:", response);
+                        localStorage.setItem("accessToken", response.result.accessToken);
+                        localStorage.setItem("refreshToken", response.result.refreshToken);
+                        navigate("/");
+                    }
+                })
+                .catch((error) => console.error("구글 로그인 실패:", error));
+        }
+    }, [fetchData, navigate]);
 
 
 
@@ -86,12 +104,15 @@ function Login() {
                 </Input>
                 <Input>
                     <input
-                        type="password"
+                        type={(isShowPWChecked) ? "text" : "password"}
                         ref={passwordRef}
                         placeholder="비밀번호"
                         {...register("password")}
                     />
-                    <img src={SeePassword} onClick={handleShowPWChecked} alt="비밀번호 보기" />
+                    <img src={SeePassword} 
+                    onClick={handleShowPWChecked} 
+                    className="seePassword"
+                    alt="비밀번호 보기" />
                 </Input>
 
                 <OptionArea>
@@ -117,7 +138,7 @@ function Login() {
             <SocialLogin>
                 <SocialIcon src={Kakao} />
                 <SocialIcon src={Naver} />
-                <SocialIcon src={Google} border="#E6E6E6" onClick={googleLogin} />
+                <SocialIcon src={Google} border="#E6E6E6" onClick={() => googleLogin()} />
             </SocialLogin>
         </Container>
     );
@@ -165,6 +186,10 @@ const Input = styled.div`
     background: #FFF;
 
     padding: 8px 20px 8px 20px;
+
+    .seePassword{
+        cursor: pointer;
+    }
 
     input::placeholder{
         color: #919191; 
