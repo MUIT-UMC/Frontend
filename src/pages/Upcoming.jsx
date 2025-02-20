@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FormattedDate from "../components/date/FormattedDate";
-import useFetch from "../hooks/useFetch";
+// import useFetch from "../hooks/useFetch";
+import useCustomFetch from "../hooks/useCustomFetch";
 
 //const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const token = localStorage.getItem("accessToken");
@@ -16,13 +17,13 @@ const Upcoming = () => {
   const todayUrl = "/musicals/open/today";
   const allUrl = "/musicals/open/all";
 
-  const { data: todayData, error: todayError, loading: todayLoading } = useFetch(todayUrl, {
+  const { data: todayData, error: todayError, loading: todayLoading } = useCustomFetch(todayUrl, {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
   });
 
-  const { data: allData, error: allError, loading: allLoading } = useFetch(allUrl, {
+  const { data: allData, error: allError, loading: allLoading } = useCustomFetch(allUrl, {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
