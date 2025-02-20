@@ -19,10 +19,9 @@ const TicketContainer = ({ alt, details, isDisabled }) => {
  const korStatus = {
   RESERVE_AWAIT: "입금 대기중",
   RESERVED: "예매 완료",
-  EXPIRED: "예매 기한 만료",
+  EXPIRED: "사용 완료",
   CANCEL_AWAIT: "취소 대기중",
   CANCELED: "취소 완료",
-
  }
   const navigate = useNavigate();
   
@@ -72,7 +71,7 @@ const TicketContainer = ({ alt, details, isDisabled }) => {
           </Item>
           <Item>
             <Label>상태</Label>
-            <Value  
+            <Value color="#A00000"  
               // color={label === "취소가능일시" ? "#A00000" : undefined}
             >{korStatus[reservationStatus]}</Value>
           </Item>

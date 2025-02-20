@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
@@ -10,10 +10,10 @@ const Step4 = () => {
   const navigate = useNavigate();
   const { amateurId } = useParams();
   const [accountName, setAccountName] = useState("");
-  const [quantity] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const isButtonActive = accountName.trim().length > 0;
+  const isButtonActive = accountName.trim().length > 0;  
+  const location = useLocation();
+  const { peopleCount, selectedTicketId,ticketInfo } = location.state || {};
 
   const handleSubmit = async () => {
     if (!isButtonActive || isSubmitting) return;
@@ -31,7 +31,7 @@ const Step4 = () => {
         },
         body: JSON.stringify({
           accountName,
-          quantity: 1,
+          quantity: peopleCount,
         }),
       });
   
@@ -50,6 +50,13 @@ const Step4 = () => {
       setIsSubmitting(false);
     }
   };
+    // 선택된 티켓 정보 찾기
+    const selectedTicket = ticketInfo.tickets.find(
+      (ticket) => ticket.amateurTicketId === selectedTicketId
+    );
+    const ticketPrice = selectedTicket ? selectedTicket.price : 0;
+    // 총 결제 금액 계산
+    const totalAmount = ticketPrice * peopleCount;
 
   return (
     <Container>
@@ -61,9 +68,8 @@ const Step4 = () => {
       </Sidebar>
       <Content>
         <LeftContent>
-          <Title>실종</Title>
-          <Subtitle>홍익대학교 학생회관 3층 소극장</Subtitle>
-          <DateRange>2024.10.03~2024.10.05</DateRange>
+          <Title>{ticketInfo.name}</Title>
+          <Subtitle>{ticketInfo.place}</Subtitle>
           <DiscountBox>
             <DiscountTitle>결제수단</DiscountTitle>
             <Options>
@@ -84,19 +90,15 @@ const Step4 = () => {
         <Summary>
           <Row>
             <Label>일시</Label>
-            <Value>2024.10.03 (목) 19:00</Value>
+            <Value>{ticketInfo.schedule}</Value>
           </Row>
           <Row>
             <Label>인원</Label>
-            <Value>1</Value>
+            <Value>{peopleCount}</Value>
           </Row>
           <Row>
             <Label>티켓 금액</Label>
-            <Value>10,000원</Value>
-          </Row>
-          <Row>
-            <Label>할인</Label>
-            <Value $active>-3000원</Value>
+            <Value>{ticketPrice.toLocaleString()}원</Value>
           </Row>
           <Row>
             <Label>배송료</Label>
@@ -104,9 +106,10 @@ const Step4 = () => {
           </Row>
           <TotalRow>
             <TotalLabel>총 결제 금액</TotalLabel>
-            <TotalValue>7,000원</TotalValue>
+            <TotalValue>{totalAmount.toLocaleString()}원</TotalValue>
           </TotalRow>
-          <Button onClick={handleSubmit} $active={isButtonActive && !isSubmitting} disabled={isSubmitting}>
+          <Button 
+          onClick={handleSubmit} >
             {isSubmitting ? '결제 처리 중...' : '다음'}
           </Button>
           <PreButton onClick={() => navigate('../step3')}>이전</PreButton>
@@ -194,18 +197,6 @@ font-style: normal;
 font-weight: 500;
 line-height: 25px; /* 156.25% */
   margin-bottom: 3px;
-`;
-
-const DateRange = styled.div`
- color: #919191;
-
-/* Body-tiny-md */
-font-family: Inter;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: 18px; /* 128.571% */
-  margin-bottom: 20px;
 `;
 
 const DiscountBox = styled.div`
@@ -378,8 +369,8 @@ line-height: normal;
 
 const Button = styled.button`
 border-radius: 3px;
-border: 1px solid  ${({ active }) => (active ? "#A00000" : "#919191")};
-background: ${({ active }) => (active ? "#A00000" : "#919191")};
+border: 1px solid ;
+background: #A00000;
 display: flex;
 width: 400px;
 height: 40px;

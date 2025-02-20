@@ -80,7 +80,7 @@ function NavbarDefault() {
         </CenterArea>
         <RightArea>
           <IconLink to="/search"><img src={SearchIcon} alt="Search Icon" /></IconLink>
-          <IconLink to="/mypage"><img src={ProfileIcon} alt="Profile Icon" /></IconLink>
+          <IconLink to="/mypage/my/tickets"><img src={ProfileIcon} alt="Profile Icon" /></IconLink>
         </RightArea>
       </NavTop>
       <NavBottom>

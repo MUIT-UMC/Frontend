@@ -35,15 +35,13 @@ function Tickets() {
 
         {activeTab === "예매완료" && (
           <>
-            <h2>예매완료</h2>
             <TicketList status="RESERVED"/>
           </>
         )}
 
         {activeTab === "예매취소" && (
           <>
-            <h2>예매취소</h2>
-            <p>예매 취소의 경우 티켓컨테이너가 회색으로 보인다.</p>
+            {/*<p>예매 취소의 경우 티켓컨테이너가 회색으로 보인다.</p>*/}
             <TicketList status="CANCELED"/>
           </>
         )}
@@ -67,7 +65,7 @@ const Wrapper = styled.div`
 const NavBar = styled.nav`
   display: flex;
   gap: 20px;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
   margin-top: 16px;
 `;
 

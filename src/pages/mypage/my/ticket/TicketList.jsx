@@ -23,13 +23,28 @@ const TicketList = ({ status }) => {
 
   console.log(data);
   return (
-    <>
+<>
+  {loading && <div>로딩 중...</div>}
+  {error && <div>에러 발생: {error}</div>}
+  {!loading && !error && (
+    data?.result?.tickets?.length > 0 ? (
       <TicketWrapper>
-            {data?.result?.tickets?.map((details, index) => (
-                <TicketContainer key={index} details={details} />
-              ))}
-          </TicketWrapper>
-    </>
+        {data.result.tickets.map((details, index) => (
+          <TicketContainer key={index} details={details} />
+        ))}
+      </TicketWrapper>
+    ) : (
+      <div>
+        {status === "CANCELED" ? 
+          "예매 취소한 티켓이 없습니다." : 
+          status === "RESERVED" ? 
+          "예매 완료된 티켓이 없습니다." : 
+          "예매한 티켓이 없습니다."
+        }
+      </div>
+    )
+  )}
+</>
   )
 };
 
