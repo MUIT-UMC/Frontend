@@ -6,13 +6,17 @@ import DaumPostcode from "react-daum-postcode";
 import AddressInput from "../../../../components/signup/addressInput";
 
 import SearchRed from "../../../../assets/icons/SearchRed.svg"
+import useCustomFetch from "../../../../hooks/fetchWithAxios";
 
 function AddAddress() {
+  const memberId = localStorage.getItem("userId");
+  const {fetchData} = useCustomFetch();
   const navigate = useNavigate();
+  
   const [name, setName] = useState("");
   const [recipient, setRecipient] = useState("");
   const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState(null);
+  const [address, setAddress] = useState(""); // 검색 결과로 받아온 주소
   const [isOpen, setIsOpen] = useState(false);
 
   const isFormValid = name.trim() !== "" && recipient.trim() !== "" && phone.trim() !== "";
@@ -21,28 +25,43 @@ function AddAddress() {
     navigate(-1);
   };
 
-  const CompleteAddAddress = () => {
-    alert("주소가 성공적으로 추가되었습니다.");
+  const CompleteAddAddress = async () => {
+    if (!address.trim()) {
+      alert("주소를 선택해주세요.");
+      return;
+    }
+    console.log("제출 주소:", address);
+
+    try {
+      const response = await fetchData(`/member/${memberId}/changeAddress`, 'PATCH', { address });
+      if (response?.isSuccess) {
+        alert("주소가 성공적으로 변경되었습니다.");
+        navigate(-1);
+      } else {
+        alert("주소 변경 실패: " + response?.message);
+      }
+    } catch (error) {
+      console.error("API 요청 실패:", error);
+      alert("주소 변경 중 오류가 발생했습니다.");
+    }
   };
 
   const handleAddress = () => {
     setIsOpen(true);
-};
-
-const handleComplete = (data) => {
-    let fullAddress = data.address;
-    let extraAddress = "";
-
-    if (data.addressType === "R") {
-      if (data.bname) extraAddress += data.bname;
-      if (data.buildingName) extraAddress += extraAddress ? `, ${data.buildingName}` : data.buildingName;
-      fullAddress += extraAddress ? ` (${extraAddress})` : "";
-    }
-
-    setAddress(fullAddress);
-    setIsOpen(false); 
   };
 
+  const handleComplete = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
+    if (data.addressType === "R") {
+      if (data.bname) extraAddress += data.bname;
+      if (data.buildingName)
+        extraAddress += extraAddress ? `, ${data.buildingName}` : data.buildingName;
+      fullAddress += extraAddress ? ` (${extraAddress})` : "";
+    }
+    setAddress(fullAddress);
+    setIsOpen(false);
+  };
 
   return (
     <Container>
@@ -68,33 +87,30 @@ const handleComplete = (data) => {
         </Input>
       </InputArea>
 
-      <>
-        <InputArea>
-          <p className="body-B-600">주소</p>
-          {(!address) ? (
-            <div className="address-search" onClick={handleAddress}>
+      <InputArea>
+        <p className="body-B-600">주소</p>
+        {!address ? (
+          <div className="address-search" onClick={handleAddress}>
             <img src={SearchRed} alt="주소 검색" /> 주소 검색
           </div>
-          ) : (
-            <Input>
-            <input value={address} readOnly placeholder="주소를 선택해주세요."
-              /*{...register("address")}*/ />
-            </Input>
-
-          ) }
-          
-        </InputArea>
-
-        {isOpen && (
-          <ModalBackground onClick={() => setIsOpen(false)}>
-            <ModalContent onClick={(e) => e.stopPropagation()}>
-              <DaumPostcode onComplete={handleComplete} />
-              <CloseButton onClick={() => setIsOpen(false)}>닫기</CloseButton>
-            </ModalContent>
-          </ModalBackground>
+        ) : (
+          <Input>
+            <input
+              value={address}
+              placeholder="주소를 선택해주세요."
+            />
+          </Input>
         )}
+      </InputArea>
 
-      </>
+      {isOpen && (
+        <ModalBackground onClick={() => setIsOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <DaumPostcode onComplete={handleComplete} />
+            <CloseButton onClick={() => setIsOpen(false)}>닫기</CloseButton>
+          </ModalContent>
+        </ModalBackground>
+      )}
 
       <InputArea>
         <p className="body-B-600">휴대폰</p>
@@ -118,8 +134,9 @@ const handleComplete = (data) => {
         </button>
       </BtnArea>
     </Container>
-  )
+  );
 }
+
 
 const Container = styled.div`
     font-family: Pretendard;

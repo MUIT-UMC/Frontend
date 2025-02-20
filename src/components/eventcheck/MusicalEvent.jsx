@@ -89,6 +89,10 @@ const MusicalInfo = styled.div`
   .poster {
     width: 140px;
     height: 200px;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.04);
+      transition: transform 0.2s ease;
   }
 `
 
@@ -113,6 +117,7 @@ const MusicalDetail = styled.div`
     font-style: normal;
     font-weight: 700;
     color: #000;
+    cursor: pointer;
   }
   .body-M-600 {
     font-size: 16px;

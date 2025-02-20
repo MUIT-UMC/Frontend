@@ -23,7 +23,7 @@ function AddressManagement() {
     <Container>
       {isAuthenticated ? (
         <>
-        {/*배송지는 회원 정보를 받아와서 변경경*/}
+        {/*배송지는 회원 정보를 받아와서 변경*/}
           <InputArea>
             <p className="body-B-600">기본 배송지</p>
             <Input>
@@ -43,7 +43,9 @@ function AddressManagement() {
                 <span>|</span>
                 <span>{info?.result?.address}</span>
               </div>
-              <EditButton>기본 배송지로 등록</EditButton>
+              <EditButton
+              onClick={handleAddAddress}>
+                배송지 수정</EditButton>
             </Input>
           </InputArea>
 
@@ -111,6 +113,7 @@ const Input = styled.div`
     display: flex;
     align-items: center;
     gap: 4px;
+    cursor: pointer;
   }
   .body-M-500{
     color: var(--Gray-sub, #919191);
@@ -130,6 +133,8 @@ const EditButton = styled.button`
   border-radius: 2px;
   border: 1px solid #919191;
   background: #FFF;
+
+  cursor: pointer;
 
   color: #919191;
   /* Body-tiny-md */
