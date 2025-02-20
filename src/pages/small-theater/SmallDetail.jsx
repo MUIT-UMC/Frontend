@@ -40,22 +40,19 @@ function SmallDetail() {
 
   const imageUrls = musical.notice.imgUrls; 
   const poster =  musical.posterImgUrl
-  const detailImg=DetailImg;
   const details = [
     { label: "장소", value: musical.place},
     { label: "공연 기간", value: musical.schedule },
     { label: "공연 시간", value: musical.runtime },
     { label: "관람 연령", value:musical.age },
     { label: "출연", value: musical.starring },
-    { label: "가격", value: <Price>
-      <div className="item">
-        <div className="type">일반예매</div>
-        <div className="price">10,000원</div>
-      </div>
-      <div className="item">
-        <div className="type">지인, 홍대생 할인</div>
-        <div className="price">7,000원</div>
-      </div>
+    { label: "가격", value:  <Price>
+      {musical.tickets.map((ticket, index) => (
+        <div className="item" key={index}>
+          <div className="type">{ticket.ticketName}</div>
+          <div className="price">{ticket.price}원</div>
+        </div>
+      ))}
     </Price> }, // 가격 상세 구현 필요
     { label: "티켓 수", value: "200매 (표가 없을 시 구매 불가)" },
   ];
