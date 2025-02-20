@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import ArrowPrevIcon from '../assets/icons/ArrowPrev.svg';
 import ArrowNextIcon from '../assets/icons/ArrowNext.svg';
+import useCustomFetch from "../hooks/fetchWithAxios";
 import Upcoming from "./Upcoming";
 
 // 색상, 폰트 상수, 레이아웃 (디자인 가이드)
@@ -20,9 +21,8 @@ const SIDE_MARGIN = 100; // 좌우 마진
 const COLUMN_GAP = 20;   // column 간격
 
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
-const token = localStorage.getItem("accessToken"); // 로그인 구현되면 이렇게
-// 그전 까지 임시
-// const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
+const token = localStorage.getItem("accessToken"); 
+
 
 function Home() {
 
@@ -64,7 +64,7 @@ function Home() {
   // 오픈예정 
   const fetchTicketOpen = async () => {
     try {
-      const response = await axios.get(`${baseURL}/musicals/open`, {
+      const response = await useCustomFetch(`${baseURL}/musicals/open`, {
         headers: {
           Authorization: `Bearer ${token}`,
         }

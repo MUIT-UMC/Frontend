@@ -18,7 +18,7 @@ const EventSearchResult = (props) => {
             <div>
                 <h3 className="body-B-600">{props.name}</h3>
                 <p className="body-M-600">{props.place}</p>
-                <p className="body-M-500">{formatDate(props.perFrom)}~{formatDate(props.perTo)}</p>
+                <p className="body-M-500">{props.duration}</p>
             </div>
         </Container>
     )
