@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {useLocation,  useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useParams } from 'react-router-dom';
 
@@ -29,6 +29,10 @@ const Step1 = () => {
     const handlePeopleChange = (event) => {
         setPeopleCount(event.target.value);
     };
+
+    const handleNextStep = () => {
+      navigate("./step2", { state: { peopleCount,ticketInfo, } }); // 인원 정보 전달
+  };
 
     return (
       <Container>
@@ -60,7 +64,7 @@ const Step1 = () => {
               </TicketRow>
             </TicketDetails>
           </Info>
-          <Button onClick={() => navigate("./step2")}>예약하기</Button>
+          <Button  onClick={handleNextStep}>예약하기</Button>
         </RightSection>
       </Container>
     );

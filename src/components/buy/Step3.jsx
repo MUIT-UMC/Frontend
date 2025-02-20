@@ -7,12 +7,15 @@ import { useParams } from 'react-router-dom';
 import useCustomFetch from "../../hooks/useCustomFetch";
 //const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const token = localStorage.getItem("accessToken");
+import { useLocation } from "react-router-dom";
 
 
 // Step3 - 배송 선택 및 주문자 확인
 const Step3 = () => {
   const {amateurId} = useParams();
   const navigate = useNavigate();
+    const location = useLocation();
+    const { peopleCount = 1, selectedTicketId = '1' } = location.state || {};
   
   const url = `/tickets/${amateurId}/ticketInfo`;
   const { data, error, loading } = useCustomFetch(url, {
@@ -27,6 +30,25 @@ const Step3 = () => {
 
   const ticketInfo = data.result;
   const memberInfo = data.result.reserveConfirmMemberDTO;
+
+  // 선택된 티켓 정보 찾기
+  const selectedTicket = ticketInfo.tickets.find(
+    (ticket) => ticket.amateurTicketId === selectedTicketId
+  );
+  const ticketPrice = selectedTicket ? selectedTicket.price : 0;
+  // 총 결제 금액 계산
+  const totalAmount = ticketPrice * peopleCount;
+
+  const handleNextStep = () => {
+    navigate('../step4', {
+      state: {
+        peopleCount,
+        selectedTicketId,
+        ticketInfo,
+      },
+    });
+  };
+  
       
      return (
       <Container>
@@ -40,7 +62,6 @@ const Step3 = () => {
           <LeftContent>
         <Title>{ticketInfo.name}</Title>
         <Subtitle>{ticketInfo.place}</Subtitle>
-        <DateRange>{ticketInfo.schedule}</DateRange>
         <DiscountBox>
           <DiscountTitle>티켓 수령 방법</DiscountTitle>
           <Options>
@@ -75,15 +96,11 @@ const Step3 = () => {
           </Row>
           <Row>
             <Label>인원</Label>
-            <Value>1</Value>
+            <Value>{peopleCount}</Value>
           </Row>
           <Row>
             <Label>티켓 금액</Label>
-            <Value>{ticketInfo.tickets.price}</Value>
-          </Row>
-          <Row>
-            <Label>할인</Label>
-            <Value active>-3000원</Value>
+            <Value>{ticketPrice.toLocaleString()}원</Value>
           </Row>
           <Row>
             <Label>배송료</Label>
@@ -91,9 +108,9 @@ const Step3 = () => {
           </Row>
           <TotalRow>
           <TotalLabel>총 결제 금액</TotalLabel>
-          <TotalValue>{ticketInfo.tickets.price}</TotalValue>
+          <TotalValue>{totalAmount.toLocaleString()}원</TotalValue>
         </TotalRow>
-        <Button onClick={() => navigate('../step4')} active>다음</Button>  {/* 이전 페이지로 이동 */}
+        <Button onClick={handleNextStep} active>다음</Button>  {/* 이전 페이지로 이동 */}
       <Button onClick={() => navigate('../step2')}>이전</Button>  {/* 다음 페이지로 이동 */}
       </Summary>
         </Content>

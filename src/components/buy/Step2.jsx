@@ -7,13 +7,16 @@ import { useParams } from 'react-router-dom';
 import useCustomFetch from "../../hooks/useCustomFetch";
 //const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const token = localStorage.getItem("accessToken");
-
+import { useLocation } from "react-router-dom";
 
 // Step2 - 할인 선택
 const Step2 = () => {
 
   const {amateurId} = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const peopleCount = location.state?.peopleCount || 1;
+  const [selectedTicketId, setSelectedTicketId] = useState("1");
     
   const url = `/tickets/${amateurId}/ticketInfo`;
   const { data, error, loading } = useCustomFetch(url, {
@@ -26,6 +29,26 @@ const Step2 = () => {
   if (!data || !data.result) return <div>데이터가 없습니다.</div>;
 
   const ticketInfo = data.result;
+
+
+  // 🎯 선택된 티켓 정보 찾기
+  const selectedTicket = ticketInfo.tickets.find(ticket => ticket.amateurTicketId === selectedTicketId);
+  const ticketPrice = selectedTicket ? selectedTicket.price : 0;
+
+  // 🎯 할인 선택 핸들러
+  const handleDiscountChange = (event) => {
+    setSelectedTicketId(event.target.value);
+  };
+  const handleNextStep = () => {
+    navigate('../step3', {
+      state: {
+        peopleCount,
+        selectedTicketId,
+        ticketInfo,
+      },
+    });
+  };
+  
 
     return (
         <Container>
@@ -44,13 +67,25 @@ const Step2 = () => {
             <DiscountTitle>할인 선택</DiscountTitle>
             <Options>
               <Option>
-                <RadioButton type="radio" name="discount" defaultChecked /> 할인 없음
+                <RadioButton type="radio" 
+                  name="discount" 
+                  value="1" 
+                  checked={selectedTicketId === "1"} 
+                  onChange={handleDiscountChange} /> 할인 없음
               </Option>
               <Option>
-                <RadioButton type="radio" name="discount" /> 홍대생 할인
+                <RadioButton type="radio" 
+                  name="discount" 
+                  value="2" 
+                  checked={selectedTicketId === "2"} 
+                  onChange={handleDiscountChange} /> 홍대생 할인
               </Option>
               <Option>
-                <RadioButton type="radio" name="discount" /> 지인 할인
+                <RadioButton  type="radio" 
+                  name="discount" 
+                  value="2" 
+                  checked={selectedTicketId === "2"} 
+                  onChange={handleDiscountChange} /> 지인 할인
               </Option>
             </Options>
           </DiscountBox>
@@ -62,15 +97,11 @@ const Step2 = () => {
             </Row>
             <Row>
               <Label>인원</Label>
-              <Value>1</Value>
+              <Value>{peopleCount}</Value>
             </Row>
             <Row>
               <Label>티켓 금액</Label>
-              <Value>{ticketInfo.tickets.price}</Value>
-            </Row>
-            <Row>
-              <Label>할인</Label>
-              <Value active>0원</Value>
+              <Value>{ticketPrice.toLocaleString()}원</Value>
             </Row>
             <Row>
               <Label>배송료</Label>
@@ -78,9 +109,9 @@ const Step2 = () => {
             </Row>
             <TotalRow>
             <TotalLabel>총 결제 금액</TotalLabel>
-            <TotalValue>{ticketInfo.tickets.price}</TotalValue>
+            <TotalValue>{(ticketPrice * peopleCount).toLocaleString()}원</TotalValue>
           </TotalRow>
-          <Button onClick={() => navigate('../step3')} active>다음</Button>  {/* 이전 페이지로 이동 */}
+          <Button onClick={handleNextStep} active>다음</Button>  {/* 이전 페이지로 이동 */}
         <Button onClick={() => navigate('..')}>이전</Button>  {/* 다음 페이지로 이동 */}
           </Summary>
         </Content>
