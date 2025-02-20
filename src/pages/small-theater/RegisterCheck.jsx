@@ -87,7 +87,12 @@ const RegisterCheck = () => {
       noticeImages.forEach((image) => {
         dataToSend.append("noticeImages", image);
       });
-    }
+   } else {
+      console.log("⚠️ No noticeImages provided");
+   }
+   
+    console.log(dataToSend.data);
+
   
     const url = `${import.meta.env.VITE_APP_SERVER_URL}/amateurs/enroll`;
   

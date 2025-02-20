@@ -149,6 +149,10 @@ const MusicalItem = styled.div`
     width: 228.571px;
     object-fit: cover; /* 이미지가 박스를 가득 채우고 비율을 유지하도록 설정 */
     margin: 0; /* 이미지 간의 마진을 없앰 */
+          &:hover {
+  transform: scale(1.04);
+  transition: transform 0.2s ease;
+}
   }
 
   .details {
@@ -189,6 +193,7 @@ line-height: 25px; /* 156.25% */
     margin-bottom: 4px;
       }
   }
+
 `;
 
 const DropdownWrapper = styled.div`

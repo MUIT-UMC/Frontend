@@ -10,12 +10,14 @@ function Seats({ musicalId }) {
 
   return (
     <Container style={{ transform: "scale(0.7)", transformOrigin: "top left" }}>
-      <VisionDetailMain theatreId={musical?.result?.theatreId} />
+      <VisionDetailMain theatreId={musical?.result?.theatreId} paddingTop='20px' page='detail'/>
     </Container>
   );
 }
 const Container = styled.div`
-
-`
+  position: relative;
+  left: -50px;  /* 왼쪽으로 이동 */
+  /* 필요한 만큼 더 조정 */
+`;
 
 export default Seats;
