@@ -113,15 +113,20 @@ const NavWrapper = styled.div`
 `
 
 const Text = styled.div`
-  color: ${(props) => props.color ? props.color: '#000'};
-
-  /* Body-me */
+  color: ${(props) => props.color || "#000"};
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 25px; /* 156.25% */
-`
+  text-align:left; 
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+`;
 const Img = styled.img`
 height: 88px;
 width: 88px;

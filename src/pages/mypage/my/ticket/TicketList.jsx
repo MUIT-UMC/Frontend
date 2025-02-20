@@ -19,7 +19,7 @@ const TicketList = ({ status }) => {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  },);
+  }, [token]);
 
   console.log(data);
   return (

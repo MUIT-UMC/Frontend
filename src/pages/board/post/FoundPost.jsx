@@ -25,7 +25,7 @@ function FoundPost() {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  });
+  }, [token]);
   console.log('데이터', data);
   
   // 🔹 댓글 데이터 (commentTrigger 변경 시 재요청)
@@ -35,7 +35,7 @@ function FoundPost() {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  });
+  }, [token]);
   console.log("코멘트 데이터:", comment);
   console.log("에러:", commentError);
   console.log("로딩:", commentLoading);

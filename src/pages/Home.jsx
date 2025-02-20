@@ -37,7 +37,7 @@ function Home() {
     fetchHotNow();
     fetchTicketOpen();
     fetchRanking();
-  }, []);
+  }, [token]);
 
   //Hot Now
   const fetchHotNow = async () => {
