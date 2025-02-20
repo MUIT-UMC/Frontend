@@ -220,6 +220,8 @@ function Sidebar({onClose}) {
     }
   };
 
+  const isLoggedIn = !!localStorage.getItem("accessToken");
+
   return (
     <SidebarOverlay onClick={handleOverlayClick}>
       <SidebarContainer onClick={handleContainerClick}>
@@ -233,8 +235,12 @@ function Sidebar({onClose}) {
           </MenuTop>
           <Bar><img src={DivideBarIcon} alt="Bar Icon" /></Bar>
           <MenuBottom>
-            <SideMenuLink to="/login">로그인</SideMenuLink>
-            <SideMenuLink to="/signup">회원가입</SideMenuLink>
+            {!isLoggedIn && (
+              <>
+                <SideMenuLink to="/login">로그인</SideMenuLink>
+                <SideMenuLink to="/signup">회원가입</SideMenuLink>
+              </>
+            )}
             <SideMenuLink to="/mypage" onClick={handleLinkClick}>마이 페이지</SideMenuLink>
           </MenuBottom>
         </SideMenuArea>
