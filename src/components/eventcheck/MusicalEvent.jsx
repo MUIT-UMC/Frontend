@@ -18,6 +18,12 @@ const MusicalEvent = (props) => {
       state: { musicalId: props.id },
     });
   };
+  const posterClick = () => {
+    navigate('/detail/' + props.id, {
+        replace: false,
+        state: {musicalId: props.id},
+    })
+};
 
   const { data: musicals, error, loading } = useCustomFetch(`/musicals/${props.id}`);
 
@@ -31,11 +37,11 @@ const MusicalEvent = (props) => {
   return (
     <Card>
       <MusicalInfo>
-        <img src={musicals?.result?.posterUrl} className="poster" onClick={cardClick} />
+        <img src={musicals?.result?.posterUrl} className="poster" onClick={posterClick} />
         <MusicalDetail>
           <div className="detail-text">
             <h3 className="title-B-600" onClick={cardClick}>{props.title}</h3>
-            <div>
+            <div onClick={posterClick}>
               <p className="body-M-600">{props.place}</p>
               <p className="body-M-500">
                 {formatDate(props.begin)}~{formatDate(props.end)}
@@ -45,7 +51,7 @@ const MusicalEvent = (props) => {
           <HeartButton setLiked={setIsLike} liked={isLike} musicalId={props.id} width="36px" />
         </MusicalDetail>
       </MusicalInfo>
-      <EventArea>
+      <EventArea onClick={cardClick}>
         {props?.event.map((musical, index, arr) => {
           const isLast = index === arr.length - 1;
           return (
@@ -70,6 +76,10 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  &:hover {
+        transform: scale(1.02);
+        transition: transform 0.2s ease;
+}
 `
 
 const MusicalInfo = styled.div`
