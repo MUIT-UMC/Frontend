@@ -1,4 +1,3 @@
-// components/detail/InfoWrapper.jsx
 import React from "react";
 import styled from "styled-components";
 import ChevronRight from "../../../assets/icons/ChevronRight.svg";
@@ -14,6 +13,7 @@ const TicketContainer = ({ alt, details, isDisabled }) => {
     reservationDate,
     reservationStatus,
     schedule,
+    cancelDate,
  } = details || {};
 
  const korStatus = {
@@ -21,7 +21,7 @@ const TicketContainer = ({ alt, details, isDisabled }) => {
   RESERVED: "예매 완료",
   EXPIRED: "사용 완료",
   CANCEL_AWAIT: "취소 대기중",
-  CANCELED: "취소 완료",
+  CANCELED: "예매 취소",
  }
   const navigate = useNavigate();
   
@@ -37,42 +37,37 @@ const TicketContainer = ({ alt, details, isDisabled }) => {
  console.log(dayOfWeek); // 예: 수
 
   return (
-    <Wrapper >
+    <Wrapper reservationStatus={reservationStatus}>
       <InfoImage>
         <img alt={alt} src={posterImgUrl}/>
       </InfoImage>
-      <InfoDetail>
+      <InfoDetail onClick={() => handleClick(memberTicketId)}>
         <div style={{marginBottom:'18px'}}>
           <span>{amateurShowName}</span><span style={{marginLeft: '8px'}}>{quantity}매</span>
         </div>
           <Item>
             <Label>예매일</Label>
             <Value  
-              // color={label === "취소가능일시" ? "#A00000" : undefined}
             >{reservationDate?.split('T')[0]}</Value>
           </Item>
           <Item>
             <Label>장소</Label>
             <Value  
-              // color={label === "취소가능일시" ? "#A00000" : undefined}
             >{place}</Value>
           </Item>
           <Item>
             <Label>관람일시</Label>
             <Value  
-              // color={label === "취소가능일시" ? "#A00000" : undefined}
             >{schedule?.split(' ')[0]} ({dayOfWeek}) {schedule?.split(' ')[1]}</Value>
           </Item>
           <Item>
             <Label>취소가능일시</Label>
             <Value  
-              // color={label === "취소가능일시" ? "#A00000" : undefined}
-            ></Value>
+            >{cancelDate}</Value>
           </Item>
           <Item>
             <Label>상태</Label>
             <Value color="#A00000"  
-              // color={label === "취소가능일시" ? "#A00000" : undefined}
             >{korStatus[reservationStatus]}</Value>
           </Item>
       </InfoDetail>
@@ -97,7 +92,8 @@ const Wrapper = styled.div`
   gap: 10px;
   border-radius: 3px;
   border: 1px solid var(--Gray-outline, #E6E6E6);
-
+  background-color: ${({ reservationStatus }) =>
+    reservationStatus === "CANCELED" ? "#F5F5F5" : "transparent"};
 `;
 
 const InfoImage = styled.div`
