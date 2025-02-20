@@ -4,32 +4,42 @@ import ChevronLeft from "../../assets/icons/ChevronLeft.svg";
 import ChevronRight from "../../assets/icons/ChevronRight.svg";
 
 const PageNavigator = ({ currentPage, totalPages, onPageChange }) => {
+  const pagesPerGroup = 5; // 5개씩 끊어서 표시
+  const currentGroup = Math.floor(currentPage / pagesPerGroup);
+  const startPage = currentGroup * pagesPerGroup;
+  const endPage = Math.min(startPage + pagesPerGroup, totalPages);
+
   const handlePageClick = (page) => {
-    if (page >= 0 && page <= totalPages) {
+    if (page >= 0 && page < totalPages) {
       onPageChange(page);
     }
   };
 
   return (
     <PageNavigatorWrapper>
+      {/* 이전 5개 이동 */}
       <Img
         src={ChevronLeft}
-        visibility={currentPage === 0 ? "hidden" : "visible"}
-        onClick={() => handlePageClick(currentPage - 1)}
+        visibility={currentGroup === 0 ? "hidden" : "visible"}
+        onClick={() => handlePageClick(startPage - pagesPerGroup)}
       />
-      {Array.from({ length: totalPages }, (_, index) => (
+
+      {/* 현재 그룹의 페이지 번호 표시 */}
+      {Array.from({ length: endPage - startPage }, (_, index) => (
         <PageNumber
-          key={index}
-          color={currentPage === index ? "#A00000" : undefined}
-          onClick={() => handlePageClick(index)}
+          key={startPage + index}
+          color={currentPage === startPage + index ? "#A00000" : undefined}
+          onClick={() => handlePageClick(startPage + index)}
         >
-          {index + 1}
+          {startPage + index + 1}
         </PageNumber>
       ))}
+
+      {/* 다음 5개 이동 */}
       <Img
         src={ChevronRight}
-        visibility={currentPage === totalPages-1 ? "hidden" : "visible"}
-        onClick={() => handlePageClick(currentPage + 1)}
+        visibility={endPage >= totalPages ? "hidden" : "visible"}
+        onClick={() => handlePageClick(startPage + pagesPerGroup)}
       />
     </PageNavigatorWrapper>
   );

@@ -38,7 +38,7 @@ function AnonymousPost() {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  });
+  }, [token]);
   console.log('데이터', data);
   const [isButtonLiked, setIsButtonLiked] = useState(data?.result?.isLiked);
   const [likeCount, setLikeCount] = useState(data?.result?.likeCount);
@@ -58,7 +58,7 @@ function AnonymousPost() {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  });
+  }, [token]);
   console.log("코멘트 데이터:", comment);
   console.log("에러:", commentError);
   console.log("로딩:", commentLoading);

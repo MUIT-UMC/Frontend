@@ -16,7 +16,7 @@ function LikedMusical() {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  },);
+  },[token]);
   console.log(data);
 
   
