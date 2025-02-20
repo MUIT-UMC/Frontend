@@ -236,6 +236,8 @@ const Text = styled.div`
   align-items: center;
   justify-content: right;
 
+  cursor: pointer;
+
   /* Body-me */
   font-family: Pretendard;
   font-size: 16px;
