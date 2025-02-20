@@ -34,12 +34,12 @@ function SmallDetail() {
   // API에서 받아온 데이터를 처리합니다.
   const musical = data.result; 
   const name = musical.name;
-  const content = musical.summaries.content || ''; // content가 없으면 빈 문자열로 처리
+  const content = musical.summaryContent || ''; // content가 없으면 빈 문자열로 처리
   const [quote, ...descriptionParts] = content.split("\n");
   const description = descriptionParts.join("\n").replace(/\n/g, "<br />");
 
-  const imageUrls = musical.notice.imgUrls; 
-  const poster =  musical.posterImgUrl
+  const imageUrls = musical.noticeImages; 
+  const poster =  musical.posterImage;
   const details = [
     { label: "장소", value: musical.place},
     { label: "공연 기간", value: musical.schedule },
@@ -54,7 +54,7 @@ function SmallDetail() {
         </div>
       ))}
     </Price> }, // 가격 상세 구현 필요
-    { label: "티켓 수", value: "200매 (표가 없을 시 구매 불가)" },
+    { label: "티켓 수", value: musical.totalTicket },
   ];
 
   return (
@@ -102,7 +102,7 @@ function SmallDetail() {
         <Title>공연시간 정보</Title>
         <Text>{musical.timeInfo}</Text>
         <Title>공지사항</Title>
-        <Text> {musical.notice.content}</Text>
+        <Text> {musical.noticeContent}</Text>
         </Label>
         {imageUrls && imageUrls.length > 0 && (
   <DetailImageWrapper>

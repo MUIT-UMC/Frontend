@@ -22,13 +22,14 @@ function CastList() {
 
   // 캐스팅 정보 추출
   const castings = data.result.castings;
+  const castingImages=data.result.castingImages
 
   return (
     <ActorsWrapper>
       {castings.map((casting, index) => (
         <Actor key={index}>
           <ProfileWrapper>
-            <img src={casting.imgUrl} alt={casting.actorName} />
+            <img src={castingImages[index]} alt={casting.actorName} />
           </ProfileWrapper>
           <ActorName>{casting.actorName}</ActorName>
           <ActorInfo>{casting.castingName}</ActorInfo>
