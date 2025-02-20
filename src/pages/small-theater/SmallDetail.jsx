@@ -63,7 +63,7 @@ function SmallDetail() {
   return (
     <>
       {/*빨간배너 */}
-       <BannerContainer>
+       <BannerContainer poster={poster}>
                 <Header>{name}</Header>
                 <TagWrapper>
              {musical.hashtag
