@@ -120,13 +120,15 @@ const MyPageWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 115px;
+  align-items: stretch;
 `
 
 const Aside = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh; /* 창 높이를 기준으로 설정 */
+  height: auto;
+  flex-shrink: 0;
 `
 
 const Main = styled.div`
@@ -190,6 +192,7 @@ const AsideBottom = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top:200px;
 `
 
 const Button = styled.button`

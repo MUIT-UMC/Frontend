@@ -21,22 +21,29 @@ function LikedMusical() {
 
   
   return (
+    
     <Container>
-      <MusicalList>
-        {data?.result?.map((musical) => (
-          <Card key={musical.id} onClick={() => navigate(`/detail/${musical.id}`)}>
-            <Image src={musical.posterUrl} alt={musical.name} />
-            <CardHeader>
-              <CardTitle>{musical.name}</CardTitle>
-              <LikeButton>
-                <img src={Heart} alt="Like" width={24} height={24}/>
-              </LikeButton>
-            </CardHeader>
-            <Theater>{musical.place}</Theater>
-            <Period>{musical.duration}</Period>
-          </Card>
-        ))}
-      </MusicalList>
+          {loading && <div style={{marginTop:'32px'}}>로딩 중...</div>}
+          {error && <div style={{marginTop:'32px'}}>에러 발생: {error}</div>}
+       {data?.result?.length > 0 ? (
+        <MusicalList>
+          {data.result.map((musical) => (
+            <Card key={musical.id} onClick={() => navigate(`/detail/${musical.id}`)}>
+              <Image src={musical.posterUrl} alt={musical.name} />
+              <CardHeader>
+                <CardTitle>{musical.name}</CardTitle>
+                <LikeButton>
+                  <img src={Heart} alt="Like" width={24} height={24} />
+                </LikeButton>
+              </CardHeader>
+              <Theater>{musical.place}</Theater>
+              <Period>{musical.duration}</Period>
+            </Card>
+          ))}
+        </MusicalList>
+      ) : (
+        <p style={{marginTop:'32px'}}>좋아요한 뮤지컬이 없습니다.</p>
+      )}
     </Container>
   );
 }
@@ -47,8 +54,7 @@ export default LikedMusical;
 const Container = styled.div`
   display: flex;
   max-width: 1440px;
-  height: 864px;
-  margin-top:30px;
+  
 `;
 
 
@@ -57,7 +63,7 @@ const MusicalList = styled.div`
  grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개 */
   gap: 6px; /* 카드 간 간격 */
   margin-left: -35px;
-
+margin-top:30px;
 `;
 
 const Card = styled.div`

@@ -67,6 +67,7 @@ const AuthArea = styled.div`
   gap: 60px;
 
   .Title{
+  
     font-size: 16px;
     font-weight: 500;
     color: #000000;

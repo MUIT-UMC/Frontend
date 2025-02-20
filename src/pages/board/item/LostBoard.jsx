@@ -84,8 +84,8 @@ const [searchParams, setSearchParams] = useState({
      */}
 
       <SearchContainer fields={fieldsForFour} onSearchChange={handleSearchChange} />
-      {loading && <div>로딩 중...</div>}
-      {error && <div>에러 발생: {error}</div>}
+      {loading && <div style={{marginTop:'32px'}}>로딩 중...</div>}
+      {error && <div style={{marginTop:'32px'}}>에러 발생: {error}</div>}
       {data?.result?.posts?.length == 0 ? <div style={{marginTop: '30px'}}>아직 작성된 게시글이 없습니다.</div> :
         !loading && !error && (
           <>

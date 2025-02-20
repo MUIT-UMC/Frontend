@@ -35,18 +35,20 @@ function MyPosts() {
 
   return (
     <>
-    {loading && <div>로딩 중...</div>}
-      {error && <div>에러 발생: {error}</div>}
+    {loading && <div style={{marginTop:'32px'}}>로딩 중...</div>}
+      {error && <div style={{marginTop:'32px'}}>에러 발생: {error}</div>}
       {!loading && !error && (
-        <>
-          <PostList details={data?.result?.posts} headers={tableHeaders} cols={3} boardType='mypost'/>
-          <PageNavigator
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </>
-      )}
+  <>
+    {data?.result?.posts?.length > 0 ? (
+      <>
+        <PostList details={data?.result?.posts} headers={tableHeaders} cols={3} boardType="mypost" />
+        <PageNavigator currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      </>
+    ) : (
+      <p style={{marginTop:'32px'}}>아직 작성된 게시글이 없습니다.</p>
+    )}
+  </>
+)}
       
     </>
   );

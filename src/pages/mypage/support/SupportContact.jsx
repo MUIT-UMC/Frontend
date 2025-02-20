@@ -43,25 +43,26 @@ const SupportContact = () => {
 
   // if (loading) return <div>로딩 중...</div>;
   //  if (error) return <div>에러 발생: {error}</div>;
-
-  return (
-    <>
-      {/*loading && <div>로딩 중...</div>*/}
-      {/*error && <div>에러 발생: {error}</div>*/}
-      {/*!loading && !error &&*/ (
+return (
+  <>
+    {loading && <div style={{marginTop:'32px'}}>로딩 중...</div>}
+    {error && <div style={{marginTop:'32px'}}>에러 발생: {error}</div>}
+    {!loading && !error && (
+      data?.result?.inquiries?.length > 0 ? (
         <>
-          <PostList details={data?.result?.inquiries} headers={tableHeaders} cols="3" boardType='contact'/>
+          <PostList details={data.result.inquiries} headers={tableHeaders} cols="3" boardType='contact' />
           <PageNavigator
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
         </>
-      )}
-    </>
-  );
-};
-
+      ) : (
+        <div style={{marginTop: '32px'}}>아직 작성된 문의가 없습니다.</div>
+      )
+    )}
+  </>
+);};
 export default SupportContact;
 
 const BoardContainer = styled.div`
