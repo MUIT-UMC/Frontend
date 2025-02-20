@@ -23,6 +23,7 @@ const COLUMN_GAP = 20;   // column 간격
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
 const token = localStorage.getItem("accessToken"); 
 
+
 function Home() {
 
   // 데이터를 저장할 state들
