@@ -58,7 +58,7 @@ export default function AdminSmallReserve() {
             statusText = "취소 중";
             break;
           case "CANCELED":
-            statusText = "취소 완료";
+            statusText = "예매 취소";
             break;
           default:
             break;

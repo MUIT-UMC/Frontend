@@ -43,10 +43,10 @@ function Reply({key, data}) {
   };
 
   const reportHandler = async (commentId) => {
-    if (window.confirm("게시글을 신고하시겠습니까?")) {
+    if (window.confirm("댓글을 신고하시겠습니까?")) {
       try {
         console.log('신고할 답댓글 ', commentId);
-        const response = await axios.post(`${muit_server}/reports/${commentId}?commentType=REPLY`, 
+        const response = await axios.post(`${muit_server}/comments/report/${commentId}?commentType=REPLY`, 
           {},
           {
           headers: { 

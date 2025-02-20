@@ -78,10 +78,10 @@ function Comment({data, noneCommentIcon}) {
     setIsReplying(true);
   }
   const reportHandler = async (commentId) => {
-    if (window.confirm("게시글을 신고하시겠습니까?")) {
+    if (window.confirm("댓글을 신고하시겠습니까?")) {
       try {
         console.log('신고할 댓글 ', commentId);
-        const response = await axios.post(`${muit_server}/reports/${commentId}?commentType=COMMENT`, 
+        const response = await axios.post(`${muit_server}/comments/report/${commentId}?commentType=COMMENT`, 
           {},
           {
           headers: { 
@@ -242,6 +242,7 @@ font-size: 16px;
 font-style: normal;
 font-weight: 500;
 line-height: 25px; /* 156.25% */
+  white-space: pre-line;
 `
 const EditInput = styled.input`
   width: 100%;

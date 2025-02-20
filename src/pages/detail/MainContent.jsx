@@ -72,10 +72,9 @@ function MainContent({data,loading, error}) {
             musicalId={musical.id}
           />
         </TitleWrapper>
-        <div>반별 test용으로 별점을 4.6 고정으로 해둠</div>
-        <RatingWrapper>
+        <RatingWrapper style={{marginLeft:'4px'}}>
           
-          <RatingStars rating={score} />
+        <RatingStars rating={score} />
           <Rating>{score}</Rating>
         </RatingWrapper>
         
