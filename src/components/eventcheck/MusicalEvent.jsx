@@ -21,7 +21,7 @@ const MusicalEvent = (props) => {
 
   const { data: musicals, error, loading } = useCustomFetch(`/musicals/${props.id}`);
 
-  console.log("이벤트개수:", props?.count);
+  //console.log("이벤트개수:", props?.count);
   useEffect(() => {
     if (musicals?.result) {
       setIsLike(musicals.result.isLike);
@@ -34,7 +34,7 @@ const MusicalEvent = (props) => {
         <img src={musicals?.result?.posterUrl} className="poster" onClick={cardClick} />
         <MusicalDetail>
           <div className="detail-text">
-            <h3 className="title-B-600">{props.title}</h3>
+            <h3 className="title-B-600" onClick={cardClick}>{props.title}</h3>
             <div>
               <p className="body-M-600">{props.place}</p>
               <p className="body-M-500">

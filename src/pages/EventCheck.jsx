@@ -46,7 +46,7 @@ function EventCheck() {
     setPage(pageNumber);
   };
 
-  console.log('총 페이지 수:', events?.result?.totalPages);
+  //console.log('총 페이지 수:', events?.result?.totalPages);
 
   return (
     <Container>
@@ -119,6 +119,8 @@ function EventCheck() {
 }
 
 const Container = styled.div`
+  width: 100%;
+
   font-family: Pretendard;
   padding: 100px;
 
@@ -140,6 +142,7 @@ const Container = styled.div`
   }
 `
 const NowShowing = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   margin-right: auto;
@@ -169,6 +172,8 @@ const EventListArea = styled.div`
   gap: 100px;
 `
 const Pagination = styled.div`
+  width: 100%;
+
   display: flex;
   justify-content: center;
   align-items: center;
