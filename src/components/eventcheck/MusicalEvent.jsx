@@ -7,6 +7,21 @@ import formatDate from "../../utils/formatDate";
 import { useEffect, useState } from "react";
 import HeartButton from "../HeartButton";
 
+    const posterClick = () => {
+        navigate('/detail/' + props.id, {
+            replace: false,
+            state: {musicalId: props.id},
+        })
+    }
+
+    const {data: musicals, error, loading} = useCustomFetch(`/musicals/${props.id}`);
+    console.log(props?.event);
+    useEffect(() => {
+        if (musicals?.result) {
+            setIsLike(musicals.result.isLike);
+        }
+    }, [musicals]);
+
 const MusicalEvent = (props) => {
   const navigate = useNavigate();
   const { fetchData } = useCustomFetch();

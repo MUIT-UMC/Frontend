@@ -5,18 +5,20 @@ import HeartFull from "../../assets/icons/heart-full.svg";
 
 function LikeActorButton() {
   const [isLiked, setIsLiked] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const handleClick = () => {
     setIsLiked((prev) => !prev);
+    setIsClicked(true);
+
+    setTimeout(() => {
+      setIsClicked(false);
+    }, 200); // 0.2초 후 원래 크기로
   };
 
   return (
-    <Button onClick={handleClick}>
-      <img
-        src={isLiked ? HeartFull : HeartLine}
-        alt={isLiked ? "Liked" : "Not Liked"}
-        style={{width: '24px', height: '24px'}}
-      />
+    <Button onClick={handleClick} isClicked={isClicked}>
+      <HeartIcon src={isLiked ? HeartFull : HeartLine} alt={isLiked ? "Liked" : "Not Liked"} />
     </Button>
   );
 }
@@ -33,10 +35,12 @@ const Button = styled.button`
   align-items: center;
   border: none;
   cursor: pointer;
-  padding: 0px;
-  
-  img {
-  position: absolute;
-  bottom: 1px;
-  }
+  padding: 1px;
+  transition: transform 0.2s ease;
+  transform: ${(props) => (props.isClicked ? "scale(1.05)" : "scale(1)")}; // 버튼 확대 효과
+`;
+
+const HeartIcon = styled.img`
+  width: 16px;
+  height: 16px;
 `;

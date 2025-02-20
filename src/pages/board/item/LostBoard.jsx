@@ -47,7 +47,7 @@ const [searchParams, setSearchParams] = useState({
    console.log('데이터', data);
    console.log(error);
   const fieldsForFour = [
-    { labelkor: '분실일', label: "lostDate", placeholder: "" },
+    { labelkor: '분실일', label: "lostDate", placeholder: "", type:"date"},
     { labelkor: '분실장소', label: "location", placeholder: "" },
     { labelkor: '분실물명', label: "lostItem", placeholder: "" },
     { labelkor: '뮤지컬명', label: "musicalName", placeholder: "" },

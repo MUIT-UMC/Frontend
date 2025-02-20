@@ -50,7 +50,7 @@ const FoundBoard = () => {
 
   const fieldsForFour = [
     
-    { labelkor: "습득일", label: "lostDate", placeholder: "" },
+    { labelkor: "습득일", label: "lostDate", placeholder: "", type:"date"},
     { labelkor: "습득장소", label: "location", placeholder: "" },
     { labelkor: "습득물명", label: "lostItem", placeholder: "" },
     { labelkor: "뮤지컬명", label: "musicalName", placeholder: "" },
