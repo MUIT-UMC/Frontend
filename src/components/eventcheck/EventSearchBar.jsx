@@ -29,11 +29,11 @@ const EventSearchBar = () => {
     }, [searchValue]);
 
     const { data, error, loading } = useCustomFetch(
-        debouncedValue ? `/musicals?musicalName=${debouncedValue}` : null
+        debouncedValue ? `/musicals/search?musicalName=${debouncedValue}` : null
     );
 
     const result = data?.isSuccess ? data?.result?.musicalHomeList || [] : [];
-    //console.log(result.length);
+    console.log(result);
 
     return (
       <>
@@ -59,8 +59,7 @@ const EventSearchBar = () => {
               posterUrl={musical?.posterUrl}
               name={musical?.name}
               place={musical?.place}
-              perFrom={musical?.perFrom}
-              perTo={musical.perTo}
+              duration={musical?.duration}
               onClick={() => ToEventDetail(musical.id)}
             />
           ))}
