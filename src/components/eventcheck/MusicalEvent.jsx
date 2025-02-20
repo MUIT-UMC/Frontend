@@ -20,6 +20,13 @@ const MusicalEvent = (props) => {
         })
     }
 
+    const posterClick = () => {
+        navigate('/detail/' + props.id, {
+            replace: false,
+            state: {musicalId: props.id},
+        })
+    }
+
     const {data: musicals, error, loading} = useCustomFetch(`/musicals/${props.id}`);
     console.log(props?.event);
     useEffect(() => {
@@ -54,9 +61,9 @@ const MusicalEvent = (props) => {
     return(
         <Card>
             <MusicalInfo>
-                <img src={musicals?.result?.posterUrl} className="poster" onClick={cardClick}/>
+                <img src={musicals?.result?.posterUrl} className="poster" onClick={posterClick}/>
                 <MusicalDetail>
-                    <div className="detail-text">
+                    <div className="detail-text" onClick={posterClick}>
                         <h3 className="title-B-600">{props.title}</h3>
                         <div>
                             <p className="body-M-600">{props.place}</p>
@@ -71,7 +78,7 @@ const MusicalEvent = (props) => {
                     )*/}                
                 </MusicalDetail>
             </MusicalInfo>
-            <EventArea>
+            <EventArea  onClick={cardClick}>
                 {props?.event.map((musical)=>(
                     <EventContent
                     key={musical.id}
@@ -93,6 +100,10 @@ const Card = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
+    &:hover {
+        transform: scale(1.02);
+        transition: transform 0.2s ease;
+}
 `
 const MusicalInfo = styled.div`
     display: flex;

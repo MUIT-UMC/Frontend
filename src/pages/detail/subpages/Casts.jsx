@@ -30,11 +30,11 @@ function CastsDetail() {
               <Actor key={actor?.realName}>
                 <ProfileWrapper>
                   <img src={actor?.actorPic} alt={`${actor?.realName} 프로필`} />
-                  {/*
+                  {
                    <LikeActorButtonWrapper>
                     <LikeActorButton />
                   </LikeActorButtonWrapper>
-                  */}
+                  }
                 </ProfileWrapper>
                 <div>{actor?.realName}</div>
               </Actor>

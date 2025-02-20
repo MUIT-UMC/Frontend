@@ -98,7 +98,8 @@ function MainContent({data,loading, error}) {
             티켓 오픈 컴포넌트*/}
           </CalendarWrapper>
 
-          <EventLink style={{ transform: "scale(0.8)", transformOrigin: "top left" }}>
+                
+          <EventLink style={{  transformOrigin: "top left" }}>
             {event?.result?.eventResultListDTO.map((musical)=>(
               <EventContent
                     key={musical.id}
@@ -241,8 +242,9 @@ const Text = styled.div`
 const EventLink = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 100%; /* RightSection과 동일하게 유지 */
   justify-content: flex-end;
-  margin-top: 16px;
+  align-items: stretch; /* 내부 요소가 부모 너비를 따르도록 */
   gap: 4px;
-`
+  margin: 16px 10px 0px 10px;
+`;

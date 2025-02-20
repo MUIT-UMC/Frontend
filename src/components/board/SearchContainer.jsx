@@ -2,24 +2,22 @@ import React from "react";
 import styled from "styled-components";
 
 function SearchContainer({ fields, onSearchChange }) {
-  // const isTwoColumns = fields.length === 2;
-
   const handleInputChange = (label, value) => {
-    onSearchChange(label, value); // 부모 컴포넌트로 값 전달
+    onSearchChange(label, value);
   };
 
   return (
-    <ContainerWrapper >
-      {fields.map(({ labelkor, label, placeholder }, index) => (
-        <SearchForm key={index} >
+    <ContainerWrapper>
+      {fields.map(({ labelkor, label, placeholder, type }, index) => (
+        <SearchForm key={index}>
           <div>{labelkor}</div>
           <Input
-            placeholder={placeholder}
+            type={type === "date" ? "date" : "text"} // type이 "date"이면 date, 없으면 text
+            placeholder={type === "date" ? "" : placeholder}
             onChange={(e) => {
               handleInputChange(label, e.target.value);
               console.log(e.target.value);
-            }
-            }
+            }}
           />
         </SearchForm>
       ))}
@@ -61,4 +59,11 @@ const Input = styled.input`
   width: 328px;
   height: 90%;
   stroke: var(--Gray-outline, #e6e6e6);
+  color: var(--Gray-maintext, #000);
+/* Body-me */
+font-family: Pretendard;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 25px; /* 156.25% */
 `;

@@ -52,6 +52,7 @@ function EventCheck() {
     <Container>
       <h2 className="Title-B-500">뮤지컬의 <span className="color-txt">이벤트 일정</span>을 확인해보세요!</h2>
       <EventSearchBar/>
+      
 
       <NowShowing>
         <h1 className="B-Title-B-500">현재 진행중인 뮤지컬 이벤트</h1>
@@ -108,6 +109,7 @@ function EventCheck() {
           <PageButton
             onClick={handleNextPage}
             disabled={page + 1 === events?.result?.totalPages}
+
           >
             <img src={ChevronRight} alt="Next" />
           </PageButton>
@@ -117,10 +119,12 @@ function EventCheck() {
   );
 }
 
+const Header = styled.div`
+
+`
 const Container = styled.div`
   font-family: Pretendard;
   padding: 100px;
-
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -166,6 +170,7 @@ const EventListArea = styled.div`
   flex-wrap: wrap;
   padding-top: 60px;
   gap: 100px;
+  width: 
 `
 const Pagination = styled.div`
   display: flex;
@@ -173,6 +178,7 @@ const Pagination = styled.div`
   align-items: center;
   gap: 20px;
   margin-top: 20px;
+  width: 1200px;
 `
 const PageButton = styled.button`
   background: none;
@@ -180,6 +186,7 @@ const PageButton = styled.button`
   cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   padding: 5px;
+   visibility: ${({ disabled }) => (disabled ? "hidden" : "visible")}; /* 버튼을 안 보이게 처리 */
 `
 const PageNumber = styled.span`
   cursor: pointer;

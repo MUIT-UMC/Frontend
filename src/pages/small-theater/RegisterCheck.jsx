@@ -102,7 +102,7 @@ const RegisterCheck = () => {
       console.log("⚠️ No noticeImages provided");
    }
    
-    
+    console.log(dataToSend.data);
   
     const url = `${import.meta.env.VITE_APP_SERVER_URL}/amateurs/enroll`;
   
