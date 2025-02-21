@@ -8,19 +8,20 @@ const token = localStorage.getItem("accessToken");
 
 const Step4 = () => {
   const navigate = useNavigate();
-  const { amateurId } = useParams();
+  // const { amateurTicketId } = useParams();
   const [accountName, setAccountName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isButtonActive = accountName.trim().length > 0;  
   const location = useLocation();
-  const { peopleCount, selectedTicketName="일반 예매",ticketInfo } = location.state || {};
+  const { peopleCount, selectedTicketName="일반 예매",ticketInfo,amateurTicketId } = location.state || {};
+  console.log("ticketId",amateurTicketId)
 
   const handleSubmit = async () => {
     if (!isButtonActive || isSubmitting) return;
 
     setIsSubmitting(true);
 
-    const url = `${import.meta.env.VITE_APP_SERVER_URL}/tickets/purchase/${amateurId}`;
+    const url = `${import.meta.env.VITE_APP_SERVER_URL}/tickets/purchase/${amateurTicketId}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
