@@ -172,7 +172,7 @@ function AnonymousPost() {
         <CommentInputArea postId={postId} setCommentTrigger={setCommentTrigger} commentTrigger={commentTrigger} isWrited={isWrited} setIsWrited={setIsWrited}/>
         <CommentWrapper>
         {comment?.result?.comments?.map((data) => (
-          <Comment key={data.commentId} data={data} isDeleted={isDeleted} setIsDeleted={setIsDeleted}/>
+          <Comment key={data.commentId} data={data} isDeleted={isDeleted} setIsDeleted={setIsDeleted} isWrited={isWrited} setIsWrited={setIsWrited}/>
         ))}
         </CommentWrapper>
                 

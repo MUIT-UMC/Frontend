@@ -10,7 +10,7 @@ import axios from "axios";
 const token = localStorage.getItem("accessToken");
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
-function Comment({data, noneCommentIcon, isDeleted, setIsDeleted}) {
+function Comment({data, noneCommentIcon, isDeleted, setIsDeleted, isWrited, setIsWrited}) {
   // console.log('Comment.jsx', data);
   const [isWriter, setIsWriter] = useState(data.nickname=='글쓴이');
 
@@ -153,7 +153,7 @@ function Comment({data, noneCommentIcon, isDeleted, setIsDeleted}) {
       {Array.isArray(data.replies) && data.replies.length > 0 ? (
         <ReplyWrapper>
           {data?.replies?.map((reply) => (
-            <Reply key={reply.id} data={reply} />
+            <Reply key={reply.id} data={reply} setIsDeleted={setIsDeleted} isDeleted={isDeleted}/>
           ))}
         </ReplyWrapper>
       ) : null}
@@ -161,7 +161,7 @@ function Comment({data, noneCommentIcon, isDeleted, setIsDeleted}) {
         <ReplyInputWrapper>
           <img src={ReplyArrow} />
           <div style={{width: '100%'}}>
-          <CommentInputArea postId={data.commentId} isReplying={isReplying} setIsReplying={setIsReplying} />
+          <CommentInputArea postId={data.commentId} isReplying={isReplying} setIsReplying={setIsReplying} isWrited={isWrited} setIsWrited={setIsWrited}/>
           </div>
           
         </ReplyInputWrapper>

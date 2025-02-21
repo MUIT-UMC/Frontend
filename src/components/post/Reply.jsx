@@ -7,7 +7,7 @@ import { useState } from "react";
 import axios from "axios";
 const token = localStorage.getItem("accessToken");
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
-function Reply({key, data}) {
+function Reply({key, data, isDeleted, setIsDeleted}) {
   console.log(data);
   console.log('리플라이 콘텐츠', data.content);
 
@@ -32,6 +32,7 @@ function Reply({key, data}) {
   
       if (response.ok) {
         alert("댓글이 삭제되었습니다.");
+        setIsDeleted(!isDeleted);
         // 필요하면 상태 업데이트 로직 추가
       } else {
         alert(`삭제 실패: ${result.message}`);
