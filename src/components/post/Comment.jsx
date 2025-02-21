@@ -10,8 +10,8 @@ import axios from "axios";
 const token = localStorage.getItem("accessToken");
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
-function Comment({data, noneCommentIcon}) {
-  console.log('Comment.jsx', data);
+function Comment({data, noneCommentIcon, isDeleted, setIsDeleted}) {
+  // console.log('Comment.jsx', data);
   const [isWriter, setIsWriter] = useState(data.nickname=='글쓴이');
 
   const [isEditing, setIsEditing] = useState(false);
@@ -37,6 +37,7 @@ function Comment({data, noneCommentIcon}) {
   
       if (response.ok) {
         alert("댓글이 삭제되었습니다.");
+        setIsDeleted(!isDeleted);
         // 필요하면 상태 업데이트 로직 추가
       } else {
         alert(`삭제 실패: ${result.message}`);
@@ -132,7 +133,6 @@ function Comment({data, noneCommentIcon}) {
             ) : (
               <>
                 {/*<Text onClick={() => setIsEditing(true)}>수정</Text>*/}
-                {console.log('댓글 닉네임', data.nickname)}
                 <Text onClick={deleteHandler} style={{ display: (data.nickname !== "삭제된 댓글" && data.isMyComment) ? "block" : "none" }}>삭제</Text>
               </>
             )}
