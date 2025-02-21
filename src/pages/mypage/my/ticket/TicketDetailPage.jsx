@@ -59,7 +59,7 @@ function  TicketDetailPage() {
   RESERVED: "예매 완료",
   EXPIRED: "사용 완료",
   CANCEL_AWAIT: "취소 대기중",
-  CANCELED: "취소 완료",
+  CANCELED: "예매 취소",
 
  }
 

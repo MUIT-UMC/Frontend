@@ -16,7 +16,7 @@ const Step2 = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const peopleCount = location.state?.peopleCount || 1;
-  const [selectedTicketId, setSelectedTicketId] = useState("1");
+  const [selectedTicketName, setSelectedTicketName] = useState("일반 예매");
     
   const url = `/tickets/${amateurId}/ticketInfo`;
   const { data, error, loading } = useCustomFetch(url, {
@@ -32,18 +32,19 @@ const Step2 = () => {
 
 
   // 🎯 선택된 티켓 정보 찾기
-  const selectedTicket = ticketInfo.tickets.find(ticket => ticket.amateurTicketId === selectedTicketId);
+  const selectedTicket = ticketInfo.tickets.find(ticket => ticket.ticketName === selectedTicketName);
   const ticketPrice = selectedTicket ? selectedTicket.price : 0;
 
   // 🎯 할인 선택 핸들러
   const handleDiscountChange = (event) => {
-    setSelectedTicketId(event.target.value);
+    setSelectedTicketName(event.target.value);
   };
+
   const handleNextStep = () => {
     navigate('../step3', {
       state: {
         peopleCount,
-        selectedTicketId,
+        selectedTicketName,
         ticketInfo,
       },
     });
@@ -69,22 +70,22 @@ const Step2 = () => {
               <Option>
                 <RadioButton type="radio" 
                   name="discount" 
-                  value="1" 
-                  checked={selectedTicketId === "1"} 
+                  value="일반 예매"
+                  checked={selectedTicketName === "일반 예매"}
                   onChange={handleDiscountChange} /> 할인 없음
               </Option>
               <Option>
                 <RadioButton type="radio" 
                   name="discount" 
-                  value="2" 
-                  checked={selectedTicketId === "2"} 
+                  value="홍대생 할인"
+                  checked={selectedTicketName === "홍대생 할인"} 
                   onChange={handleDiscountChange} /> 홍대생 할인
               </Option>
               <Option>
                 <RadioButton  type="radio" 
                   name="discount" 
-                  value="2" 
-                  checked={selectedTicketId === "2"} 
+                  value="홍대생 할인"
+                  checked={selectedTicketName === "홍대생 할인"}
                   onChange={handleDiscountChange} /> 지인 할인
               </Option>
             </Options>

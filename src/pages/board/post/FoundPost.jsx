@@ -8,7 +8,8 @@ import Info from "../../../components/detail/Info";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import PostMenu from "../../../components/post/PostMenu";
-
+import { useState } from "react";
+import { useEffect } from "react";
 // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const token = localStorage.getItem("accessToken");
 console.log(token);
@@ -25,8 +26,11 @@ function FoundPost() {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  });
+  }, [token]);
   console.log('데이터', data);
+
+  const [isWrited, setIsWrited] = useState(false);
+    const [isDeleted, setIsDeleted] = useState(false);
   
   // 🔹 댓글 데이터 (commentTrigger 변경 시 재요청)
   const { data: comment, error: commentError, loading: commentLoading } = useFetch(
@@ -35,7 +39,15 @@ function FoundPost() {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  });
+  }, [token]);
+
+    useEffect(() => {
+      if (isWrited||isDeleted) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 50);
+      }
+    }, [isWrited, isDeleted]);
   console.log("코멘트 데이터:", comment);
   console.log("에러:", commentError);
   console.log("로딩:", commentLoading);
@@ -96,10 +108,10 @@ function FoundPost() {
 
         {/*댓글 작성부분 - 한 컴포넌트로 묶기 */}
         <PostTitle marginBottom='20px'>댓글 {commentCount}개</PostTitle>
-        <CommentInputArea postId={postId}/>
+        <CommentInputArea postId={postId} isWrited={isWrited} setIsWrited={setIsWrited}/>
         <CommentWrapper>
         {comment?.result?.comments?.map((data) => (
-          <Comment key={data.commentId} data={data} />
+          <Comment key={data.commentId} data={data}  isDeleted={isDeleted} setIsDeleted={setIsDeleted}/>
         ))}
         </CommentWrapper>
                 

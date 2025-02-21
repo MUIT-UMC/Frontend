@@ -81,7 +81,15 @@ function MyPage() {
           />
         </div>
         <AsideBottom>
-          <TextButton>로그아웃</TextButton>
+        <TextButton
+          onClick={() => {
+            localStorage.removeItem("userId");
+            localStorage.removeItem("accessToken"); // 토큰도 있다면 같이 삭제
+            navigate("/login"); // 로그인 페이지로 이동
+          }}
+          >
+           로그아웃
+        </TextButton>
           <TextButton color="#FF1E00"
           onClick={()=>navigate('/mypage/account-deletion')}>회원탈퇴</TextButton>
         </AsideBottom>

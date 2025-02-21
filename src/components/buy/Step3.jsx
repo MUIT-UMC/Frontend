@@ -15,7 +15,7 @@ const Step3 = () => {
   const {amateurId} = useParams();
   const navigate = useNavigate();
     const location = useLocation();
-    const { peopleCount = 1, selectedTicketId = '1' } = location.state || {};
+    const { peopleCount = 1, selectedTicketName="일반 예매" } = location.state || {};
   
   const url = `/tickets/${amateurId}/ticketInfo`;
   const { data, error, loading } = useCustomFetch(url, {
@@ -32,9 +32,7 @@ const Step3 = () => {
   const memberInfo = data.result.reserveConfirmMemberDTO;
 
   // 선택된 티켓 정보 찾기
-  const selectedTicket = ticketInfo.tickets.find(
-    (ticket) => ticket.amateurTicketId === selectedTicketId
-  );
+  const selectedTicket = ticketInfo.tickets.find(ticket => ticket.ticketName === selectedTicketName);
   const ticketPrice = selectedTicket ? selectedTicket.price : 0;
   // 총 결제 금액 계산
   const totalAmount = ticketPrice * peopleCount;
@@ -43,12 +41,12 @@ const Step3 = () => {
     navigate('../step4', {
       state: {
         peopleCount,
-        selectedTicketId,
+        selectedTicketName,
         ticketInfo,
+        amateurTicketId: selectedTicket.amateurTicketId,
       },
     });
   };
-  
       
      return (
       <Container>

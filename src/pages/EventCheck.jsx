@@ -124,7 +124,7 @@ const Header = styled.div`
 
 `
 const Container = styled.div`
-  width: 100%;
+  width: 1240px;
 
   font-family: Pretendard;
   padding: 100px;

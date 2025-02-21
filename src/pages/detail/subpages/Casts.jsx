@@ -19,33 +19,33 @@ function CastsDetail() {
   console.log('캐스팅 데이터', data?.result);
 
   return (
-    
     <>
-      {data?.result?.map((role) => (
-        <CharacterWrapper key={role?.roleName}>
-          <h3>{role?.roleName}</h3>
-          
-          <ActorsWrapper>
-            {role?.actorList?.map((actor) => (
-              <Actor key={actor?.realName}>
-                <ProfileWrapper>
-                  <img src={actor?.actorPic} alt={`${actor?.realName} 프로필`} />
-                  {
-                   <LikeActorButtonWrapper>
-                    <LikeActorButton />
-                  </LikeActorButtonWrapper>
-                  }
-                </ProfileWrapper>
-                <div>{actor?.realName}</div>
-              </Actor>
-            ))}
-          </ActorsWrapper>
-        </CharacterWrapper>
-      ))}
-     
-   </>
-    
+      {data?.result?.length === 0 ? (
+        <p>캐스팅 정보가 없습니다.</p>
+      ) : (
+        data?.result?.map((role) => (
+          <CharacterWrapper key={role?.roleName}>
+            <h3>{role?.roleName}</h3>
+  
+            <ActorsWrapper>
+              {role?.actorList?.map((actor) => (
+                <Actor key={actor?.realName}>
+                  <ProfileWrapper>
+                    <img src={actor?.actorPic} alt={`${actor?.realName} 프로필`} />
+                    <LikeActorButtonWrapper>
+                      <LikeActorButton />
+                    </LikeActorButtonWrapper>
+                  </ProfileWrapper>
+                  <div>{actor?.realName}</div>
+                </Actor>
+              ))}
+            </ActorsWrapper>
+          </CharacterWrapper>
+        ))
+      )}
+    </>
   );
+  
 }
 
 export default CastsDetail;
@@ -99,4 +99,5 @@ const ActorsWrapper = styled.div`
 display:flex;
 flex-direction: row;
 gap: 40px;
+max-width: 800px;
 `

@@ -92,8 +92,7 @@ const PostListWrapper = styled.table`
   margin-top: 32px;
   font-family: Pretendard, sans-serif;
   text-align: center;
-
-
+table-layout: fixed; /* 고정된 레이아웃 */
   
   th, td {
     
@@ -118,10 +117,38 @@ const PostListWrapper = styled.table`
   td:nth-child(1) {
     text-align: left;
     padding-left: 50px;
+    min-width: 40%;
+    max-width: 50%;
+  }
+    td:nth-child(2) {
+    text-align: left;
+    padding-left: 50px;
+    width: 20%;
+    max-width: 190px;
+  }
+        td:nth-child(3) {
+    text-align: left;
+    padding-left: 50px;
+    width: 20%;
+  }
+        td:nth-child(4) {
+    text-align: left;
+    padding-left: 50px;
+    width: 20%;
   }
     th:nth-child(1) {
     text-align: left;
     padding-left: 94px;
+    min-width: 40%;
+    max-width: 50%;
+  }
+    th:nth-child(2) {
+    width:20%;
+  }
+    th:nth-child(3) {
+    width:20%;
+  }    th:nth-child(4) {
+    width:20%;
   }
 
   td {
@@ -129,13 +156,17 @@ const PostListWrapper = styled.table`
     border-bottom: 1px solid #E6E6E6;
     padding-top: 18px;
     padding-bottom: 18px;
-
+    padding-right: 20px;
   /* Body-tiny-md */
   font-family: Pretendard;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+
+  overflow: hidden; /* 넘치는 내용 숨김 */
+  white-space: nowrap; /* 줄바꿈 방지 */
+  text-overflow: ellipsis; /* ... 처리 */
   }
 
   tbody tr:hover {

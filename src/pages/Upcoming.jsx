@@ -4,6 +4,7 @@ import styled from "styled-components";
 import FormattedDate from "../components/date/FormattedDate";
 // import useFetch from "../hooks/useFetch";
 import useCustomFetch from "../hooks/useCustomFetch";
+import { Link } from 'react-router-dom';
 
 //const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
 const token = localStorage.getItem("accessToken");
@@ -94,7 +95,9 @@ const Upcoming = () => {
               style={{ zIndex: index === activeIndex ? 2 : 1 }} // 클릭된 이미지가 위로
               onClick={() => handleMusicalClick(index)}
             >
-              <img src={musical.image} alt={musical.name} />
+              <CardLink to={musical ? `/detail/${musical.id}` : "#"}>
+                <img src={musical.image} alt={musical.name} />
+              </CardLink>
               {index === activeIndex && (
                 <div className="details">
                   <div className="title">
@@ -117,7 +120,12 @@ const Upcoming = () => {
           {ticketListMusicals.map((musical) => (
            <MusicalItem key={musical.id}>
              <DdayBadge>{musical.dday}</DdayBadge> 
-              <img src={musical.image} alt={musical.name} />
+             <CardWrapper>
+             <CardLink to={musical ? `/detail/${musical.id}` : "#"}>
+                <img src={musical.image} alt={musical.name} />
+              </CardLink>
+             </CardWrapper>
+              
               <div className="details">
                <div className="name">
                 {musical.name}
@@ -276,6 +284,7 @@ const TicketList = styled.div`
 `;
 
 const MusicalItem = styled.div`
+  position: relative;
   text-align: left;
   font-family: Pretendard;
   overflow: hidden;
@@ -325,11 +334,10 @@ const MusicalItem = styled.div`
 `;
 const DdayBadge = styled.div`
   position: absolute;
-  top: 100px;  /* 기존보다 아래로 이동 */
-  left: 70px; /* 기존보다 오른쪽으로 이동 */
-width: 54px;
+  top: 13px;  /* 기존보다 아래로 이동 */
+  left: 11px; /* 기존보다 오른쪽으로 이동 */
+width: 35px;
 height: 20px;
-flex-shrink: 0;
 display: flex;
 flex-direction: column;
 justify-content: center;
@@ -344,3 +352,18 @@ font-style: normal;
 font-weight: 700;
 line-height: normal;
 `;
+
+const CardLink = styled(Link)`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  
+`;
+
+const CardWrapper = styled.div`
+&:hover {
+  transform: scale(1.04);
+  transition: transform 0.2s ease;
+}
+`

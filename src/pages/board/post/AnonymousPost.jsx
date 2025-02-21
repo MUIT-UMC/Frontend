@@ -31,17 +31,21 @@ function AnonymousPost() {
   // 게시글 데이터 
   // const token = import.meta.env.VITE_APP_ACCESS_TOKEN;
   const token = localStorage.getItem("accessToken");
-  console.log(token);
+  // console.log(token);
   
   const url = `/posts/${postId}`;
+
   const { data, error, loading } = useFetch(url, {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  });
+  }, [token]);
   console.log('데이터', data);
+
   const [isButtonLiked, setIsButtonLiked] = useState(data?.result?.isLiked);
   const [likeCount, setLikeCount] = useState(data?.result?.likeCount);
+  const [isWrited, setIsWrited] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   useEffect(() => {
     if (data?.result?.isLiked !== undefined) {
@@ -58,7 +62,16 @@ function AnonymousPost() {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  });
+  }, [token]);
+
+  useEffect(() => {
+    if (isWrited||isDeleted) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 50);
+    }
+  }, [isWrited, isDeleted]);
+
   console.log("코멘트 데이터:", comment);
   console.log("에러:", commentError);
   console.log("로딩:", commentLoading);
@@ -156,10 +169,10 @@ function AnonymousPost() {
         </IconWrapper>
         </CommentSectionTop>
         
-        <CommentInputArea postId={postId} setCommentTrigger={setCommentTrigger} commentTrigger={commentTrigger}/>
+        <CommentInputArea postId={postId} setCommentTrigger={setCommentTrigger} commentTrigger={commentTrigger} isWrited={isWrited} setIsWrited={setIsWrited}/>
         <CommentWrapper>
         {comment?.result?.comments?.map((data) => (
-          <Comment key={data.commentId} data={data} />
+          <Comment key={data.commentId} data={data} isDeleted={isDeleted} setIsDeleted={setIsDeleted} isWrited={isWrited} setIsWrited={setIsWrited}/>
         ))}
         </CommentWrapper>
                 

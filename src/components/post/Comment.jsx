@@ -10,8 +10,8 @@ import axios from "axios";
 const token = localStorage.getItem("accessToken");
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 
-function Comment({data, noneCommentIcon}) {
-  console.log('Comment.jsx', data);
+function Comment({data, noneCommentIcon, isDeleted, setIsDeleted, isWrited, setIsWrited}) {
+  // console.log('Comment.jsx', data);
   const [isWriter, setIsWriter] = useState(data.nickname=='글쓴이');
 
   const [isEditing, setIsEditing] = useState(false);
@@ -37,6 +37,7 @@ function Comment({data, noneCommentIcon}) {
   
       if (response.ok) {
         alert("댓글이 삭제되었습니다.");
+        setIsDeleted(!isDeleted);
         // 필요하면 상태 업데이트 로직 추가
       } else {
         alert(`삭제 실패: ${result.message}`);
@@ -78,10 +79,10 @@ function Comment({data, noneCommentIcon}) {
     setIsReplying(true);
   }
   const reportHandler = async (commentId) => {
-    if (window.confirm("게시글을 신고하시겠습니까?")) {
+    if (window.confirm("댓글을 신고하시겠습니까?")) {
       try {
         console.log('신고할 댓글 ', commentId);
-        const response = await axios.post(`${muit_server}/reports/${commentId}?commentType=COMMENT`, 
+        const response = await axios.post(`${muit_server}/comments/report/${commentId}?commentType=COMMENT`, 
           {},
           {
           headers: { 
@@ -132,7 +133,6 @@ function Comment({data, noneCommentIcon}) {
             ) : (
               <>
                 {/*<Text onClick={() => setIsEditing(true)}>수정</Text>*/}
-                {console.log('댓글 닉네임', data.nickname)}
                 <Text onClick={deleteHandler} style={{ display: (data.nickname !== "삭제된 댓글" && data.isMyComment) ? "block" : "none" }}>삭제</Text>
               </>
             )}
@@ -153,7 +153,7 @@ function Comment({data, noneCommentIcon}) {
       {Array.isArray(data.replies) && data.replies.length > 0 ? (
         <ReplyWrapper>
           {data?.replies?.map((reply) => (
-            <Reply key={reply.id} data={reply} />
+            <Reply key={reply.id} data={reply} setIsDeleted={setIsDeleted} isDeleted={isDeleted}/>
           ))}
         </ReplyWrapper>
       ) : null}
@@ -161,7 +161,7 @@ function Comment({data, noneCommentIcon}) {
         <ReplyInputWrapper>
           <img src={ReplyArrow} />
           <div style={{width: '100%'}}>
-          <CommentInputArea postId={data.commentId} isReplying={isReplying} setIsReplying={setIsReplying} />
+          <CommentInputArea postId={data.commentId} isReplying={isReplying} setIsReplying={setIsReplying} isWrited={isWrited} setIsWrited={setIsWrited}/>
           </div>
           
         </ReplyInputWrapper>
@@ -242,6 +242,7 @@ font-size: 16px;
 font-style: normal;
 font-weight: 500;
 line-height: 25px; /* 156.25% */
+  white-space: pre-line;
 `
 const EditInput = styled.input`
   width: 100%;

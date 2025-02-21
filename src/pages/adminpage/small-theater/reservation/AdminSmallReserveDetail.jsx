@@ -32,7 +32,7 @@ function mapStatusToKorean(reservationStatus) {
     case "CANCEL_AWAIT":
       return "취소 중";
     case "CANCELED":
-      return "취소 완료";
+      return "예매 취소";
     default:
       return reservationStatus || ""; 
   }
@@ -47,7 +47,7 @@ function mapKoreanToStatus(koreanString) {
       return "EXPIRED";
     case "취소 중":
       return "CANCEL_AWAIT";
-    case "취소 완료":
+    case "예매 취소":
       return "CANCELED";
     default:
       return ""; 
@@ -242,7 +242,7 @@ export default function AdminSmallReserveDetail() {
                   <option value="예약 완료" style={{color: COLOR_GRAY_MAINTEXT}}>예약 완료</option>
                   <option value="사용 완료" style={{color: COLOR_GRAY_MAINTEXT}}>사용 완료</option>
                   <option value="취소 중" style={{color: COLOR_MUIT_RED}}>취소 중</option>
-                  <option value="취소 완료" style={{color: COLOR_GRAY_MAINTEXT}}>취소 완료</option>
+                  <option value="예매 취소" style={{color: COLOR_GRAY_MAINTEXT}}>예매 취소</option>
                 </Select>
               </Td>
             </Tr>

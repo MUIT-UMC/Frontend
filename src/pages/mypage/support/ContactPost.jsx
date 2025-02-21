@@ -74,8 +74,8 @@ function ContactPost() {
   const comment = {
     id: 1,
     nickname: '관리자',
-    content: '안녕하세요, 고객님. [알라딘] 티켓 결제 관련하여 문의 주셔서 감사합니다. 현재 고객님의 결제 내역을 확인하고 있습니다. 결제가 정상적으로 완료되지 않았거나 오류가 발생했을 경우, 추가로 필요한 조치를 안내드리겠습니다. 결제 상태를 확인하는 데 약간의 시간이 소요될 수 있으니 양해 부탁드립니다. 만약 결제 확인 이메일이나 문자를 아직 받지 못하셨다면, 스팸메일함을 한 번 확인해 주시고, 결제 당시 사용하신 결제 수단의 상세 내역(거래일시, 승인번호 등)을 알려주시면 더욱 빠르게 처리할 수 있습니다. 추가적으로 궁금한 사항이 있으시다면 언제든 말씀해 주세요. 빠르게 확인 후 다시 연락드리겠습니다. 감사합니다.',
-    createdAt: '2025-01-15',
+    content: '안녕하세요, 고객님. 문의 주셔서 감사합니다. \n\n현재 확인 중에 있으니 잠시만 기다려 주시길 바랍니다. \n빠른 시일 내에 답변 드릴 수 있도록 최선을 다하겠습니다. \n추가로 궁금하신 사항이 있으시면 언제든지 말씀해주세요. \n\n감사합니다.',
+    createdAt: d?.createdAt?.split('T')[0],
   }
 
   const listSize = '?' // comment?.result?.listSize;
@@ -102,15 +102,14 @@ function ContactPost() {
         </ContentArea>
         
         
-        <Hr marginTop='60px' marginBottom='20px' />
 
         {/*댓글 작성부분 - 한 컴포넌트로 묶기 */}
         <CommentSectionTop>
-        <PostTitle marginBottom='20px'>답변 {listSize}개</PostTitle>
+        <PostTitle marginBottom='20px'></PostTitle>
         </CommentSectionTop>
         <Hr marginTop='20px' marginBottom='0px' />
         <CommentWrapper>
-        <Comment key={comment.id} data={comment} noneCommentIcon={true}/>
+        <Comment key={comment.id} data={comment} noneCommentIcon={true} />
         </CommentWrapper>
                 
 

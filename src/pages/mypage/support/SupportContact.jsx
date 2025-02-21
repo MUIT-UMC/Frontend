@@ -26,7 +26,7 @@ const SupportContact = () => {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
     },
-  });
+  }, [token]);
   console.log('데이터', data);
 
   const tableHeaders = ["제목", "날짜", "상태"];
