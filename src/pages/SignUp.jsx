@@ -19,15 +19,14 @@ function SignUp() {
   const googleLogin = async () => {
     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirectUri}&response_type=code&scope=openid email profile`;
 
-    const popup = window.location.href(oauthUrl, "GoogleAuth", "width=700,height=600");
+    const popup = window.open(oauthUrl, "GoogleAuth", "width=700,height=600");
     if (!popup) {
       alert("팝업 차단이 활성화되어 있습니다. 팝업을 허용해주세요.");
       return;
     }
-    //console.log("팝업창 열림:", oauthUrl);
+
     console.log("팝업창 URL:", popup.location.href);
 
-    // 부모 창에서 메시지 이벤트 리스너 등록
     window.addEventListener(
       "message",
       async (event) => {

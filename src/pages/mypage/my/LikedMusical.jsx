@@ -60,11 +60,12 @@ const Container = styled.div`
 
 const MusicalList = styled.div`
   display: grid;
- grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개 */
+  grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개 */
   gap: 6px; /* 카드 간 간격 */
   margin-left: -35px;
-margin-top:30px;
-`;
+  margin-top:30px;
+  cursor: pointer;
+`
 
 const Card = styled.div`
   padding: 16px;

@@ -124,6 +124,8 @@ const EditButton = styled.button`
   padding: 4px 12px;
   align-items: center;
 
+  cursor: pointer;
+
   border-radius: 2px;
   border: 1px solid #919191;
   background: #FFF;

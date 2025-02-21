@@ -6,8 +6,6 @@ import axios from "axios";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import googleLogin from "../utils/googleSignUp";
-
 import MuitElement from "../assets/logos/MuitElement.png";
 import Google from "../assets/logos/google.png";
 import Kakao from "../assets/logos/kakao.png";
@@ -16,6 +14,9 @@ import SeePassword from "../assets/icons/SeePassword.svg";
 import { useEffect, useRef, useState } from "react";
 
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
+
+const googleClientId = import.meta.env.VITE_APP_GOOGLE_CLIENT_ID;
+const googleRedirectUri = import.meta.env.VITE_APP_GOOGLE_REDIRECT_URI;
 
 
 const COLOR_MUIT_RED = "#A00000";
@@ -86,6 +87,50 @@ function Login() {
                 .catch((error) => console.error("구글 로그인 실패:", error));
         }
     }, [fetchData, navigate]);
+
+    const googleLogin = async () => {
+        const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirectUri}&response_type=code&scope=openid email profile`;
+    
+        const popup = window.open(oauthUrl, "Connect Google Account", "width=700,height=600");
+        if (!popup) {
+          alert("팝업 차단이 활성화되어 있습니다. 팝업을 허용해주세요.");
+          return;
+        }
+        //console.log("팝업창 열림:", oauthUrl);
+        console.log("팝업창 URL:", popup.location.href);
+    
+        // 부모 창에서 메시지 이벤트 리스너 등록
+        window.addEventListener(
+          "message",
+          async (event) => {
+            // 보안을 위해 event.origin을 체크
+            if (event.origin !== window.location.origin) return;
+            if (event.data?.type === "GOOGLE_AUTH_CODE" && event.data.code) {
+              console.log("팝업창 URL:", popup.location.href);
+              console.log("부모창에서 받은 인증 코드:", event.data.code);
+              try {
+                const response = await fetchData(
+                  `/login/oauth2/code/google?code=${event.data.code}`,
+                  "GET"
+                );
+                console.log("백엔드 응답:", response);
+                if (response?.result) {
+                  localStorage.setItem("accessToken", response.result.accessToken);
+                  localStorage.setItem("refreshToken", response.result.refreshToken);
+                  navigate("/");
+                } else {
+                  alert("구글 로그인 실패: " + response?.message);
+                }
+              } catch (error) {
+                console.error("구글 로그인 에러:", error);
+                alert("구글 로그인 오류. 다시 시도해주세요.");
+              }
+            }
+          },
+          { once: true }
+        );
+      };
+    
 
 
 
