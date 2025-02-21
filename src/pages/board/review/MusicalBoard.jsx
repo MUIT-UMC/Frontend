@@ -16,6 +16,12 @@ const MusicalBoard = () => {
   
   const [postType] = useState("REVIEW");
     const [currentPage, setCurrentPage] = useState(0);
+      useEffect(() => {
+        localStorage.setItem("currentPage", 0);
+      }, []);
+      useEffect(() => {
+        localStorage.setItem("currentPage", currentPage);
+      }, [currentPage]);
     const [size] = useState(5); // 한 페이지당 게시물 수
     const [searchParams, setSearchParams] = useState({
       musicalName: "",
