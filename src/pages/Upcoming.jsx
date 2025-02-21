@@ -120,9 +120,12 @@ const Upcoming = () => {
           {ticketListMusicals.map((musical) => (
            <MusicalItem key={musical.id}>
              <DdayBadge>{musical.dday}</DdayBadge> 
-              <CardLink to={musical ? `/detail/${musical.id}` : "#"}>
+             <CardWrapper>
+             <CardLink to={musical ? `/detail/${musical.id}` : "#"}>
                 <img src={musical.image} alt={musical.name} />
               </CardLink>
+             </CardWrapper>
+              
               <div className="details">
                <div className="name">
                 {musical.name}
@@ -355,4 +358,12 @@ const CardLink = styled(Link)`
   height: 100%;
   object-fit: cover;
   display: block;
+  
 `;
+
+const CardWrapper = styled.div`
+&:hover {
+  transform: scale(1.04);
+  transition: transform 0.2s ease;
+}
+`
