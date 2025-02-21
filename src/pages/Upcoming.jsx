@@ -76,6 +76,10 @@ const Upcoming = () => {
   const handleMusicalClick = (index) => {
     setActiveIndex(index); // 클릭한 뮤지컬의 인덱스를 저장
   };
+  const handleMouseEnter = (index) => {
+    setActiveIndex(index);
+  };
+  
 
 
   return (
@@ -87,30 +91,35 @@ const Upcoming = () => {
           <h1>TODAY</h1>
           <p>오늘 티켓 오픈</p>
         </Today>
-        <FeaturedMusical>
-          {todayMusicals.map((musical, index) => (
-            <div
-              key={musical.id}
-              className={`musical-item ${index === activeIndex ? "active" : ""}`}
-              style={{ zIndex: index === activeIndex ? 2 : 1 }} // 클릭된 이미지가 위로
-              onClick={() => handleMusicalClick(index)}
-            >
-              <CardLink to={musical ? `/detail/${musical.id}` : "#"}>
-                <img src={musical.image} alt={musical.name} />
-              </CardLink>
-              {index === activeIndex && (
-                <div className="details">
-                  <div className="title">
-                    {musical.name}
-                     {musical.extraInfo&&(<span className="extra-info">{musical.extraInfo}</span>)}
+<FeaturedMusical>
+            {todayMusicals.map((musical, index) => (
+              <div
+                key={musical.id}
+                className={`musical-item ${index === activeIndex ? "active" : ""}`}
+                style={{ zIndex: index === activeIndex ? 2 : 1 }}
+                onClick={() => handleMusicalClick(index)}
+                onMouseEnter={() => handleMouseEnter(index)}
+              >
+                <CardWrapper>
+                  <CardImage to={musical ? `/detail/${musical.id}` : "#"}>
+                    <img src={musical.image} alt={musical.name} />
+                  </CardImage>
+                </CardWrapper>
+                {index === activeIndex && (
+                  <div className="details">
+                    <div className="title">
+                      {musical.name}
+                      {musical.extraInfo && (
+                        <span className="extra-info">{musical.extraInfo}</span>
+                      )}
+                    </div>
+                    <div className="datetime">오늘 {musical.time}</div>
+                    <div className="info">{musical.extraInfo}</div>
                   </div>
-                  <div className="datetime">오늘 {musical.time}</div>
-                  <div className="info">{musical.extraInfo}</div>
-                </div>
-              )}
-            </div>
-          ))}
-        </FeaturedMusical>
+                )}
+              </div>
+            ))}
+          </FeaturedMusical>
       </MainSection>
 
       {/* 하단 섹션 */}
@@ -336,7 +345,7 @@ const DdayBadge = styled.div`
   position: absolute;
   top: 13px;  /* 기존보다 아래로 이동 */
   left: 11px; /* 기존보다 오른쪽으로 이동 */
-width: 35px;
+width: suth;
 height: 20px;
 display: flex;
 flex-direction: column;
@@ -366,4 +375,10 @@ const CardWrapper = styled.div`
   transform: scale(1.04);
   transition: transform 0.2s ease;
 }
-`
+`;
+const CardImage = styled(Link)`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+`;
