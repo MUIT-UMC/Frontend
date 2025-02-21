@@ -9,7 +9,8 @@ import { GoX } from "react-icons/go";
 const muit_server = import.meta.env.VITE_APP_SERVER_URL;
 const token = localStorage.getItem("accessToken");
 {/* 에러 500 서버오류 의심? */}
-function CommentInputArea({ postId, setCommentTrigger, commentTrigger, isReplying, setIsReplying }) {
+function CommentInputArea({ postId, setCommentTrigger, 
+  commentTrigger, isReplying, setIsReplying, isWrited, setIsWrited }) {
   // console.log('게시글', postId);
   const [memberId, setMemberId] = useState(1);
   const [comment, setComment] = useState("");
@@ -47,11 +48,14 @@ function CommentInputArea({ postId, setCommentTrigger, commentTrigger, isReplyin
     }
   });
 
-      console.log(response);
+      // console.log(response);
+      console.log('작성 전', isWrited);
       if (response.data.isSuccess) {
         alert("댓글이 등록되었습니다.");
         setComment(""); // Clear the comment input after successful submission
         // setCommentTrigger(commentTrigger+1); // 🔹 댓글 등록 후 트리거 업데이트
+        setIsWrited(!isWrited);
+        console.log('작성 후', isWrited);
       } else {
         setError("댓글 등록에 실패했습니다.");
       }
