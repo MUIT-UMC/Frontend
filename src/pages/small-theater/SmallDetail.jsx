@@ -61,6 +61,20 @@ function SmallDetail() {
     <>
       {/*빨간배너 */}
        <BannerContainer poster={poster}>
+        {poster ? (
+          <BannerImage 
+            src={poster} 
+            alt="배너 이미지" 
+            // onError={handleImageError} 
+          />
+        ) : (
+          <BannerImage 
+            src="/path/to/default-image.jpg" 
+            alt="기본 배너 이미지" 
+          />
+        )}
+        <Overlay />
+        <Content>
                 <Header>{name}</Header>
                 <TagWrapper>
              {musical.hashtag
@@ -73,6 +87,7 @@ function SmallDetail() {
                 <ChevronWrapper>
                   <img src={ChevronDown} style={{ display: 'block', marginTop: '20px' }} />
                 </ChevronWrapper>
+                </Content>
             </BannerContainer>
 
       {/* 본문 */}
@@ -126,15 +141,13 @@ function SmallDetail() {
 export default SmallDetail;
 /*빨간배너 */
 const BannerContainer = styled.div`
-  background: linear-gradient(
-      var(--Muit-Red-main, #A00000),
-      rgba(160, 0, 0, 0.5)
-    ),
-   url(${(props) => props.poster}) no-repeat center center / cover;
-  width: 1250px;
-  height:822px;
-  padding: 101px 95px;
   position: relative;
+  width: 1440px;
+  height: 1024px;
+  overflow: hidden;
+    &:hover img {
+    transform: scale(1.1);
+  }
 `;
 
 const Header = styled.div`
@@ -173,13 +186,22 @@ const Quote = styled.blockquote`
 `;
 
 const Description = styled.div`
-  color: #FFF;
-  width: 870px;
+  width: 740px;
+  height: 380px;
   font-family: Pretendard;
   font-size: 16px;
-  font-style: normal;
-  line-height: 30px; /* 156.25% */
-`
+  line-height: 24px;
+  overflow-y: auto;
+  position: relative;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 0) 100%);
+`;
+
 const Tag = styled.li`
   display: flex;
   width: 120px;
@@ -357,4 +379,32 @@ const DetailImage = styled.div`
   width: 500px;
   height: 888px;
   flex-shrink: 0;
+`;
+const BannerImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  top: 108;
+  left: 0;
+  transition: transform 1s ease-in-out;
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(var(--Muit-Red-main, #A00000), rgba(160, 0, 0, 0.5));
+  z-index: 1;
+  pointer-events: none;
+`;
+const Content = styled.div`
+  position: relative;
+  z-index: 2;
+  padding: 101px 95px;
+  padding-top: 190px;
+  color: #FFF;
 `;
