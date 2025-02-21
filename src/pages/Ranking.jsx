@@ -209,6 +209,7 @@ const CardImage = styled(Link)`
   height: 100%;
   object-fit: cover;
   display: block;
+  
 `;
 
 const CardRank = styled.div`
@@ -287,6 +288,13 @@ const BottomPoster = styled(Link)`
   object-fit: cover;
   margin-bottom: 8px;
   border: 1px solid ${COLOR_GRAY_UNSELECTED};
+  img {
+    transition: transform 0.2s ease;
+  }
+
+  img:hover {
+    transform: scale(1.04);
+  }
 `;
 
 const BottomInfo = styled.div`
