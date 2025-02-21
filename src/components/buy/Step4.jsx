@@ -21,7 +21,6 @@ const Step4 = () => {
     setIsSubmitting(true);
 
     const url = `${import.meta.env.VITE_APP_SERVER_URL}/tickets/purchase/${amateurId}`;
-  
     try {
       const response = await fetch(url, {
         method: 'POST',
