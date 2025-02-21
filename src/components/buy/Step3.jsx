@@ -43,10 +43,10 @@ const Step3 = () => {
         peopleCount,
         selectedTicketName,
         ticketInfo,
+        amateurTicketId: selectedTicket.amateurTicketId,
       },
     });
   };
-  
       
      return (
       <Container>
