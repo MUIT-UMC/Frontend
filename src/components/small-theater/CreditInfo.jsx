@@ -47,7 +47,7 @@ const CreditsWrapper = styled.div`
 `;
 const CreditRow = styled.div`
   display: grid;
-  grid-template-columns: auto 1fr; /* Two columns for position and name */
+  grid-template-columns: 120px 1fr; /* Two columns for position and name */
   column-gap: 35px; /* Gap between position and name */
   align-items: center;
 `;
