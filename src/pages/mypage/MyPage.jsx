@@ -188,12 +188,14 @@ width: 50px;
   background: none;
   color: ${(props) => props.color? props.color : '#000'};
 
-/* Body-tiny-md */
-font-family: Pretendard;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: 18px; /* 128.571% */
+  cursor: pointer;
+
+  /* Body-tiny-md */
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 128.571% */
 `
 
 const AsideBottom = styled.div`

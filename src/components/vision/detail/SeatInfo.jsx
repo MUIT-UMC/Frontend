@@ -2,10 +2,12 @@ import styled from "styled-components";
 import useCustomFetch from "../../../hooks/fetchWithAxios";
 
 const SeatView = (props) => {
-    const { data, error, loading } = useCustomFetch(
+    const { data, loading, error } = useCustomFetch(
         `/theatres/${props.theatreId}/sectionType?sectionType=${props.area}`
     );
     console.log(data);
+
+    //if (loading) return <ViewSkeleton />;
 
     return (
         <View>
@@ -17,12 +19,13 @@ const SeatView = (props) => {
                 {data?.result?.viewPic ? (
                     <img src={data.result.viewPic} alt="좌석 뷰" className="view-img" />
                 ) : (
-                    <GrayBox/>
+                    <GrayBox />
                 )}
             </ImageContainer>
             {/*<p className="body-M-500">F구역 5열 1번</p>*/}
 
         </View>
+
     )
 }
 
